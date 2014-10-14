@@ -5,6 +5,6 @@ compiler:
 before_script:
   - "cd run && ./prepare.sh"
 script:
-  - "cd run && make"
+  - make
 after_success:
-  - "cd run && ./test.sh"
+  - "./test.sh"
