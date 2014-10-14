@@ -29,7 +29,9 @@ CXXFLAGS += -g -Wall -Wextra -pthread
 
 # All tests produced by this Makefile.  Remember to add new tests you
 # created to the list.
-TESTS = MaximumProductSubarrayTests
+TESTS = MaximumProductSubarray.MyTests \
+	ReverseWords.MyTests \
+	EvaluateRPN.MyTests
 
 # All Google Test headers.  Usually you shouldn't change this
 # definition.
@@ -41,7 +43,7 @@ GTEST_HEADERS = $(GTEST_DIR)/include/gtest/*.h \
 all : $(TESTS)
 
 clean :
-	rm -f $(TESTS) gtest.a gtest_main.a *.o
+	rm -f $(TESTS) gtest.a gtest_main.a *.o *.MyTests *.MyTestso
 
 # Builds gtest.a and gtest_main.a.
 
@@ -71,8 +73,8 @@ gtest_main.a : gtest-all.o gtest_main.o
 # gtest_main.a, depending on whether it defines its own main()
 # function.
 
-MaximumProductSubarray.o : $(USER_DIR)/MaximumProductSubarray.cpp $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/MaximumProductSubarray.cpp
+%.MyTestso: $(USER_DIR)/%.cpp $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/$(subst .MyTestso,,$@).cpp -o $@
 
-MaximumProductSubarrayTests : MaximumProductSubarray.o gtest_main.a
+%.MyTests : %.MyTestso gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
