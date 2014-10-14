@@ -1,0 +1,10 @@
+language: cpp
+compiler:
+  - gcc
+  - clang
+before_script:
+  - "cd run && ./prepare.sh"
+script:
+  - "cd run && make"
+after_success:
+  - "cd run && ./test.sh"
