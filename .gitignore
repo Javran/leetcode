@@ -26,3 +26,9 @@
 *.exe
 *.out
 *.app
+
+# for autoscripts
+run/*
+!run/Makefile
+!run/prepare.sh
+!run/build-and-test.sh
