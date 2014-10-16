@@ -32,7 +32,8 @@ CXXFLAGS += -g -Wall -Wextra -pthread
 TESTS = MaximumProductSubarray.MyTests \
 	ReverseWords.MyTests \
 	EvaluateRPN.MyTests \
-	MinimumInRotated.MyTests
+	MinimumInRotated.MyTests \
+	MaxPointsOnALine.MyTests
 
 # All Google Test headers.  Usually you shouldn't change this
 # definition.
