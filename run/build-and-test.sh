@@ -1,5 +1,5 @@
 #!/bin/bash
 
-make
+make || exit 1
 
 ./test.sh
