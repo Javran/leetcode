@@ -60,7 +60,7 @@ public:
         // but we know this is impossible because
         // there is no way that P == M, and every number
         // in this array is unique
-        assert( num[indFrom] != num[indMid] );
+        assert( num[indP] != num[indMid] );
         return -1;
 
         // a final check to make sure this binary search
