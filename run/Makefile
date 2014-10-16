@@ -75,7 +75,7 @@ gtest_main.a : gtest-all.o gtest_main.o
 # function.
 
 %.MyTestso: $(USER_DIR)/%.cpp $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/$(subst .MyTestso,,$@).cpp -o $@
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -DNOT_OJ -c $(USER_DIR)/$(subst .MyTestso,,$@).cpp -o $@
 
 %.MyTests : %.MyTestso gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
