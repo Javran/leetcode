@@ -33,7 +33,8 @@ TESTS = MaximumProductSubarray.MyTests \
 	ReverseWords.MyTests \
 	EvaluateRPN.MyTests \
 	MinimumInRotated.MyTests \
-	MaxPointsOnALine.MyTests
+	MaxPointsOnALine.MyTests \
+	SortList.MyTests
 
 # All Google Test headers.  Usually you shouldn't change this
 # definition.
