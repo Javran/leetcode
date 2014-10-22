@@ -159,6 +159,7 @@ namespace {
 
     MY_TEST(SortList, Random, 1,9,2,8,3,7,4,0,6,5)
     MY_TEST(SortList, Ord,    1,2,3)
+    MY_TEST(SortList, Single, 1)
     MY_TEST(SortList, Empty   )
     MY_TEST(SortList, Rev,    8,7,6,5,4,4,4,3,2,1)
 
