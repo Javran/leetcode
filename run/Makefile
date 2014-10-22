@@ -34,7 +34,9 @@ TESTS = MaximumProductSubarray.MyTests \
 	EvaluateRPN.MyTests \
 	MinimumInRotated.MyTests \
 	MaxPointsOnALine.MyTests \
-	SortList.MyTests
+	SortList.MyTests \
+	InsertionSortList.MyTests \
+	LRUCache.MyTests
 
 # All Google Test headers.  Usually you shouldn't change this
 # definition.

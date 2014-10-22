@@ -13,3 +13,5 @@ my LeetCode solution, aiming at clear comments &amp; explanations.
 * [Evaluate Reverse Polish Notation](./src/EvaluateRPN.cpp)
 * [Max Points on a Line](./src/MaxPointsOnALine.cpp)
 * [Sort List](./src/SortList.cpp)
+* [Insertion Sort List](./src/InsertionSortList.cpp)
+* [LRU Cache](./src/LRUCache.cpp) (TODO: testcase pending)
