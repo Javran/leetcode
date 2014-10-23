@@ -40,14 +40,14 @@ public:
         for (std::vector<Point>::iterator i = points.begin();
              i != points.end();
              ++i) {
-            std::map<Point,int>::iterator result = 
+            std::map<Point,int>::iterator result =
                 uniqPoints.find(*i);
             if (result == uniqPoints.end())
                 uniqPoints[*i]  = 1;
             else
                 result->second += 1;
         }
-        
+
         // at least two points in a line or depending on the point list size
         // if there isn't sufficient points
         int currentMax = std::min((int)points.size(),2);

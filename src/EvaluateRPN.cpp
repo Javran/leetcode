@@ -72,7 +72,7 @@ namespace {
             "2", "1", "+", "3", "*")
     MY_TEST(EvalRPN, Example2, 6,
             "4", "13", "5", "/", "+")
- 
+
 #undef MY_TEST
 
 }  // namespace

@@ -88,7 +88,7 @@ public:
         // trivial case, size = 0 or size = 1
         if (head == NULL || head->next == NULL)
             return head;
-        
+
         // cut the linked list in half
         std::pair<ListNode *,ListNode *> halfLists = cutHalf(head);
 
@@ -97,7 +97,7 @@ public:
             halfLists.first = sortList( halfLists.first );
         if (halfLists.second)
             halfLists.second = sortList( halfLists.second );
-        
+
         // merge sorted linked lists
         return mergeSortedLists(halfLists.first, halfLists.second);
     }

@@ -42,7 +42,7 @@ public:
             result += " ";
             words.pop();
         }
-        
+
         // as long as there's something added to the result
         // the last charater is not necessary
         // so we remove it.
