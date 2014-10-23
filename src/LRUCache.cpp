@@ -65,7 +65,7 @@ public:
         tick();
 
         // O(log(n))
-        std::map<int, Entity>::iterator result =
+        auto result =
             cache.find(key);
 
         if (result == cache.end())
@@ -95,7 +95,7 @@ public:
 
     void set(int key, int value) {
         tick();
-        std::map<int, Entity>::iterator result =
+        auto result =
             cache.find(key);
 
         if (result != cache.end()) {
@@ -138,7 +138,7 @@ private:
         // minimum (in terms of timestamp) Entity
 
         // O(log(n))
-        std::map<int, Entity>::iterator result =
+        auto result =
             cache.find(pool.begin()->key);
 
         // O(log(n))
