@@ -22,7 +22,7 @@ USER_DIR = ../src
 # Flags passed to the preprocessor.
 # Set Google Test's header directory as a system directory, such that
 # the compiler doesn't generate warnings in Google Test headers.
-CPPFLAGS += -isystem $(GTEST_DIR)/include -std=c++11
+CPPFLAGS += -isystem $(GTEST_DIR)/include -std=c++11 -DNOT_OJ
 
 # Flags passed to the C++ compiler.
 CXXFLAGS += -g -Wall -Wextra -pthread
@@ -79,7 +79,7 @@ gtest_main.a : gtest-all.o gtest_main.o
 # function.
 
 %.MyTestso: $(USER_DIR)/%.cpp $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -DNOT_OJ -c $(USER_DIR)/$(subst .MyTestso,,$@).cpp -o $@
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/$(subst .MyTestso,,$@).cpp -o $@
 
 %.MyTests : %.MyTestso gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
