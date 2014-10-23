@@ -134,7 +134,3 @@ int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }
-
-// Local variables:
-// flycheck-gcc-definitions: ("NOT_OJ")
-// End:
