@@ -153,6 +153,52 @@ private:
 
 namespace {
 
+#define GET(ADDR,EXPECT) {                      \
+        EXPECT_EQ(EXPECT,lru.get(ADDR));        \
+    }                                           \
+
+#define SET(ADDR,VALUE) {                       \
+        lru.set(ADDR,VALUE);                    \
+    }
+
+#define MY_TEST(TN,T,C,...) TEST(TN,T) {                                \
+        LRUCache lru(C);                                                \
+        __VA_ARGS__;                                                    \
+    }
+
+    MY_TEST(LRUCache,Simple,10,
+            SET(1,123);
+            SET(2,456);
+            GET(1,123);
+            GET(2,456);)
+
+    MY_TEST(LRUCache,Overwrite,10,
+            SET(1,123);
+            SET(1,456);
+            GET(2,-1);
+            GET(1,456);)
+
+    MY_TEST(LRUCache,Expire,2,
+            SET(1,123);
+            SET(2,456);
+            SET(3,789);
+            GET(1,-1);
+            GET(2,456);
+            GET(3,789);)
+
+    MY_TEST(LRUCache,TouchOld,2,
+            SET(1,123);
+            SET(2,456);
+            GET(1,123);
+            SET(3,789);
+            GET(1,123);
+            GET(2,-1);
+            GET(3,789);)
+
+#undef GET
+#undef SET
+#undef MY_TEST
+
 }  // namespace
 
 int main(int argc, char **argv) {
