@@ -36,7 +36,8 @@ TESTS = MaximumProductSubarray.MyTests \
 	MaxPointsOnALine.MyTests \
 	SortList.MyTests \
 	InsertionSortList.MyTests \
-	LRUCache.MyTests
+	LRUCache.MyTests \
+	BinTreePostorder.MyTests
 
 # All Google Test headers.  Usually you shouldn't change this
 # definition.
