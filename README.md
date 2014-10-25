@@ -3,7 +3,7 @@ leetcode
 
 [![Build Status](https://travis-ci.org/Javran/leetcode.svg?branch=master)](https://travis-ci.org/Javran/leetcode)
 
-my LeetCode solution, aiming at clear comments &amp; explanations.
+My LeetCode solutions, aiming at clear comments &amp; explanations.
 
 # Solution List
 
@@ -14,4 +14,5 @@ my LeetCode solution, aiming at clear comments &amp; explanations.
 * [Max Points on a Line](./src/MaxPointsOnALine.cpp)
 * [Sort List](./src/SortList.cpp)
 * [Insertion Sort List](./src/InsertionSortList.cpp)
-* [LRU Cache](./src/LRUCache.cpp) (TODO: testcase pending)
+* [LRU Cache](./src/LRUCache.cpp)
+* [Binary Tree Postorder Traversal](./src/BinTreePostorder.cpp)
