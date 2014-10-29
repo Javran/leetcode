@@ -106,6 +106,8 @@ namespace {
         destroyLinkedList(nodes);                       \
     }
 
+    MY_TEST(LinkedListCycleII, Nil,
+            -1,0,QUOTE())
     MY_TEST(LinkedListCycleII, NoLoop,
             -1,5,QUOTE(0,1,2,3,4))
     MY_TEST(LinkedListCycleII, AllCycle,

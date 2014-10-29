@@ -18,3 +18,5 @@ My LeetCode solutions, aiming at clear comments &amp; explanations.
 * [Binary Tree Postorder Traversal](./src/BinTreePostorder.cpp)
 * [Binary Tree Preorder Traversal](./src/BinTreePreorder.cpp)
 * [Reorder List](./src/ReorderList.cpp)
+* [Linked List Cycle II](./src/LinkedListCycleII.cpp)
+* [Linked List Cycle](./src/LinkedListCycle.cpp)
