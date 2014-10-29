@@ -1,4 +1,5 @@
 #include <utility>
+#include <tuple>
 
 #ifdef NOT_OJ
 
@@ -12,10 +13,12 @@ struct ListNode {
 
 class Solution {
 public:
+    // copied from SortList.cpp
     ListNode * forward(ListNode *l) {
         return l == nullptr ? nullptr : l->next;
     }
 
+    // copied from SortList.cpp
     std::pair<ListNode *,ListNode *> cutHalf(ListNode *head) {
         ListNode *mid, *pioneer;
         mid = pioneer = head;
@@ -36,11 +39,12 @@ public:
         // reordering 0,1,2,...,n-1,n
         // into 0,n,1,n-1,...
         // we can simply cut this list into half
+        ListNode *l,*r;
+        std::tie(l,r) = cutHalf(head);
         // reverse the second list,
-        // and interleave two lists together
-        std::pair<ListNode*,ListNode*> two = cutHalf(head);
-        two.second = reverseList(two.second);
-        interleave(two.first,two.second);
+        r = reverseList(r);
+        // and interleave two lists together.
+        interleave(l,r);
     }
 
     // reverse a singly linked list
@@ -53,9 +57,12 @@ public:
         ListNode *newHead = nullptr;
         ListNode *curr = head;
         while (curr) {
+            // next node to be visited
             ListNode *next = curr->next;
+            // insert element into new list
             curr->next = newHead;
             newHead = curr;
+            // move to the next node (in the original list)
             curr = next;
         }
         return newHead;
@@ -67,26 +74,35 @@ public:
             return ys;
         if (! ys)
             return xs;
-
+        // at this point we can assure that
+        // xs != null && ys != null
         ListNode *head = xs;
         ListNode *xNext = nullptr;
         ListNode *yNext = nullptr;
 
         while (xs && ys) {
+            // xNext and yNext are next elements
+            // to be visited
             xNext = xs->next;
             yNext = ys->next;
+            // the net effect of following operation
+            // is that "ys" gots inserted
+            // in between "xs" and old "xs->next"
             xs->next = ys;
             ys->next = xNext;
             xs = xNext;
             ys = yNext;
         }
-
-        if (yNext)
+        // two cases:
+        // 1. ys != null
+        // we re-insert the rest of "ys"
+        if (ys)
             ys->next = yNext;
+        // 2. ys == null
+        // nothing to be done in this case
         return head;
     }
 };
-
 
 #include <cstdlib>
 

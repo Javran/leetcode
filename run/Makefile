@@ -39,7 +39,8 @@ TESTS = MaximumProductSubarray.MyTests \
 	LRUCache.MyTests \
 	BinTreePostorder.MyTests \
 	BinTreePreorder.MyTests \
-	ReorderList.MyTests
+	ReorderList.MyTests \
+	LinkedListCycleII.MyTests
 
 # All Google Test headers.  Usually you shouldn't change this
 # definition.
