@@ -33,3 +33,5 @@ run/*
 !run/prepare.sh
 !run/test.sh
 !run/build-and-test.sh
+
+node_modules/
