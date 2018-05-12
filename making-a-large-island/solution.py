@@ -27,12 +27,21 @@ class DisjointSetNode:
         self.parent = retval
         return retval
 
+def mkIsValid(h,w):
+    def isValid(pair):
+        x,y = pair
+        return x >= 0 and x < h and y >= 0 and y < w
+    return isValid
+
 class Solution:
     @staticmethod
     def computeRightDownCoords(height,width,coord):
         i,j = coord
-        isValid = lambda pair: pair[0] >= 0 and pair[0] < height and pair[1] >= 0 and pair[1] < width
-        return filter(isValid, [(i+1,j), (i,j+1)])
+        return filter(mkIsValid(height,width), [(i+1,j), (i,j+1)])
+
+    def computeAllDirCoords(height, width, coord):
+        i,j = coord
+        return filter(mkIsValid(height,width), [(i-1,j),(i+1,j),(i,j-1),(i,j+1)])
 
     def largestIsland(self, grid):
         """
@@ -41,12 +50,15 @@ class Solution:
         """
         # initialize union set
         dSet = {}
+        emptyCells = set()
         height, width = len(grid), len(grid[0])
         for i in range(height):
             for j in range(width):
                 coord = i,j
                 if grid[i][j]:
                     dSet[coord] = DisjointSetNode()
+                else:
+                    emptyCells.add(coord)
 
         # reconstruct edges
         for coord, v in dSet.items():
@@ -56,8 +68,29 @@ class Solution:
                 if grid[i1][j1]:
                     DisjointSetNode.merge(dSet[coord], dSet[coord1])
 
-Solution().largestIsland([
+        if len(emptyCells) == 0:
+            # all cells are set, nothing to do really
+            #   just pick one root and return its size
+            #   because all cells should be connected so there's only one root
+            return dSet[(0,0)].findRoot().size
+
+        maxSize = 0
+        for coord in emptyCells:
+            ns = Solution.computeAllDirCoords(height,width,coord)
+            def get(coord1):
+                if coord1 in dSet:
+                    return dSet[coord1].findRoot()
+                else:
+                    return None
+            rootSet = set(filter(lambda x: x, map(get, ns)))
+            sz = 1
+            for s in rootSet:
+                sz += s.findRoot().size
+            maxSize = max(maxSize, sz)
+        return maxSize
+
+print(Solution().largestIsland([
     [1,0,1,1],
     [0,1,0,1],
     [0,0,0,1],
-])
+]))
