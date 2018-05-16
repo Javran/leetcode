@@ -1,3 +1,5 @@
+// easy and straightforward. nothing to say
+
 object Solution {
   def flipAndInvertImage(xs: Array[Array[Int]]): Array[Array[Int]] =
     xs.map(_.reverse.map(x => if (x == 0) 1 else 0))
