@@ -1,5 +1,13 @@
 #!/usr/bin/env python3
 
+# dynamic programming.
+#
+# - f[i,j] = f[i-1,j] + f[i,j-1] when there is no obstacle
+# - f[i,j] = 0 otherwise
+# note that since computing a row of f only requires data from previous row
+# we can actually save space by having just two arrays and alternating
+# between them to keep only last and second to last row of f.
+
 class Solution:
     def uniquePathsWithObstacles(self, grid):
         """
