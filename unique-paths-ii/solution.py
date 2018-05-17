@@ -40,6 +40,8 @@ class Solution:
 
 print(
     Solution().uniquePathsWithObstacles([
-        [1],
+        [0,0,1,0],
+        [0,0,0,0],
+        [1,0,0,0],
     ])
 )
