@@ -20,3 +20,13 @@ My LeetCode solutions, aiming at clear comments &amp; explanations.
 * [Reorder List](./src/ReorderList.cpp)
 * [Linked List Cycle II](./src/LinkedListCycleII.cpp)
 * [Linked List Cycle](./src/LinkedListCycle.cpp)
+
+# Regarding CSharp Programs (mono)
+
+Workaround for mono to work: `export TERM=xterm`
+
+(see: https://github.com/mono/mono/issues/6752#issuecomment-365212655)
+
+```shell
+mcs Solution.cs && mono Solution.ext
+```
