@@ -25,7 +25,7 @@ public class Solution {
         return s.Select(x => Int32.Parse(x.ToString())).ToList();
     }
 
-    static List<char> Uncons(char hd, IEnumerable<char> tl) {
+    static List<char> Cons(char hd, IEnumerable<char> tl) {
         List<char> xs = new List<char>(tl.Count()+1);
         xs.Add(hd);
         foreach(var t in tl)
@@ -42,7 +42,7 @@ public class Solution {
             return (
                 from yResult in y
                 from ysResults in Sequence(ys.ToList())
-                select Uncons(yResult, ysResults)
+                select Cons(yResult, ysResults)
             ).ToList();
         }
     }
