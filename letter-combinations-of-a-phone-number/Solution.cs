@@ -4,28 +4,39 @@ using System.Diagnostics;
 using System.Linq;
 
 public class Solution {
-    static List<string> MakeLetters(string s) {
-        List<char> cs = new List<char>();
-        cs.AddRange(s);
-        return cs.Select(x => x.ToString()).ToList();
+    static readonly Dictionary<int, List<char>> digitToLetters;
+
+    static Solution() {
+        digitToLetters = new Dictionary<int, List<char>>();
+        Action<int, string> def = (int i, string s) =>
+            digitToLetters[i] = s.ToList();
+
+        def(2, "abc");
+        def(3, "def");
+        def(4, "ghi");
+        def(5, "jkl");
+        def(6, "mno");
+        def(7, "pqrs");
+        def(8, "tuv");
+        def(9, "wxyz");
     }
 
     static List<int> GetDigits(string s) {
-        return MakeLetters(s).Select(x => Int32.Parse(x)).ToList();
+        return s.Select(x => Int32.Parse(x.ToString())).ToList();
     }
 
-    static List<List<string>> Sequence(List<List<string>> xs) {
+    static List<List<char>> Sequence(List<List<char>> xs) {
         if (xs.Count() == 0) {
-            return new List<List<string>>{new List<string>{} };
+            return new List<List<char>>{new List<char>{} };
         } else {
             var y = xs.First();
             var ys = xs.Skip(1);
             return y.SelectMany(yResult => Sequence(ys.ToList()).SelectMany(ysResult => {
-                        List<string> result = new List<string>(ysResult.Count() + 1);
+                        List<char> result = new List<char>(ysResult.Count() + 1);
                         result.Add(yResult);
                         foreach (var ysR in ysResult)
                             result.Add(ysR);
-                        return new List<List<string>>{result};
+                        return new List<List<char>>{result};
                     })).ToList();
         }
     }
@@ -45,18 +56,6 @@ public class Solution {
         */
         if (digitsRaw == "")
             return new List<string>{};
-
-        var digitToLetters = new Dictionary<int, List<string>>
-        {
-            { 2, MakeLetters("abc") },
-            { 3, MakeLetters("def") },
-            { 4, MakeLetters("ghi") },
-            { 5, MakeLetters("jkl") },
-            { 6, MakeLetters("mno") },
-            { 7, MakeLetters("pqrs") },
-            { 8, MakeLetters("tuv") },
-            { 9, MakeLetters("wxyz") },
-        };
 
         var letters = GetDigits(digitsRaw).Select(d => digitToLetters[d]).ToList();
         var results = Sequence(letters);
