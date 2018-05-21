@@ -28,5 +28,5 @@ Workaround for mono to work: `export TERM=xterm`
 (see: https://github.com/mono/mono/issues/6752#issuecomment-365212655)
 
 ```shell
-mcs Solution.cs && mono Solution.ext
+mcs Solution.cs && mono Solution.exe
 ```
