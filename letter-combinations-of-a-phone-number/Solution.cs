@@ -25,22 +25,29 @@ public class Solution {
         return s.Select(x => Int32.Parse(x.ToString())).ToList();
     }
 
+    static List<char> Uncons(char hd, IEnumerable<char> tl) {
+        List<char> xs = new List<char>(tl.Count()+1);
+        xs.Add(hd);
+        foreach(var t in tl)
+            xs.Add(t);
+        return xs;
+    }
+
     static List<List<char>> Sequence(List<List<char>> xs) {
         if (xs.Count() == 0) {
-            return new List<List<char>>{new List<char>{} };
+            return new List<List<char>>{new List<char>{}};
         } else {
             var y = xs.First();
             var ys = xs.Skip(1);
-            return y.SelectMany(yResult => Sequence(ys.ToList()).SelectMany(ysResult => {
-                        List<char> result = new List<char>(ysResult.Count() + 1);
-                        result.Add(yResult);
-                        foreach (var ysR in ysResult)
-                            result.Add(ysR);
-                        return new List<List<char>>{result};
-                    })).ToList();
+            return (
+                from yResult in y
+                from ysResults in Sequence(ys.ToList())
+                select Uncons(yResult, ysResults)
+            ).ToList();
         }
     }
 
+    // Solution: an exercise of implementing sequence :: t (m a) -> m (t a) in C#
     public IList<string> LetterCombinations(string digitsRaw) {
         /*
 
@@ -57,9 +64,14 @@ public class Solution {
         if (digitsRaw == "")
             return new List<string>{};
 
-        var letters = GetDigits(digitsRaw).Select(d => digitToLetters[d]).ToList();
-        var results = Sequence(letters);
-        return results.Select(xs => String.Join("", xs)).ToList();
+        var letters = digitsRaw.Select(dRaw => {
+            var d = Int32.Parse(dRaw.ToString());
+            return digitToLetters[d];
+        }).ToList();
+        return (
+            from xs in Sequence(letters)
+            select String.Join("", xs)
+        ).ToList();
     }
 
     static void Main(string[] args) {
