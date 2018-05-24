@@ -23,7 +23,7 @@ const threeSum = nums => {
 
   const uniqNumsSet = new Set()
   let zeroCount = 0
-  const dups = []
+  const dupsSet = new Set()
 
   for (let i = 0; i < nums.length; ++i) {
     const num = nums[i]
@@ -31,8 +31,8 @@ const threeSum = nums => {
       ++zeroCount;
     if (uniqNumsSet.has(num)) {
       // we have seen this number before.
-      if (num !== 0 && (dups.length === 0 || dups[dups.length-1] !== num))
-        dups.push(num)
+      if (num !== 0)
+        dupsSet.add(num)
     } else {
       uniqNumsSet.add(num)
     }
@@ -49,6 +49,8 @@ const threeSum = nums => {
     for (let j = i+1; j < uniqNums.length; ++j) {
       const b = uniqNums[j]
       const c = -a-b
+      // we also further require that a <= b <= c, so we don't
+      // have to worry about adding duplicated tuples
       if (c <= a || c <= b)
         continue
       if (uniqNumsSet.has(c))
@@ -57,8 +59,7 @@ const threeSum = nums => {
   }
 
   // (3) duplicated nums
-  for (let i = 0; i < dups.length; ++i) {
-    const num = dups[i]
+  for (num of dupsSet) {
     const c = -num-num
     if (uniqNumsSet.has(c)) {
       if (c > num) {
