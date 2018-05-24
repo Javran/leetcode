@@ -21,9 +21,7 @@ const binarySearch = (xs, target, loIndIn, hiIndIn) => {
  * @param {number[]} nums
  * @return {number[][]}
  */
-const threeSum = numsInp => {
-  // we would prefer not to mutate the input if possible
-  let nums = [...numsInp]
+const threeSum = nums => {
   // sorting gives nice invariants that we can use
   nums.sort((x,y) => x - y)
 
