@@ -2,27 +2,27 @@ object Solution {
   /*
    TYPE INVARIANT:
 
-   - every number in range [0..9999], starting from
+   - every number in range [0..99999999], starting from
      least significant digits to most significant digits
 
    - all auxiliary functions (with "Aux") are not required to normalize their outputs
 
    */
-  type BigNum = List[Short]
+  type BigNum = List[Int]
 
-  val zero: BigNum = (0 : Short) :: Nil
+  val zero: BigNum = 0 :: Nil
 
   def rawToBigNum(raw: String): BigNum = {
-    val padLen = 4 - (raw.length % 4)
+    val padLen = 8 - (raw.length % 8)
     // padding raw input
     val paddedRaw =
-      if (padLen == 4)
+      if (padLen == 8)
         raw
       else
         "0"*padLen + raw
     // break into chunks
-    val grouped = paddedRaw.grouped(4)
-      .map(_.toShort)
+    val grouped = paddedRaw.grouped(8)
+      .map(_.toInt)
       .dropWhile(_ == 0)
       .toList
     if (grouped.length == 0)
@@ -57,25 +57,32 @@ object Solution {
     }
   }
 
-  def multiplyAux(xs: BigNum, v: Short, carry: Short): BigNum = xs match {
+  def multiplyAux(xs: BigNum, v: Int, carry: Int): BigNum = xs match {
     case Nil =>
       if (carry > 0)
         carry :: Nil
       else
         Nil
+    case _ if v == 0 =>
+      // observation: only number causing number size to shrink
+      // is by multiplying zero
+      if (carry > 0)
+        carry :: Nil
+      else
+        Nil
     case y :: ys =>
-      // need Int so it won't overflow
-      val tmp : Int = y.toInt * v.toInt + carry.toInt
-      val lo = (tmp % 10000).toShort
-      val hi = (tmp / 10000).toShort
+      // need Long so it won't overflow
+      val tmp : Long = y.toLong * v.toLong + carry.toLong
+      val lo = (tmp % 100000000).toInt
+      val hi = (tmp / 100000000).toInt
       lo :: multiplyAux(ys, v, hi)
   }
 
-  def addAux(a: BigNum, b: BigNum, carry: Short): BigNum = (a, b) match {
+  def addAux(a: BigNum, b: BigNum, carry: Int): BigNum = (a, b) match {
     case (x :: xs, y :: ys) =>
-      val tmp = x.toInt + y.toInt + carry.toInt
-      val lo = (tmp % 10000).toShort
-      val hi = (tmp / 10000).toShort
+      val tmp = x.toLong + y.toLong + carry.toLong
+      val lo = (tmp % 100000000).toInt
+      val hi = (tmp / 100000000).toInt
       lo :: addAux(xs, ys, hi)
     case (Nil, Nil) =>
       if (carry > 0)
@@ -94,7 +101,7 @@ object Solution {
     def combine(cs: List[BigNum]): BigNum = cs match {
       case Nil => Nil
       case x :: xs =>
-        addAux(x, combine(xs.map((0 : Short) :: _)), 0)
+        addAux(x, combine(xs.map(0 :: _)), 0)
     }
     normBigNum(combine(components))
   }
@@ -103,7 +110,7 @@ object Solution {
     case Nil =>
       "0"
     case y :: ys =>
-      y.toString + ys.map(x => f"${x}%04d").mkString("")
+      y.toString + ys.map(x => f"${x}%08d").mkString("")
   }
 
   def multiply(numRaw1: String, numRaw2: String): String = {
@@ -116,7 +123,7 @@ object Solution {
     val a = "00066615516655"
     val b = "0114514810893"
     println(rawToBigNum(a))
-    println(multiplyAux(rawToBigNum(b), 1234 : Short, 0 : Short))
+    println(multiplyAux(rawToBigNum(b), 1234 : Int, 0 : Int))
     println(addAux(rawToBigNum("0"), rawToBigNum("9999"), 1))
     println(multiply(a,b))
     println(multiply(b,a))
