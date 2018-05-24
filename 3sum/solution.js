@@ -1,22 +1,3 @@
-// for performing binary search in a sorted array
-const binarySearch = (xs, target, loIndIn, hiIndIn) => {
-  let loInd = loIndIn, hiInd = hiIndIn
-
-  while (loInd <= hiInd) {
-    const midInd = Math.floor((loInd+hiInd) / 2)
-    if (xs[midInd] === target) {
-      return midInd
-    } else if (xs[midInd] < target) {
-      loInd = midInd+1
-    } else {
-      // xs[midInd] > target
-      hiInd = midInd-1
-    }
-  }
-
-  return null
-}
-
 /**
  * @param {number[]} nums
  * @return {number[][]}
@@ -39,38 +20,38 @@ const threeSum = nums => {
      - (3) a,b,c has two duplicates
 
    */
-  // (1) looking for 3 zeros (as it is sorted, it has to be consecutive)
-  let zInd = binarySearch(nums,0,0,nums.length-1)
-  // find first 0
-  while (zInd !== null && zInd-1 >= 0 && nums[zInd-1] === 0)
-    --zInd;
-  if (zInd !== null && zInd+2 < nums.length && nums[zInd+2] === 0) {
-    pairFound(0,0)
-  }
 
-  const uniqNums = []
+  const uniqNumsSet = new Set()
+  let zeroCount = 0
   const dups = []
 
   for (let i = 0; i < nums.length; ++i) {
     const num = nums[i]
-    if (uniqNums.length > 0 && uniqNums[uniqNums.length-1] === num) {
+    if (num === 0)
+      ++zeroCount;
+    if (uniqNumsSet.has(num)) {
       // we have seen this number before.
       if (num !== 0 && (dups.length === 0 || dups[dups.length-1] !== num))
         dups.push(num)
+    } else {
+      uniqNumsSet.add(num)
     }
-    if (uniqNums.length === 0 || uniqNums[uniqNums.length-1] !== num)
-      uniqNums.push(num)
   }
+  // (1) looking for 3 zeros (as it is sorted, it has to be consecutive)
+  if (zeroCount >= 3)
+    pairFound(0,0)
 
+  // as Set maintains insertion order, it is safe spreading it.
+  const uniqNums = [...uniqNumsSet.values()]
   // (2) looking for a+b+c=0 where a != b, b != c, c != a
   for (let i = 0; i < uniqNums.length; ++i) {
     const a = uniqNums[i]
     for (let j = i+1; j < uniqNums.length; ++j) {
       const b = uniqNums[j]
       const c = -a-b
-      if (c === a || c === b)
+      if (c <= a || c <= b)
         continue
-      if (binarySearch(uniqNums, c,j+1, uniqNums.length-1) !== null)
+      if (uniqNumsSet.has(c))
         pairFound(a,b)
     }
   }
@@ -79,7 +60,7 @@ const threeSum = nums => {
   for (let i = 0; i < dups.length; ++i) {
     const num = dups[i]
     const c = -num-num
-    if (binarySearch(uniqNums, c, 0, uniqNums.length-1) !== null) {
+    if (uniqNumsSet.has(c)) {
       if (c > num) {
         // num = num < c
         pairFound(num, num)
