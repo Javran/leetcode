@@ -11,6 +11,13 @@ object Solution {
   type BigNum = List[Int]
 
   val zero: BigNum = 0 :: Nil
+  val bgBase: Long = 100000000
+
+  def splitNum(tmp: Long): (Int, Int) = {
+    val lo = (tmp % bgBase).toInt
+    val hi = (tmp / bgBase).toInt
+    (lo, hi)
+  }
 
   def rawToBigNum(raw: String): BigNum = {
     val padLen = 8 - (raw.length % 8)
@@ -44,10 +51,8 @@ object Solution {
         // all zeroes
         Nil
       case (zeros, nonZeros) =>
-        nonZeros.span(_ != 0) match {
-          case (nonZeros1, zeros1) =>
-            zeros ::: nonZeros1 ::: normBigNumAux(zeros1)
-        }
+        val (nonZeros1, zeros1) = nonZeros.span(_ != 0)
+        zeros ::: nonZeros1 ::: normBigNumAux(zeros1)
     }
 
     // step 2: all Nils should be [0]s so that we keep a non-empty rep
@@ -73,16 +78,14 @@ object Solution {
     case y :: ys =>
       // need Long so it won't overflow
       val tmp : Long = y.toLong * v.toLong + carry.toLong
-      val lo = (tmp % 100000000).toInt
-      val hi = (tmp / 100000000).toInt
+      val (lo, hi) = splitNum(tmp)
       lo :: multiplyAux(ys, v, hi)
   }
 
   def addAux(a: BigNum, b: BigNum, carry: Int): BigNum = (a, b) match {
     case (x :: xs, y :: ys) =>
       val tmp = x.toLong + y.toLong + carry.toLong
-      val lo = (tmp % 100000000).toInt
-      val hi = (tmp / 100000000).toInt
+      val (lo, hi) = splitNum(tmp)
       lo :: addAux(xs, ys, hi)
     case (Nil, Nil) =>
       if (carry > 0)
