@@ -1,3 +1,5 @@
+// TODO: this solution is slow,
+// I went for JS to fast prototype a quicker one, would come back later.
 #include <stdio.h>
 #include <stdlib.h>
 
