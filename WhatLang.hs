@@ -8,7 +8,7 @@ module Main where
 import System.Random
 
 languages :: [String]
-languages = words "C++ Java Python3 C C# JavaScript Ruby Scala Kotlin"
+languages = words "Python3 C# JavaScript Ruby Scala Kotlin"
 
 langCount :: Int
 langCount = length languages
