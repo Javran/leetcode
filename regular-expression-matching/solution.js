@@ -8,7 +8,7 @@ const buildFSA = pattern => {
   }
 
   const startState = mkState()
-  // transitions.get(state).get(<echar>) = <state>
+  // transitions.get(state).get(<echar>) = Set of <state>
   // <echar>: can be a single character, '.' or 'EPS' (echar for extended char)
   const transitions = new Map()
 
@@ -58,7 +58,9 @@ const buildFSA = pattern => {
     }
   }
 
-  const eClosure = stateSet => {
+  // find epsilon closure
+  const eClosure = stateSetInp => {
+    const stateSet = new Set(stateSetInp)
     const newStates = new Set()
     stateSet.forEach(state => {
       const nexts = lookup(state, 'EPS')
@@ -93,10 +95,8 @@ const buildFSA = pattern => {
     return eClosure(endStateSet)
   }
 
-  const startStates = eClosure(new Set([startState]))
-
   return {
-    startStates,
+    mkStartStates: () => eClosure(new Set([startState])),
     nextStates,
     acceptingState,
   }
@@ -109,7 +109,7 @@ const buildFSA = pattern => {
  */
 const isMatch = (str, pattern) => {
   const fsa = buildFSA(pattern)
-  let curStates = new Set(fsa.startStates)
+  let curStates = fsa.mkStartStates()
   for (let i = 0; i < str.length; ++i) {
     curStates = fsa.nextStates(curStates, str[i])
   }
