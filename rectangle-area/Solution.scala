@@ -10,6 +10,7 @@ object Solution {
   // a segment is (a,b) where a <= b
   type Seg = (Int, Int)
 
+  // smart constructor
   def mkSeg(a: Int, b: Int): Seg =
     if (a <= b)
       (a, b)
@@ -31,11 +32,16 @@ object Solution {
   def segIntersectLen(a: Seg, b: Seg): Int = {
     val (aL, aR) = a
     val (bL, bR) = b
+    // don't worry if there are less than 4 unique elements,
+    // as a segment of length 0 contributes nothing.
     val sorted = List(aL, aR, bL, bR).sorted
+    // zip with an offset of one to create all smallest segments we can have
     val smallSegs = sorted.zip(sorted.tail)
+    // pick only those in common
     val commonSegs = smallSegs.filter(seg =>
       segCovered(seg, a) && segCovered(seg,b)
     )
+    // and figure out length of intersection
     return commonSegs.map(segSpan).sum
   }
 
