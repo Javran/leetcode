@@ -39,3 +39,6 @@ node_modules/
 
 # Java
 *.class
+
+# Kotlin
+META-INF/
