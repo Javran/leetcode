@@ -1,3 +1,5 @@
+import java.lang.Math
+
 /*
 
 math problem in disguise.
@@ -27,10 +29,14 @@ to the question - just do floor(sqrt(n)) and we are done.
 */
 
 class Solution {
+    fun bulbSwitch(n: Int): Int {
+        return Math.floor(Math.sqrt(n.toDouble())).toInt()
+    }
+
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-            println("placeholder")
+            println(Solution().bulbSwitch(10))
         }
     }
 }
