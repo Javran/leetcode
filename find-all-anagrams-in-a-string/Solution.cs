@@ -2,21 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+/*
+  TyDigest is a type for digest of interest:
+  a char is contained if and only if the char presents in the pattern.
+*/
 using TyDigest = System.Collections.Generic.Dictionary<char, int>;
 
 public class Solution {
-    public static TyDigest Digest(string s) {
-        var ret = new Dictionary<char, int>();
-        foreach (var ch in s) {
-            if (ret.ContainsKey(ch)) {
-                ret[ch] += 1;
-            } else {
-                ret[ch] = 1;
-            }
-        }
-        return ret;
-    }
-
     public static bool Matches(TyDigest d, TyDigest pat) {
         foreach (var k in pat.Keys) {
             if (!d.ContainsKey(k) || d[k] != pat[k])
@@ -25,24 +17,22 @@ public class Solution {
         return true;
     }
 
-    public static void NextDigest(char oldCh, char newCh, TyDigest dCurrent, TyDigest pat) {
-        if (oldCh == newCh)
-            return;
-        if (dCurrent.ContainsKey(oldCh))
-            dCurrent[oldCh] -= 1;
-        if (dCurrent.ContainsKey(newCh))
-            dCurrent[newCh] += 1;
-    }
-
     public IList<int> FindAnagrams(string s, string p) {
         var ans = new List<int>();
         if (s.Length < p.Length)
             return ans;
 
         // digest pattern
-        var dPattern = Digest(p);
+        var dPattern = new Dictionary<char, int>();
         // digest current part
         var dCurrent = new Dictionary<char, int>();
+        foreach (var ch in p) {
+            if (dPattern.ContainsKey(ch)) {
+                dPattern[ch] += 1;
+            } else {
+                dPattern[ch] = 1;
+            }
+        }
         foreach (var k in dPattern.Keys) {
             dCurrent[k] = 0;
         }
@@ -57,8 +47,17 @@ public class Solution {
             if (Matches(dCurrent, dPattern)) {
                 ans.Add(i);
             }
-            if (i+p.Length < s.Length)
-                NextDigest(s[i], s[i+p.Length], dCurrent, dPattern);
+            // sliding window, but only focus on pattern chars
+            if (i+p.Length < s.Length) {
+                var oldCh = s[i];
+                var newCh = s[i+p.Length];
+                if (oldCh == newCh)
+                    continue;
+                if (dCurrent.ContainsKey(oldCh))
+                    dCurrent[oldCh] -= 1;
+                if (dCurrent.ContainsKey(newCh))
+                    dCurrent[newCh] += 1;
+            }
         }
 
         return ans;
