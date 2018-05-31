@@ -9,6 +9,7 @@ const isPerfectSquare = n => {
   // n must now be non-negative integer
   if (n < 4)
     return n <= 1
+  // binary search #FTW
   let l = 2, r = n
   while (l <= r) {
     const u = Math.floor((l+r)/2)
