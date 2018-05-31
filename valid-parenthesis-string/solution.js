@@ -7,9 +7,6 @@ var checkValidString = xs => {
   // we just need to maintain a non-deterministic state because
   // of existence of the wildcard '*'
   let unbalanceSet = new Set([0])
-  const next = (unbalance, ch, curSet) => {
-  }
-
   for (let i = 0; i < xs.length; ++i) {
     const ch = xs[i]
     const nextSet = new Set()
