@@ -6,17 +6,35 @@ class TreeNode(var _value: Int) {
   override def toString: String = {
     val lStr = if (left == null) "-" else left.toString
     val rStr = if (right == null) "-" else right.toString
-    s"TreeNode(${value}, ${lStr}, ${rStr})"
+    s"TreeNode(${value},${lStr},${rStr})"
   }
 }
 
 /*
+
+ base case:
+
+ - split on null => return (null, null)
+ - or when we are right at the matching node: (when root.value == V)
+
+     A             A
+    / \    ===> ( / , C)
+   B   C         B
+
+ for all other cases:
+
+ - we need to go all the way down to the splitting point
+ - do base case
+ - recover until we have the full tree split into two,
+   which can be easily taken care of by BST zipper
+
  */
 object Solution {
   sealed trait Dir
   final case class Left() extends Dir
   final case class Right() extends Dir
 
+  // SplitResult = (<less-than-or-equal-to-tree>, <greater-than-tree>)
   type SplitResult = (TreeNode, TreeNode)
   type Breadcrumb = List[(Dir, TreeNode)]
 
@@ -28,18 +46,32 @@ object Solution {
       val newResult = dir match {
         case Left() =>
           /*
-           We were taking left path:
-              root
-             /   \
-            T     ?
-           and now T has been split into (newL, newR).
+           
+           We were taking the left path:
 
-           which means we should recover context on newR and keep newL intact
+              root
+             /    \
+            T      ?
+
+           and now T has been split into (newL, newR).
+           which means we should recover context on newR and keep newL intact.
+
            */
           root.left = newR
           (newL, root)
         case Right() =>
-          // was going right.
+          /*
+
+           Symmetric case:
+
+              root
+             /    \
+            ?      T
+
+           and T has been split into (newL, newR).
+           recover context on newL.
+
+           */
           root.right = newL
           (root, newR)
       }
@@ -47,18 +79,21 @@ object Solution {
   }
 
   def splitBSTAux(V: Int, root: TreeNode, bc: Breadcrumb): SplitResult = {
-    if (root == null) {
-      untrace(bc)((null, null))
-    } else if (root.value == V) {
-      val oldRight = root.right
-      root.right = null
-      untrace(bc)((root, oldRight))
-    } else if (root.value < V) {
-      splitBSTAux(V, root.right, (Right(), root) :: bc)
-    } else {
-      // root.value > V
-      splitBSTAux(V, root.left, (Left(), root) :: bc)
+    def splitAux(root: TreeNode, bc: Breadcrumb): SplitResult = {
+      if (root == null) {
+        untrace(bc)((null, null))
+      } else if (root.value == V) {
+        val oldRight = root.right
+        root.right = null
+        untrace(bc)((root, oldRight))
+      } else if (root.value < V) {
+        splitAux(root.right, (Right(), root) :: bc)
+      } else {
+        // root.value > V
+        splitAux(root.left, (Left(), root) :: bc)
+      }
     }
+    splitAux(root,bc)
   }
 
   def splitBST(root: TreeNode, V: Int): Array[TreeNode] = {
