@@ -10,6 +10,8 @@ class TreeNode(var _value: Int) {
   }
 }
 
+/*
+ */
 object Solution {
   sealed trait Dir
   final case class Left() extends Dir
@@ -23,16 +25,25 @@ object Solution {
       r
     case (dir, root) :: tl =>
       val (newL, newR) = r
-      dir match {
+      val newResult = dir match {
         case Left() =>
-          // was going left.
+          /*
+           We were taking left path:
+              root
+             /   \
+            T     ?
+           and now T has been split into (newL, newR).
+
+           which means we should recover context on newR and keep newL intact
+           */
           root.left = newR
-          untrace(tl)((newL, root))
+          (newL, root)
         case Right() =>
           // was going right.
           root.right = newL
-          untrace(tl)((root, newR))
+          (root, newR)
       }
+      untrace(tl)(newResult)
   }
 
   def splitBSTAux(V: Int, root: TreeNode, bc: Breadcrumb): SplitResult = {
