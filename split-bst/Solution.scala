@@ -6,7 +6,7 @@ class TreeNode(var _value: Int) {
   override def toString: String = {
     val lStr = if (left == null) "-" else left.toString
     val rStr = if (right == null) "-" else right.toString
-    s"TreeNode(${value},${lStr},${rStr})"
+    s"(${lStr}|${value}|${rStr})"
   }
 }
 
