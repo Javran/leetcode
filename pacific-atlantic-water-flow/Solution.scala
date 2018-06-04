@@ -21,10 +21,13 @@ object Solution {
      */
 
     // whether we can move from a to b
+    // NOTE: this function should only be called by "allPossibleDirs"
+    // to ensure that "a" and "b" are neighbors
     def canMove(a: Coord, b: Coord): Boolean = {
       val ((x0, y0), (x1, y1)) = (a,b)
-      val dist = Math.abs(x0-x1) + Math.abs(y0-y1)
-      dist == 1 && matrix(x0)(y0) >= matrix(x1)(y1)
+      // no need of distance check.
+      // val dist = Math.abs(x0-x1) + Math.abs(y0-y1)
+      matrix(x0)(y0) >= matrix(x1)(y1)
     }
 
     // give all possible moving directions
