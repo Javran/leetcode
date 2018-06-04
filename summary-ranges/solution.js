@@ -3,8 +3,23 @@
  * @return {string[]}
  */
 const summaryRanges = nums => {
+  /*
+     a linear scan should do the job.
+     we need "curRange" to keep track of current range
+     that we are building, and we expand its end whenever possible,
+     or start a new curRange otherwise
+   */
   const ranges = []
   let curRange = null
+
+  const recordResult = () => {
+    const str = curRange[0] === curRange[1] ?
+      String(curRange[0]) :
+      `${curRange[0]}->${curRange[1]}`
+    ranges.push(str)
+    curRange = null
+  }
+
   nums.map(num => {
     if (curRange === null) {
       curRange = [num, num]
@@ -14,19 +29,14 @@ const summaryRanges = nums => {
       curRange[1] = num
     } else {
       // need to start a new chunk
-      ranges.push(curRange)
+      recordResult()
       curRange = [num, num]
     }
   })
   if (curRange !== null) {
-    ranges.push(curRange)
-    curRange = null
+    recordResult()
   }
-  return ranges.map(range =>
-    range[0] === range[1] ?
-      String(range[0]) :
-      `${range[0]}->${range[1]}`
-  )
+  return ranges
 }
 
 console.log(summaryRanges([0,1,2,4,5,7]))
