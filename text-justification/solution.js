@@ -29,6 +29,7 @@ const fullJustify = (words, maxWidth) => {
     }
   }
 
+  // this part takes care of groupping words into rows
   const ansRows = []
   words.map(w => {
     const afterLen = afterNewCurMinLen(w)
@@ -47,9 +48,12 @@ const fullJustify = (words, maxWidth) => {
   const fullJustify = row => {
     const spaces = maxWidth - sum(row.map(x => x.length))
     if (row.length === 1) {
+      // special case when we only have one word on that line
       return row[0] + ' '.repeat(spaces)
     }
+    // create separators
     const seps = intDiv(spaces, row.length-1).map(x => ' '.repeat(x))
+    // interleave words with separators
     const curRow = []
     for (let i = 0; i < row.length-1; ++i) {
       curRow.push(row[i])
@@ -59,6 +63,7 @@ const fullJustify = (words, maxWidth) => {
     return curRow.join('')
   }
 
+  // fully justify all lines except last one
   for (let i = 0; i < ansRows.length - 1; ++i) {
     ansRows[i] = fullJustify(ansRows[i])
   }
