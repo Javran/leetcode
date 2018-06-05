@@ -1,3 +1,6 @@
+// let's do rational numbers
+//   instead of imprecise floating ones
+//   just for fun XD
 // RU: short for Ratio Utils
 object RU {
   // hopefully numerator and denominator won't blow up
@@ -53,6 +56,8 @@ object RU {
     (sign * (a1/c), b1/c)
   }
 
+  // non-determinisitically perform one operation of +,-,*,/
+  // and return all distinct results
   def combine(a: Ratio, b: Ratio): List[Ratio] = (
     for (
       op <- List[(Ratio, Ratio) => Ratio](add, sub, mul, div);
@@ -66,6 +71,8 @@ object Solution {
   type Ratio = RU.Ratio
   type Nums = List[Ratio]
 
+  // non-determinisitically pick one value from existing list
+  // returns list of (<picked>, <all other elements)
   def chooseOne[T](xs: List[T]): List[(T, List[T])] = xs match {
     case Nil => Nil
     case y :: ys =>
@@ -86,6 +93,7 @@ object Solution {
       ) yield result :: remained2
 
     val results = for (
+      // 3 steps to combine 4 numbers into one
       rs <- step(step(step(initStates)))
       if rs.length == 1 && rs.head == (24, 1)
     ) yield rs.head
