@@ -1,4 +1,4 @@
-import scala.collection.mutable.ArrayBuffer
+import scala.annotation.tailrec
 
 /*
  
@@ -23,32 +23,23 @@ object Solution {
     curPriority: Int
   )
 
-  def parse(raw: List[Char]): List[Token] = {
-    val buf = new ArrayBuffer[Token]()
-    var inp = raw
-    while (inp != Nil) {
-      inp match {
-        case Nil =>
-          return buf.toList
-        case x :: xs =>
-          x match {
-            case _ if x.isSpaceChar =>
-              inp = xs.dropWhile(_.isSpaceChar)
-            case '(' | ')' | '+' | '-' =>
-              buf += Left(x)
-              inp = xs
-            case _ if x.isDigit =>
-              val (numsRaw, ys) = inp.span(_.isDigit)
-              buf += Right(numsRaw.mkString("").toInt)
-              inp = ys
-          }
+  @tailrec def parse(raw: List[Char], acc: List[Token]): List[Token] = raw match {
+    case Nil => acc.reverse
+    case x :: xs =>
+      x match {
+        case _ if x.isSpaceChar =>
+          parse(xs.dropWhile(_.isSpaceChar), acc)
+        case '(' | ')' | '+' | '-' =>
+          parse(xs, Left(x) :: acc)
+        case _ if x.isDigit =>
+          val (numsRaw, ys) = raw.span(_.isDigit)
+          parse(ys, Right(numsRaw.mkString("").toInt) :: acc)
       }
-    }
-    return buf.toList
   }
 
   // force a machine to run until all ops with priority >= given priority is done
-  def force(m: Machine, priority: Int): Machine = {
+  // as both "-" and "-" happen to be left-associative, using ">=" won't get us into any trouble
+  @tailrec def force(m: Machine, priority: Int): Machine = {
     val Machine(numStack, opStack, _) = m
     opStack match {
       case (op, opPrior) :: opStack1 if opPrior >= priority =>
@@ -84,7 +75,7 @@ object Solution {
   }
 
   def calculate(s: String): Int = {
-    val tokens = parse(s.toList)
+    val tokens = parse(s.toList, Nil)
     val m = force(tokens.foldLeft(Machine(Nil, Nil, 1))(interpret), -1)
     m.numStack.head
   }
