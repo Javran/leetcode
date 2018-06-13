@@ -29,7 +29,7 @@ const validWordAbbreviation = (word, abbrRaw) => {
     if (isDigit(ch)) {
       let j = i
       while (j+1 < abbrRaw.length && isDigit(abbrRaw[j+1]))
-             ++j
+        ++j
       // a "takeWhile"
       const d = abbrRaw.slice(i,j+1)
       // invalid abbr because the digit starts with 0
@@ -41,7 +41,7 @@ const validWordAbbreviation = (word, abbrRaw) => {
     } else {
       let j = i
       while (j+1 < abbrRaw.length && !isDigit(abbrRaw[j+1]))
-             ++j
+        ++j
       const w = abbrRaw.slice(i,j+1)
       if (!tryMatch(w))
         return false
