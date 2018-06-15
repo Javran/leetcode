@@ -12,7 +12,6 @@ const lengthOfLIS = nums => {
   // (or in other words, most likely to grow longer)
   const dp = new Array(nums.length)
   let curLen = 0
-  let maxLen = 0
   for (let i = 0; i < nums.length; ++i) {
     const num = nums[i]
     if (curLen === 0 || dp[curLen-1] < num) {
