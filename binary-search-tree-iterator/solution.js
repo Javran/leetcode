@@ -3,6 +3,8 @@ function TreeNode(val) {
   this.left = this.right = null;
 }
 
+// continuation passing preorder traversal.
+// which allows us to suspend in the middle of a traversal
 const preOrderK = (root, fk, cont) => {
   root ?
     preOrderK(root.left, fk, () =>
@@ -18,16 +20,23 @@ const preOrderK = (root, fk, cont) => {
  * @param {TreeNode} root - root of the binary search tree
  */
 const BSTIterator = function(root) {
+  // indicator of whether next value exists
+  // (for implementing hasNext)
   this.supply = false
   preOrderK(
     root,
     (node, k) => {
+      // visit current node
+      // value first goes to nextVal then nowVal, so the traversal is
+      // always one step ahead (this is to allow hasNext)
       this.nowVal = this.nextVal
       this.nextVal = node.val
       this.supply = true
+      // suspend traversal instead of executing right away
       this.nextK = k
     },
     () => {
+      // shift supply as always, but now traversal is over.
       this.nowVal = this.nextVal
       delete this.nextVal
       this.supply = false
