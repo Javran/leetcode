@@ -46,8 +46,23 @@ object Solution {
       case (e,ind) => e == ind+1
     })
 
+  // ref: http://www.cs.bham.ac.uk/~mdr/teaching/modules04/java2/TilesSolvability.html
+  def isSolvable(b: Board): Boolean = {
+    val inversionCount =
+      b.toList.filter(_ != 0).tails.map({
+        case x :: xs =>
+          xs.count(_ < x)
+        case Nil =>
+          0
+      }).sum
+    // width = 3 is odd, the number of inversions in a solvable situation is even.
+    (inversionCount & 1) == 0
+  }
+
   def slidingPuzzle(boardInp: Array[Array[Int]]): Int = {
     val board: Board = boardInp.flatten
+    if (!isSolvable(board))
+      return -1
     val visited: HashSet[Int] = new HashSet()
     val queue: Queue[(Board, Int)] = new Queue()
     queue += ((board, 0): (Board, Int))
@@ -63,6 +78,8 @@ object Solution {
       )
         queue += ((nextBoard, step+1): (Board, Int))
     }
+    // if "isSolvable" is correctly implemented, the next line
+    // should be unreachable
     return -1
   }
 
