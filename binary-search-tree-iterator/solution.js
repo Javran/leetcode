@@ -12,7 +12,7 @@ const preOrderK = (root, fk, cont) => {
         preOrderK(root.right, fk, cont)
       )
     ) :
-  cont()
+    cont()
 }
 
 /**
