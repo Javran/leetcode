@@ -5,11 +5,11 @@ function TreeNode(val) {
 
 // continuation passing preorder traversal.
 // which allows us to suspend in the middle of a traversal
-const preOrderK = (root, fk, cont) => {
+const inOrderK = (root, fk, cont) => {
   root ?
-    preOrderK(root.left, fk, () =>
+    inOrderK(root.left, fk, () =>
       fk(root, () =>
-        preOrderK(root.right, fk, cont)
+        inOrderK(root.right, fk, cont)
       )
     ) :
     cont()
@@ -23,7 +23,7 @@ const BSTIterator = function(root) {
   // indicator of whether next value exists
   // (for implementing hasNext)
   this.supply = false
-  preOrderK(
+  inOrderK(
     root,
     (node, k) => {
       // visit current node
