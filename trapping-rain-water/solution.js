@@ -5,6 +5,26 @@
 const trap = hs => {
   if (!Array.isArray(hs) || hs.length <= 2)
     return 0
+  /*
+
+     idea: to compute the sum of trapped water,
+     we compute each bin and put it together.
+     for the given array, we can break it down into 3 parts:
+
+     - first part is a increasing sequence of bins,
+       the amount of water depends on current max-height
+       and the height of current bin.
+
+     - second part is between left-most and right-most global maximum bins.
+       if we have multiple bins of maximum height, we might trap some water
+       in this part as well. Fortunately this part can be processed uniformly
+       with first part by simply figuring out the right-most maximum bin.
+
+     - third part is a decreasing sequence, which mirrors the first part.
+       In other words, a right-to-left scan until hitting the right-most
+       maximum bin should do the trick
+
+   */
 
   // first scan for the right-most max value
   let maxH = hs[0]
