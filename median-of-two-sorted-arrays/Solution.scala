@@ -77,7 +77,18 @@ object Solution {
     return math.min(as(aCut), bs(bCut))
   }
 
+  // note that k is zero-based.
   def findKth(k: Int, aView: ArrView, bView: ArrView): Int = {
+    /*
+     before passing to the real impl, there are tricks to reduce search space:
+
+     - if we were to find k-th element of two arrays, we can drop all values after
+       k-th element for both aView and bView.
+     - it should always be the case that findKth(k, aView, bView) === findKth(k, bView, aView)
+       since we know we are only searching cutting positions in aView,
+       we might take whatever smaller one of aView, bView to be the aView passed to real impl
+     
+     */
     val (as, (aL, aRInp)) = aView
     val (bs, (bL, bRInp)) = bView
     val aR = math.min(aRInp, aL+k+1)
