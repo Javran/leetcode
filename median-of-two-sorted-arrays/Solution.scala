@@ -89,6 +89,14 @@ object Solution {
   }
 
   def findMedianSortedArrays(nums1: Array[Int], nums2: Array[Int]): Double = {
+    /*
+     if we can find k-th smallest element among two sorted list,
+     this problem is as good as solved:
+     depending on the length of the array, we can do two things:
+     - if the length of the array l is even, need to take two middle values
+       and take their average
+     - otherwise we just need to find the element in the middle.
+     */
     val l = nums1.length + nums2.length
     val view1 = (nums1, (0, nums1.length))
     val view2 = (nums2, (0, nums2.length))
@@ -99,7 +107,7 @@ object Solution {
       (lo + hi).toDouble / 2
     } else {
       // odd
-      findKth(l/2, view1, view2)
+      findKth(l/2, view1, view2).toDouble
     }
   }
 
