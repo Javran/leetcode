@@ -31,6 +31,7 @@ const dailyTemperatures = ts => {
       ans[ind] = 0
     else
       ans[ind] = min
+    tsTable[t-30].pop()
   })
   return ans
 }
