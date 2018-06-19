@@ -6,7 +6,6 @@ const dailyTemperatures = ts => {
   // idea: range of temp is narrow,
   // if we keep track of all indices for temps
   // we should have enough time to find min one from it.
-  // TODO: slow, could be improved
   const sz = 100-30+1
   const tsTable = new Array(sz)
   for (let i = 0; i < sz; ++i)
@@ -20,7 +19,7 @@ const dailyTemperatures = ts => {
     for (let i = t+1; i <= 100; ++i) {
       const tTable = tsTable[i-30]
       const indF = tTable.findIndex(x => x > ind)
-      if (indF !== -1) {
+      if (tTable.length > 0 && tTable[0] > ind) {
         const actualInd = tTable[indF]
         if (min === null || min > actualInd - ind)
           min = actualInd - ind
@@ -31,7 +30,8 @@ const dailyTemperatures = ts => {
       ans[ind] = 0
     else
       ans[ind] = min
-    tsTable[t-30].pop()
+    // current ind is no longer of use.
+    tsTable[t-30].shift()
   })
   return ans
 }
