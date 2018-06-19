@@ -18,9 +18,8 @@ const dailyTemperatures = ts => {
     let min = null
     for (let i = t+1; i <= 100; ++i) {
       const tTable = tsTable[i-30]
-      const indF = tTable.findIndex(x => x > ind)
       if (tTable.length > 0 && tTable[0] > ind) {
-        const actualInd = tTable[indF]
+        const actualInd = tTable[0]
         if (min === null || min > actualInd - ind)
           min = actualInd - ind
         continue
