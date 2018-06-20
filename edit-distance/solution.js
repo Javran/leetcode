@@ -19,6 +19,11 @@ const minDistance = (word1, word2) => {
    */
   const m = word1.length
   const n = word2.length
+  if (m === 0)
+    return n
+  if (n === 0)
+    return m
+
   const dist = new Array(m+1)
   for (let i = 0; i <= m; ++i)
     dist[i] = new Uint16Array(n+1)
@@ -28,10 +33,13 @@ const minDistance = (word1, word2) => {
     dist[0][j] = j
   for (let i = 1; i <= m; ++i)
     for (let j = 1; j <= n; ++j) {
-      let min = Math.min(dist[i-1][j], dist[i][j-1]) + 1
       let replaceOrKeep =
         (word1[i-1] === word2[j-1]) ? dist[i-1][j-1] : dist[i-1][j-1] + 1
-      min = Math.min(min, replaceOrKeep)
+      const min = Math.min(
+        dist[i-1][j] + 1,
+        dist[i][j-1] + 1,
+        replaceOrKeep
+      )
       dist[i][j] = min
     }
   return dist[m][n]
