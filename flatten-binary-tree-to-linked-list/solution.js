@@ -17,6 +17,7 @@ const flatten = root => {
   const go = root => {
     if (root) {
       const l = root.left, r = root.right
+      // repurposing current node
       cur.right = root
       root.left = null, root.right = null
       cur = root
