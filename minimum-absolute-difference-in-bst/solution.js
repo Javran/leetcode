@@ -10,6 +10,8 @@
  * @return {number}
  */
 const getMinimumDifference = root => {
+  // NOTE: exactly same code (except for function name)
+  // for minimum-distance-between-bst-nodes
   // observation: the min diff can only be between two consecutive values
   // in BST's in-order traversal
   let min = null
