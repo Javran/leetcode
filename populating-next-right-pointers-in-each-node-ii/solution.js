@@ -26,11 +26,19 @@ const connect = root => {
           l.next = r
           ret[i+1] = r
         } else if (l && !r) {
-          ret[i+1] = l
+          // note that once r is empty, all following values
+          // of rs must be falsy, so here we can short circuit a bit
+          for (/* NOOP */; i < sz; ++i)
+            ret[i+1] = ls[i]
+          break
         } else if (!l && r) {
-          ret[i+1] = r
+          for (/* NOOP */; i < sz; ++i)
+            ret[i+1] = rs[i]
+          break
         } else {
-          ret[i+1] = null
+          // this part should actually be unreachable
+          // because the size of the array is the max of two
+          throw "unreachable"
         }
       }
       // finally adding first node
