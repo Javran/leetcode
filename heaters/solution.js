@@ -14,6 +14,9 @@ const findRadius = (hs, es) => {
   hs.sort(cmp)
   es.sort(cmp)
 
+  // idea: keep track of left side and right side (including current position for
+  // both sides), then min(ansL[x], ansR[x]) should be the radius for house x
+  // to be heated
   const ansL = new Array(hs.length)
   const ansR = new Array(hs.length)
   // scan from left to figure out ansL
