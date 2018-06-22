@@ -10,30 +10,24 @@
  * @return {ListNode}
  */
 const plusOne = head => {
+  // idea: use return value as carry flag.
   const go = head => {
-    if (head.next === null) {
-      ++head.val
-      if (head.val === 10) {
+    if (!head)
+      return false
+    const carry = go(head.next)
+    if (carry || head.next === null) {
+      // either it's the last digit or we need to respect carry flag
+      if (head.val === 9) {
         head.val = 0
         return true
       } else {
-        return false
-      }
-    } else {
-      const carry = go(head.next)
-      if (carry) {
         ++head.val
-        if (head.val === 10) {
-          head.val = 0
-          return true
-        } else {
-          return false
-        }
-      } else {
         return false
       }
     }
+    return false
   }
+
   const carry = go(head)
   if (carry) {
     const newNode = new ListNode(1)
