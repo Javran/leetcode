@@ -10,8 +10,11 @@
  * @return {number}
  */
 const longestUnivaluePath = root => {
+  // idea: traverse the tree, compute "univalue" height of left & right children
+  // and because all paths can be split into left height + right height
+  // the traversal guarantees to find the longest one.
   let max = 0
-  // return [ans, height] (of that node)
+  // compute longest "univalue" height
   const go = root => {
     if (root) {
       const lHeight = go(root.left)
