@@ -4,13 +4,13 @@
  */
 const generatePossibleNextMoves = s => {
   const locs = []
+  const ans = []
   for (let i = 1; i < s.length; ++i) {
-    if (s[i-1] === '+' &&s [i] === '+')
-      locs.push(i-1)
+    if (s[i-1] === '+' &&s [i] === '+') {
+      ans.push(s.substring(0, i-1) + '--' + s.substring(i+1))
+    }
   }
-  return locs.map(loc => {
-    return s.substring(0, loc) + '--' + s.substring(loc+2)
-  })
+  return ans
 }
 
 console.log(generatePossibleNextMoves("++--++++"))
