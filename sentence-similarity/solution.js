@@ -8,6 +8,7 @@ const areSentencesSimilar = (words1, words2, pairs) => {
   if (words1.length !== words2.length)
     return false
   const n = words1.length
+  // record similar words
   const simMap = new Map()
   pairs.forEach(([u,v]) => {
     if (!simMap.has(u))
