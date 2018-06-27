@@ -17,16 +17,16 @@ const updateMatrix = mat => {
     for (let j = 0; j < cols; ++j) {
       if (mat[i][j] === 0) {
         // all 0s are starting points for BFS
-        queue.push([i,j,0 /* depth */])
+        queue.push({x:i, y:j, dep: 0})
       }
     }
   }
   let qHead = 0
   while (qHead < queue.length) {
-    const [x,y,dep] = queue[qHead]
+    const {x,y,dep} = queue[qHead]
     const tryInsert = (x,y) => {
       if (ans[x][y] === null)
-        queue.push([x, y, dep+1])
+        queue.push({x, y, dep: dep+1})
     }
     ++qHead
     // when it's possible to update.
