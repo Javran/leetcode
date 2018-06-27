@@ -24,24 +24,26 @@ const updateMatrix = mat => {
   let qHead = 0
   while (qHead < queue.length) {
     const [x,y,dep] = queue[qHead]
+    const tryInsert = (x,y) => {
+      if (ans[x][y] === null)
+        queue.push([x, y, dep+1])
+    }
     ++qHead
-    if (
-      ans[x][y] === null
-    ) {
-      // when it's possible to update.
+    // when it's possible to update.
+    if (ans[x][y] === null) {
       ans[x][y] = dep
       // extend.
       if (x > 0) {
-        queue.push([x-1, y, dep+1])
+        tryInsert(x-1,y)
       }
       if (x+1 < rows) {
-        queue.push([x+1, y, dep+1])
+        tryInsert(x+1,y)
       }
       if (y > 0) {
-        queue.push([x, y-1, dep+1])
+        tryInsert(x,y-1)
       }
       if (y+1 < cols) {
-        queue.push([x, y+1, dep+1])
+        tryInsert(x,y+1)
       }
     }
   }
