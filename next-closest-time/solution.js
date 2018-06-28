@@ -26,7 +26,8 @@ const nextClosestTime = S => {
   }
 
   // search space is relatively small, let's try them all.
-  const searchSpace = []
+  // we have a non-empty search space, so null will never be returned
+  let ans = null
   {
     const curSearch = new Array(4)
     const build = dep => {
@@ -41,7 +42,8 @@ const nextClosestTime = S => {
           const ret = mkHHMM(hh,mm)
           if (ret.total <= inpHHMM.total)
             ret.total += 24*60
-          searchSpace.push(ret)
+          if (ans === null || ans.total > ret.total)
+            ans = ret
         }
         return
       }
@@ -51,12 +53,9 @@ const nextClosestTime = S => {
       })
     }
     build(0)
-    // in ascending ord to get the closest time.
-    searchSpace.sort((x,y) => x.total - y.total)
   }
-  const ansHHMM = searchSpace[0]
-  const pprAnsHH = ansHHMM.hh >= 10 ? String(ansHHMM.hh) : `0${ansHHMM.hh}`
-  const pprAnsMM = ansHHMM.mm >= 10 ? String(ansHHMM.mm) : `0${ansHHMM.mm}`
+  const pprAnsHH = ans.hh >= 10 ? String(ans.hh) : `0${ans.hh}`
+  const pprAnsMM = ans.mm >= 10 ? String(ans.mm) : `0${ans.mm}`
   return `${pprAnsHH}:${pprAnsMM}`
 }
 
