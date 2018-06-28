@@ -5,6 +5,8 @@
 const MovingAverage = function(size) {
   this.maxSize = size
   this.arr = []
+  // keeping track of current sum allows us to avoid redundant computations
+  this.curSum = 0
 }
 
 /**
@@ -13,10 +15,12 @@ const MovingAverage = function(size) {
  */
 MovingAverage.prototype.next = function(val) {
   this.arr.push(val)
+  this.curSum += val
   if (this.arr.length > this.maxSize) {
-    this.arr.shift()
+    const oldV = this.arr.shift()
+    this.curSum -= oldV
   }
-  return this.arr.reduce((x,y) => x+y, 0) / this.arr.length
+  return this.curSum / this.arr.length
 }
 
 /**
