@@ -18,16 +18,16 @@ const decodeString = s => {
       // now that: num is between [startInd ... endInd], "[" at endInd+1
       // begin processing at endInd+2
       const num = parseInt(s.substring(beginInd, endInd+1), 10)
-      const ans = []
+      let ans = ''
       let i
       // aggressive consumption
       for (i = endInd+2; i < s.length && s[i] !== ']'; /* NOOP */) {
         const procResult = procString(i)
-        ans.push(procResult.result)
+        ans += procResult.result
         i = procResult.nextInd
       }
       return {
-        result: ans.join('').repeat(num),
+        result: ans.repeat(num),
         // skipping "]"
         nextInd: i+1,
       }
@@ -35,28 +35,19 @@ const decodeString = s => {
       let endInd = beginInd
       while (endInd + 1 < s.length && !isDigit(endInd+1) && s[endInd+1] !== ']')
         ++endInd
-      const ret = {
+      return {
         result: s.substring(beginInd, endInd+1),
         nextInd: endInd+1,
       }
-      if (endInd + 1 < s.length && s[endInd+1] !== ']') {
-        const ret2 = procString(endInd+1)
-        return {
-          result: ret.result + ret2.result,
-          nextInd: ret2.nextInd,
-        }
-      } else {
-        return ret
-      }
     }
   }
-  const ans = []
+  let ans = ''
   for (let i = 0; i < s.length; /* NOOP */) {
     const result = procString(i)
-    ans.push(result.result)
+    ans += result.result
     i = result.nextInd
   }
-  return ans.join('')
+  return ans
 }
 
 console.log(decodeString("3[a]2[bc]"))
