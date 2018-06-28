@@ -32,6 +32,8 @@ const decodeString = s => {
         nextInd: i+1,
       }
     } else {
+      // hiting non-repeating part, we just consume consecutive chunks
+      // to save some time (non-aggressive)
       let endInd = beginInd
       while (endInd + 1 < s.length && !isDigit(endInd+1) && s[endInd+1] !== ']')
         ++endInd
