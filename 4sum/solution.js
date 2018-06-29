@@ -3,15 +3,24 @@
  * @param {number} target
  * @return {number[][]}
  */
-const fourSum = (nums, target) => {
-  if (nums.length <= 3) {
+const fourSum = (numsInp, target) => {
+  if (numsInp.length <= 3) {
     return []
   }
-  if (nums.length === 4) {
-    return (nums.reduce((x,y) => x+y) === target) ? [nums] : []
+  if (numsInp.length === 4) {
+    return (numsInp.reduce((x,y) => x+y) === target) ? [numsInp] : []
   }
   // we at least have 5 nums to work with.
-  nums.sort((x,y) => x-y)
+  numsInp.sort((x,y) => x-y)
+  // limitting every number to have at most 4 copies
+  // since there's no point keeping more than 4 copies of the same num
+  // this allows finding next different number in constant time
+  // in situations where many same numbers are heavily duplicated
+  const nums = []
+  for (let i = 0; i < numsInp.length; ++i) {
+    if (numsInp[i-4] !== numsInp[i])
+      nums.push(numsInp[i])
+  }
   const ans = []
   const cur = new Array(4)
   const search = (dep, startInd, currentTarget) => {
@@ -65,3 +74,4 @@ const fourSum = (nums, target) => {
 }
 
 console.log(fourSum([1, 0, -1, 0, -2, 2], 0))
+console.log(fourSum([1,1,1,1,1,2,2,2,2,2,2,3,3,3,3,4,4,4,4,4,4,4,5,6,6,7,7,7], 12))
