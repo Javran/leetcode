@@ -39,22 +39,25 @@ const fourSum = (nums, target) => {
     // >> nums.length - i     >= 3-dep
     for (
       let i = startInd;
-      nums.length - i >= 3-dep;
-      /* NOOP */
+      nums.length-i >= 3-dep;
+      ++i
     ) {
       const n = nums[i]
-      cur[dep] = n
-      // overshooting
       if ((4-dep)*n > currentTarget)
+        // overshooting, no point in proceeding.
         break
+
+      cur[dep] = n
       search(dep+1, i+1, currentTarget-n)
       // find next i, which must differ from current value
       while (
-        nums.length - (i+1) >= 3-dep &&
+        //    nums.length - (i+1) >= 3-dep
+        // >> nums.length - i >= 4 - dep
+        nums.length-i >= 4-dep &&
         nums[i+1] === n
       )
         ++i
-      ++i
+      // ++i in for loop should bring us to next right place.
     }
   }
   search(0,0,target)
