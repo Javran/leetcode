@@ -17,23 +17,23 @@ const findDuplicates = nums => {
   const ans = []
   const doSwap = ind => {
     const v = nums[ind]
-    if (v-1 !== ind && nums[v-1] === v) {
-      if (ans.indexOf(v) === -1)
-        ans.push(v)
-    }
-    if (nums[v-1] !== v && v-1 !== ind) {
-      const tmp = nums[v-1]
-      nums[v-1] = nums[ind]
-      nums[ind] = tmp
-      doSwap(ind)
+    if (v-1 !== ind) {
+      if (nums[v-1] === v) {
+        if (ans.indexOf(v) === -1)
+          ans.push(v)
+        return
+      }
+      if (nums[v-1] !== v) {
+        const tmp = nums[v-1]
+        nums[v-1] = nums[ind]
+        nums[ind] = tmp
+        doSwap(ind)
+      }
     }
   }
 
-  for (let i = 0; i < nums.length; ++i) {
-    const v = nums[i]
+  for (let i = 0; i < nums.length; ++i)
     doSwap(i)
-  }
-
   return ans
 }
 
