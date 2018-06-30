@@ -17,9 +17,8 @@ const shortestToChar = (S, C) => {
       if (i-1 >= 0 && ansL[i-1] !== -1)
         ansL[i] = ansL[i-1] + 1
     }
-  }
-
-  for (let j = n-1; j >= 0; --j) {
+    // j = n-1, decreasing until j === 0
+    let j = n-1-i
     if (S.codePointAt(j) === code) {
       ansR[j] = 0
     } else {
