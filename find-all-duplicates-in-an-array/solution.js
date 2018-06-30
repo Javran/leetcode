@@ -15,6 +15,9 @@ const findDuplicates = nums => {
 
    */
   const ans = []
+  // when we put nums[ind] to nums[v-1], the orignal value swapped out
+  // could be out of place, which means we might keep swapping
+  // as much as we can.
   const doSwap = ind => {
     const v = nums[ind]
     if (v-1 !== ind) {
@@ -24,9 +27,8 @@ const findDuplicates = nums => {
         return
       }
       if (nums[v-1] !== v) {
-        const tmp = nums[v-1]
-        nums[v-1] = nums[ind]
-        nums[ind] = tmp
+        nums[ind] = nums[v-1]
+        nums[v-1] = v
         doSwap(ind)
       }
     }
