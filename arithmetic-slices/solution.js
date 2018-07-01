@@ -6,19 +6,17 @@ const numberOfArithmeticSlices = xs => {
   if (xs.length <= 2)
     return 0
 
-  const ys = new Array(xs.length-1)
-  // as we are interested only in diff between nums
-  for (let i = 1; i < xs.length; ++i)
-    ys[i-1] = xs[i] - xs[i-1]
-
-  let ans = 0
+  let ansDouble = 0
   let i = 0
-  while (i < ys.length) {
-    const v = ys[i]
+  while (i < xs.length-1) {
+    const v = xs[i+1] - xs[i]
     let j = i
-    while (j+1 < ys.length && ys[j+1] === v)
+    while (j+2 < xs.length && xs[j+2] - xs[j+1] === v)
       ++j
-    if (j-i+1 >= 2) {
+    //    j-i+1 >= 2
+    // => j-i   >= 1
+    const tmp = j-i
+    if (tmp >= 1) {
       /*
          looking for a pattern:
 
@@ -29,13 +27,14 @@ const numberOfArithmeticSlices = xs => {
 
          therefore we need to add to ans 1,2,...,j-i
          which is n*(n+1) / 2 where n = j-i
+
+         optimize: no div here, we leave it until the last moment.
        */
-      const tmp = j-i
-      ans += tmp*(tmp+1)/2
+      ansDouble += tmp*(tmp+1)
     }
     i = j+1
   }
-  return ans
+  return ansDouble >> 1
 }
 
 console.assert(numberOfArithmeticSlices([
