@@ -19,11 +19,19 @@ const numberOfArithmeticSlices = xs => {
     while (j+1 < ys.length && ys[j+1] === v)
       ++j
     if (j-i+1 >= 2) {
-      // sequence len: j-i+2
-      // we need to count down to 3
-      const tmp = j-i+1
-      // console.log(v, j-i+2)
-      ans += tmp*(tmp-1)/2
+      /*
+         looking for a pattern:
+
+         len: j-i+2, have 1
+         len: j-i+1, have 2
+         len: ...
+         len: 3, have j-i
+
+         therefore we need to add to ans 1,2,...,j-i
+         which is n*(n+1) / 2 where n = j-i
+       */
+      const tmp = j-i
+      ans += tmp*(tmp+1)/2
     }
     i = j+1
   }
