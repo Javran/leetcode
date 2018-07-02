@@ -10,11 +10,12 @@ var longestMountain = xs => {
   let startInd = 0, endInd = 0, downFlag = false
   const updateAns = () => {
     if (
-      endInd - startInd + 1 >= 3 &&
+      //    endInd - startInd + 1 >= 3
+      // >> endInd - startInd >= 2
+      endInd - startInd >= 2 &&
       xs[startInd] < xs[startInd+1] &&
       xs[endInd-1] > xs[endInd]
     ) {
-      // console.log('mountain: ', xs.slice(startInd, endInd+1))
       const l = endInd - startInd + 1
       if (ans < l)
         ans = l
@@ -27,6 +28,7 @@ var longestMountain = xs => {
       if (downFlag) {
         updateAns()
         // we expected it to go down. need to break right here.
+        // note that we can reuse i-1 to make a bigger mountain.
         startInd = i-1, endInd = i, downFlag = false
       } else {
         endInd = i
@@ -37,7 +39,13 @@ var longestMountain = xs => {
         endInd = i
       } else {
         // might go down.
-        if (endInd - startInd + 1 >= 2) {
+        if (
+          //    endInd - startInd + 1 >= 2
+          // >> endInd - startInd >= 1
+          endInd - startInd >= 1
+        ) {
+          // partial mountain (go far going up) going on,
+          // we switch to expect going down.
           endInd = i, downFlag = true
         } else {
           updateAns()
@@ -50,6 +58,7 @@ var longestMountain = xs => {
       startInd = i, endInd = i, downFlag = false
     }
   }
+  // test leftover
   updateAns()
   return ans
 }
