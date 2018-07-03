@@ -1,28 +1,30 @@
+// it's only rotate-able if we use this fixed set of digits
+// so that's what we gonna do.
 const rDigits = [0,1,2,5,6,8,9]
-const afterRotate = new Array(10);
-afterRotate[0] = {val: 0, changed: false}
-afterRotate[1] = {val: 1, changed: false}
-afterRotate[2] = {val: 5, changed: true}
-afterRotate[5] = {val: 2, changed: true}
-afterRotate[6] = {val: 9, changed: true}
-afterRotate[8] = {val: 8, changed: false}
-afterRotate[9] = {val: 6, changed: true}
+// would using a digit (rotate-able) change the number?
+const afterRotate = new Array(10)
+afterRotate[0] = false
+afterRotate[1] = false
+afterRotate[2] = true
+afterRotate[5] = true
+afterRotate[6] = true
+afterRotate[8] = false
+afterRotate[9] = true
 
 /**
  * @param {number} N
  * @return {number}
  */
 const rotatedDigits = N => {
+  // just having fun overcomplicating stuff...
   if (N <= 1)
     return 0
   let ans = 0
   let stop = false
-
   const digits = new Int8Array(5)
-  let num = 0
-
   const go = dep => {
     if (dep === 5) {
+      const num = digits.reduce((hi,lo) => hi*10+lo)
       if (num > N) {
         stop = true
         return
@@ -34,31 +36,24 @@ const rotatedDigits = N => {
         // got non-all-zero solution, checking range [i .. 4]
         const ds = digits.slice(i,5)
         let different = false
-        const rotated = new Int8Array(ds.length)
-        ds.forEach((d, ind) => {
-          const {val, changed} = afterRotate[d]
-          different = different || changed
-          rotated[ds.length - ind -1] = val
-        })
+        for (let ind = i; ind < 5; ++ind) {
+          different = different || afterRotate[digits[ind]]
+        }
         if (different)
           ++ans
       }
       return
     }
-    const numTmp = num
-    num *= 10
     for (let i = 0; i < rDigits.length && !stop; ++i) {
       const d = rDigits[i]
       digits[dep] = d
-      num += d
       go(dep+1)
-      num -= d
     }
-    num = numTmp
   }
   go(0)
 
   return ans
 }
 
-console.log(rotatedDigits(109))
+console.assert(rotatedDigits(109) === 44)
+console.assert(rotatedDigits(10000) === 2320)
