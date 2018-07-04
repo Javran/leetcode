@@ -9,6 +9,8 @@ const maxCoins = nums => {
   // basically the key is to think about the last, instead of the first balloon to burst
   // this removes the concern that the other part of the balloon might have an impact
   // on coins we could get.
+
+  // DP is also possible, but I just feel it's more natural with memoized search
   const memo = new Array(nums.length+1)
   for (let i = 0; i <= nums.length; ++i)
     memo[i] = new Array(nums.length+1).fill(null)
