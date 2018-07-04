@@ -19,13 +19,18 @@ const maxCoins = nums => {
   // namely nums[l..r-1]
   const search = (l, r) => {
     if (l === r)
+      // nothing in range
       return 0
     if (l === r-1)
+      // exactly one element in range
       return getNum(l-1)*nums[l]*getNum(l+1)
     if (memo[l][r] !== null)
       return memo[l][r]
     let ans = null
     for (let i = l; i < r; ++i) {
+      // now nums[i] is the last balloon to burst in range (l,r)
+      // (or element range [l..r-1]), it splits into problems of
+      // bursting elements in range [l, i-1] and elements in range [i+1, r-1]
       const lResult = search(l, i)
       const rResult = search(i+1, r)
       const v = getNum(l-1)*nums[i]*getNum(r)
