@@ -9,10 +9,10 @@ const isInterleave = (a, b, c) => {
     return false
   const f = new Array(a.length+1)
   for (let i = 0; i <= a.length; ++i)
-    f[i] = new Array(b.length+1)
+    f[i] = new Uint8Array(b.length+1)
   // f[i][j], whether a in [0..i-1] and b in [0..j-1]
   // can be interleaved to produce c in range [0..i+j-1]
-  f[0][0] = true
+  f[0][0] = 1
   for (let k = 1; k <= c.length; ++k) {
     // k = i + j
     const code = c.codePointAt(k-1)
@@ -20,21 +20,22 @@ const isInterleave = (a, b, c) => {
       const j = k - i
       if (i > a.length || j > b.length)
         continue
-      let ans = false
-      if (i-1 >= 0 && f[i-1][j] && a.codePointAt(i-1) === code)
-        ans = true
-      if (j-1 >= 0 && f[i][j-1] && b.codePointAt(j-1) === code)
-        ans = true
-      f[i][j] = ans
+      f[i][j] = (
+        (
+          i-1 >= 0 && f[i-1][j] && a.codePointAt(i-1) === code
+        ) || (
+          j-1 >= 0 && f[i][j-1] && b.codePointAt(j-1) === code
+        )
+      ) ? 1 : 0
     }
   }
-  return f[a.length][b.length]
+  return Boolean(f[a.length][b.length])
 }
 
-console.log(isInterleave("aabcc", "dbbca", "aadbbcbcac"))
-console.log(isInterleave("aabcc", "dbbca", "aadbbbbcac"))
-console.log(isInterleave("", "dbbca", "dbbca"))
-console.log(isInterleave("vv", "uu", "uuvv"))
-console.log(isInterleave("vv", "uu", "uvuv"))
-console.log(isInterleave("15", "51", "1551"))
-console.log(isInterleave("aazaa", "bbtbb", "abaztbaabb"))
+console.assert(isInterleave("aabcc", "dbbca", "aadbbcbcac"))
+console.assert(!isInterleave("aabcc", "dbbca", "aadbbbbcac"))
+console.assert(isInterleave("", "dbbca", "dbbca"))
+console.assert(isInterleave("vv", "uu", "uuvv"))
+console.assert(isInterleave("15", "51", "1551"))
+console.assert(!isInterleave("aazaa", "bbtbb", "abaztbaabb"))
+console.assert(isInterleave("aazaa", "bbtbb", "abazbtaabb"))
