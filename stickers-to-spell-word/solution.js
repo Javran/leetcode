@@ -12,6 +12,9 @@ const freqCount = xs => {
  * @return {number}
  */
 const minStickers = (stickers, target) => {
+  // idea: the key is to encode state into efficient structures.
+  // and perform search with memoization.
+
   // freq count on target
   const targetFC = freqCount(target)
   const freqEncode = sticker => {
@@ -43,6 +46,8 @@ const minStickers = (stickers, target) => {
   })
 
   // [1,2,1,3] => 'abac'
+  // this choice of encoding is just to allow state to be more "readable"
+  // when debugging. as freq can be at most 15, we are fine.
   const encodeState = st =>
     String.fromCodePoint.apply(null, st.map(x => x+97))
 
