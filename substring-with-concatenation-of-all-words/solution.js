@@ -8,51 +8,53 @@ const findSubstring = (s, words) => {
     // to problem setter: FUCK YOU
     return []
   const wordLen = words[0].length
-  // store indices of words.
+  words.sort()
+  // freq count
+  const wordFreqs = []
+  let curWF = {word: words[0], count: 1}
+  for (let i = 1; i < words.length; ++i) {
+    if (curWF.word === words[i]) {
+      ++curWF.count
+    } else {
+      wordFreqs.push(curWF)
+      curWF = {word: words[i], count: 1}
+    }
+  }
+  wordFreqs.push(curWF)
+  // now that in wordFreqs, every word is unique
+  // matches[i] = index into wordFreqs or null
   const matches = new Array(s.length).fill(null)
-  words.forEach((word, ind) => {
+  wordFreqs.forEach(({word}, ind) => {
     for (let i = s.indexOf(word); i !== -1; i = s.indexOf(word, i+1)) {
-      if (matches[i] === null) {
-        matches[i] = [ind]
-      } else {
-        matches[i].push(ind)
-      }
+      matches[i] = ind
     }
   })
   const ans = []
-  const checkWindow = w => {
-    if (w.length !== words.length)
-      return false
-    const flags = new Array(words.length).fill(0)
-    for (let i = 0; i < w.length; ++i) {
-      if (w[i] === null)
-        return false
-      let fill = false
-      for (let j = 0; j < w[i].length && !fill; ++j) {
-        if (flags[w[i][j]] === 0) {
-          flags[w[i][j]] = 1
-          fill = true
-        }
-      }
-      if (!fill)
-        return false
-    }
-    return flags.every(x => x > 0)
-  }
   // apply sliding window on every offset
   for (let offset = 0; offset < wordLen; ++offset) {
-    const window = []
+    const freqCount = new Array(wordFreqs.length).fill(0)
     for (let i = offset; i < s.length; i += wordLen) {
-      window.push(matches[i])
-      if (window.length > words.length)
-        window.shift()
-      if (checkWindow(window))
-        ans.push(i-(words.length-1)*wordLen)
+      // new freq
+      if (matches[i] !== null) {
+        ++freqCount[matches[i]]
+      }
+      // remove old
+      const prevInd = i-words.length*wordLen
+      if (prevInd >= 0 && matches[prevInd] !== null) {
+        --freqCount[matches[prevInd]]
+      }
+      if (freqCount.every((freq, ind) => freq >= wordFreqs[ind].count)) {
+        ans.push(prevInd+wordLen)
+      }
     }
   }
   return ans
 }
 
 console.log(findSubstring("barfoothefoobarman", ["foo","bar"]))
-// console.log(findSubstring("wordgoodgoodgoodbestword", ["word","good","best","word"]))
+console.log(findSubstring("wordgoodgoodgoodbestword", ["word","good","best","word"]))
 console.log(findSubstring("wordwordgoodbestwordword", ["word","good","best","word"]))
+console.log(findSubstring("awordwordgoodbestwordword", ["word","good","best","word"]))
+console.log(findSubstring("abwordwordgoodbestwordword", ["word","good","best","word"]))
+console.log(findSubstring("abcwordwordgoodbestwordword", ["word","good","best","word"]))
+console.log(findSubstring("abcabcbbacbbababbcaccb", ["ab","ac","bc","ab"]))
