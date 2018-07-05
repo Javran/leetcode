@@ -1,7 +1,7 @@
 const freqCount = xs => {
   const freqs = new Uint8Array(26)
   for (let i = 0; i < xs.length; ++i) {
-    ++freqs[xs.codePointAt(i) & 31]
+    ++freqs[(xs.codePointAt(i) & 31) - 1]
   }
   return freqs
 }
