@@ -1,4 +1,5 @@
 // intersect two sorted list, assuming every element is unique
+// return null if the intersection is empty
 const intersect = (xs, ys) => {
   if (xs === null || xs.length === 0)
     return null
@@ -19,7 +20,7 @@ const intersect = (xs, ys) => {
         ++j
     }
   }
-  return ret
+  return ret.length === 0 ? [] : ret
 }
 
 /**
@@ -27,6 +28,8 @@ const intersect = (xs, ys) => {
  * @return {string[][]}
  */
 const wordSquares = words => {
+  // we want elements to be inserted in sorted order
+  // by doing so we can allow efficient "set intersection" on sorted arrays
   words.sort()
   const len = words[0].length
   // indDict[<ind>][<char>] = Array of words (sorted)
