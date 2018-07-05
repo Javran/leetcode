@@ -1,4 +1,3 @@
-const {memoize} = require('underscore')
 /**
  * @param {number} n
  * @return {string[][]}
@@ -7,33 +6,32 @@ const solveNQueens = n => {
   // board[row] = col (0-based)
   const board = new Uint8Array(n)
   const used = new Uint8Array(n)
+  const diag1 = new Uint8Array(n*2)
+  const diag2 = new Uint8Array(n*2)
   const ans = []
 
-  const pprRow = memoize(ind =>
-    '.'.repeat(ind) + 'Q' + '.'.repeat(n-ind-1)
-  )
+  const pprStrs = new Array(n)
+  for (let i = 0; i < n; ++i) {
+    pprStrs[i] = '.'.repeat(i) + 'Q' + '.'.repeat(n-i-1)
+  }
 
-  const go = dep => {
-    if (dep === n) {
-      ans.push([...board].map(pprRow))
+  const go = row => {
+    if (row === n) {
+      ans.push([...board].map(i => pprStrs[i]))
       return
     }
-    const avoid = new Uint8Array(n)
-    for (let row = 0; row < dep; ++row) {
-      const col = board[row]
-      const l = row+col-dep
-      const r = dep-row+col
-      if (l >= 0 && l < n)
-        avoid[l] = 1
-      if (r >= 0 && r < n)
-        avoid[r] = 1
-    }
     for (let col = 0; col < n; ++col) {
-      if (!used[col] && !avoid[col]) {
+      const a = row+col
+      const b = row+n-col
+      if (!used[col] && !diag1[a] && !diag2[b]) {
         used[col] = 1
-        board[dep] = col
-        go(dep+1)
+        diag1[a] = 1
+        diag2[b] = 1
+        board[row] = col
+        go(row+1)
         used[col] = 0
+        diag1[a] = 0
+        diag2[b] = 0
       }
     }
   }
@@ -41,4 +39,4 @@ const solveNQueens = n => {
   return ans
 }
 
-solveNQueens(4)
+console.log(solveNQueens(8))
