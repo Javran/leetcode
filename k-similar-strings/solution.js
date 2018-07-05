@@ -5,31 +5,17 @@ function ListNode(str, step, minInd) {
   this.next = null
 }
 
-const pack = str => {
-  const xs = new Int8Array(str.length)
-  for (let i = 0; i < str.length; ++i)
-    xs[i] = str.codePointAt(i) - 97
-  return xs
-}
-
-const strEncode = xs =>
-  String.fromCodePoint.apply(
-    null,
-    xs.map(x => x + 97)
-  )
-
 /**
  * @param {string} A
  * @param {string} B
  * @return {number}
  */
-const kSimilarity = (srcInp, tgtInp) => {
-  const src = pack(srcInp), tgt = pack(tgtInp)
+const kSimilarity = (src, tgt) => {
   let qHead = new ListNode(src, 0, 0)
   let qTail = qHead
   let vDiff = null
   let visited = new Set()
-  visited.add(strEncode(src))
+  visited.add(src)
   while (qHead !== null) {
     let {str, step, minInd} = qHead
     const diffLocs = []
@@ -61,14 +47,18 @@ const kSimilarity = (srcInp, tgtInp) => {
         str[rInd] === tgt[lInd] ||
         str[lInd] === tgt[rInd]
       ) {
-        const newStr = Int8Array.from(str)
-        newStr[lInd] = str[rInd]
-        newStr[rInd] = str[lInd]
-        const enc = strEncode(newStr)
-        if (!visited.has(enc)) {
+        let newStr =
+          [
+            str.substring(0, lInd),
+            str[rInd],
+            str.substring(lInd+1, rInd),
+            str[lInd],
+            str.substring(rInd+1)
+          ].join('')
+        if (!visited.has(newStr)) {
           qTail.next = new ListNode(newStr, step, lInd+1)
           qTail = qTail.next
-          visited.add(enc)
+          visited.add(newStr)
         }
       }
     }
@@ -90,4 +80,5 @@ const test = (a,b,c=null) => {
 test("abac", "baca", 2)
 test("a", "a", 0)
 test("abccaacceecdeea","bcaacceeccdeaae", 9)
-test("cdebcdeadedaaaebfbcf","baaddacfedebefdabecc")
+test("cdebcdeadedaaaebfbcf","baaddacfedebefdabecc", 12)
+test("abcdefabcdefabcdef", "fcacdfaaebebdfbedc", 9)
