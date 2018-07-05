@@ -32,17 +32,23 @@ const reverseGroup = (beginPrev, endNext) => {
  */
 const reverseKGroup = (head, k) => {
   if (k === 1)
+    // nothing to do when a group is just an element
     return head
   const dummy = {next: head}
+  // prev: a structure whose next points to the beginning of cur group
+  // count: how many elements are currently in group
   let prev = dummy, count = 0
-  for (cur = prev.next; cur !== null; cur = cur.next) {
+  for (cur = head; cur !== null; cur = cur.next) {
     ++count
     if (count === k) {
+      // trigger group reverse only when we can just form a group
+      // after the reverse, first element becomes last
       const newCur = prev.next
       const next = cur.next
       reverseGroup(prev, cur.next)
       prev = newCur
-      cur = {next}
+      // cur will move to intended position after entering next loop
+      cur = newCur
       count = 0
     }
   }
