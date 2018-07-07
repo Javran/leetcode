@@ -7,6 +7,14 @@ const canCross = stones => {
   if (stones[1] - stones[0] !== 1)
     // not possible to make the first jump
     return false
+
+  // idea: pushing states forward.
+  /*
+     froms[i]: the set of indices j where
+     stone at i can be reached from stone at j.
+     this allows us to keep track of previous jump distance
+     also because we are storing indices, the actual position won't matter much
+   */
   const froms = new Array(stones.length)
   // ind 1 can only be reached from ind 0
   froms[1] = new Set([0])
@@ -14,9 +22,18 @@ const canCross = stones => {
     if (!(i in froms))
       continue
     const curPos = stones[i]
+    // propagate
     froms[i].forEach(fromInd => {
       const fromPos = stones[fromInd]
       const k = curPos - fromPos
+      /*
+         given that:
+
+         - stones is sorted
+         - we have at most 3 consecutive positions to jump
+
+         the cost of linear search here is actually very small.
+       */
       for (let jumpDist = k-1; jumpDist <= k+1; ++jumpDist) {
         if (jumpDist >= 1) {
           const nextPos = curPos + jumpDist
