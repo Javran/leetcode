@@ -1,4 +1,3 @@
-const {memoize} = require('underscore')
 /**
  * @param {number[][]} grid
  * @return {number}
@@ -7,6 +6,17 @@ const cherryPickup = grid => {
   if (grid.length === 0 || grid[0].length === 0)
     return 0
   const N = grid.length
+  const memoize = f => {
+    const xs = new Array(N)
+    return i => {
+      if (i in xs)
+        return xs[i]
+      const ans = f(i)
+      xs[i] = ans
+      return ans
+    }
+  }
+
   const search = memoize(x1 => memoize(y1 => memoize(x2 => memoize(y2 => {
     /*
        INVARIANT:
