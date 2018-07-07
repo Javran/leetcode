@@ -14,6 +14,13 @@ const cheapestJump = (xs, B) => {
   const N = xs.length
   const minCosts = new Int32Array(N).fill(-1)
   const froms = new Int16Array(N).fill(-1)
+  /*
+     to problem setter: FUCK YOU.
+
+     note that we are looking for "lexicographically smallest path"
+     so if [1,2,3,4] and [1,6] are both valid, we should choose [1,2,3,4].
+
+   */
   xs.reverse()
   // using -2 to mark the beginning, as -1 has been used
   froms[0] = -2
