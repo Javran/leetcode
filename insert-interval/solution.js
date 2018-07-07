@@ -10,6 +10,7 @@ function Interval(start, end) {
  */
 const insert = (intervals, newInterval) => {
   let i = 0
+  // identify unrelated chunks (left)
   while (i < intervals.length && intervals[i].end < newInterval.start) {
     ++i
   }
@@ -25,6 +26,7 @@ const insert = (intervals, newInterval) => {
     ++i
   }
   ans.push(cur)
+  // concat unrelated right chunks
   ans = ans.concat(intervals.slice(i))
   return ans
 }
