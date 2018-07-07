@@ -3,6 +3,7 @@
  * @return {number}
  */
 const largestRectangleArea = hs => {
+  // credit to anton4, the idea looks nice and sound to me.
   if (hs.length === 0)
     return 0
   if (hs.length === 1)
