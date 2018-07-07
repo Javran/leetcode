@@ -20,6 +20,23 @@ const cheapestJump = (xs, B) => {
      note that we are looking for "lexicographically smallest path"
      so if [1,2,3,4] and [1,6] are both valid, we should choose [1,2,3,4].
 
+     my first attempt is to use the largest index possible to update "froms".
+     this seems counter-intuitive, but it results in picking the shortest jump
+     possible in order to make the result list longer.
+     this approach can pass some tests, but not all of them - after all,
+     making the shortest jump does not imply "lexicographically smallest path":
+     [1,4,6,10] and [1,3,6,10] could all be valid solutions but [1,3,6,10] is
+     the preferred answer while my approach will pick [1,4,6,10] simply because
+     4 is larger.
+
+     I accidentally discoverred that by simply reversing the input array,
+     we can make the problem easier: by working backwards from end to beginning,
+     we avoid the problem that some previous result might cut the result short.
+     (for a working example, try with input `[0,0,0,0,0,0], 3` *credits to hguanyao*)
+     also now picking the max index for "froms" actually makes sense:
+     by always picking the farthest position (from left, or we should say from
+     the actual right side), we guarantee "lexicographically smallest path".
+
    */
   xs.reverse()
   // using -2 to mark the beginning, as -1 has been used
