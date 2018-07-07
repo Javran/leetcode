@@ -27,7 +27,7 @@ const cheapestJump = (xs, B) => {
      making the shortest jump does not imply "lexicographically smallest path":
      [1,4,6,10] and [1,3,6,10] could all be valid solutions but [1,3,6,10] is
      the preferred answer while my approach will pick [1,4,6,10] simply because
-     4 is larger.
+     4 is larger. (see last my test below)
 
      I accidentally discoverred that by simply reversing the input array,
      we can make the problem easier: by working backwards from end to beginning,
@@ -75,3 +75,6 @@ const cheapestJump = (xs, B) => {
 console.log(cheapestJump([1,2,4,-1,2], 2))
 console.log(cheapestJump([0,0,0,0,0,0], 3))
 console.log(cheapestJump([0,-1,-1,-1,0,0], 3))
+
+// this example shows why "max index without reversal" doesn't work:
+console.log(cheapestJump([1,0,0,2,2,0],2))
