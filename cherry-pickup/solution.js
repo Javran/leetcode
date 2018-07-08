@@ -83,3 +83,4 @@ const cherryPickup = grid => {
   const ans = search(0)(0)(0)(0)
   return ans === -1 ? 0 : ans
 }
+
