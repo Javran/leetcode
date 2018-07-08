@@ -5,21 +5,15 @@ leetcode
 
 My LeetCode solutions, aiming at clear comments &amp; explanations.
 
-# Solution List
+Unless stated, all source codes in this repo are accepted.
 
-* [Find Minimum in Rotated Sorted Array](./src/MinimumInRotated.cpp)
-* [Maximum Product Subarray](./src/MaximumProductSubarray.cpp)
-* [Reverse Words in a String](./src/ReverseWords.cpp)
-* [Evaluate Reverse Polish Notation](./src/EvaluateRPN.cpp)
-* [Max Points on a Line](./src/MaxPointsOnALine.cpp)
-* [Sort List](./src/SortList.cpp)
-* [Insertion Sort List](./src/InsertionSortList.cpp)
-* [LRU Cache](./src/LRUCache.cpp)
-* [Binary Tree Postorder Traversal](./src/BinTreePostorder.cpp)
-* [Binary Tree Preorder Traversal](./src/BinTreePreorder.cpp)
-* [Reorder List](./src/ReorderList.cpp)
-* [Linked List Cycle II](./src/LinkedListCycleII.cpp)
-* [Linked List Cycle](./src/LinkedListCycle.cpp)
+Nowadays most source codes are available in JavaScript as I feel that's the language for prototyping.
+Occasionally I'll use Scala to get some functional programming going
+or simply for HashMap and stuff not easily available for LeetCode's JavaScript environment.
+
+(still WIP) check out [leetcode-zwischenzug](https://www.npmjs.com/package/leetcode-zwischenzug),
+which is a library I'm working on to improve testing & debugging LeetCode problems
+locally.
 
 # Regarding CSharp Programs (mono)
 
