@@ -10,6 +10,36 @@ function TrieNode(key, wordObj=null) {
  * @return {number[][]}
  */
 const palindromePairs = words => {
+  /*
+     to problem setter: FUCK YOU.
+     apparently a word can be an empty string.
+     there are two ways to deal with this:
+     (1) skip "" when processing words,
+         and in the end we add pairs that is itself a palindrome with "" (to its left & right)
+     (2) in "case 2" set "lastInd >= -1" instead of "0", which allows us to uniformly
+         deal with the situation, but could be slower
+
+     since (1) allows us to use the special property of "", this is the way we are going.
+   */
+  /*
+     idea: we are to combine two words, (calling them "left word" and "right word")
+     let's fix left word and see what we can do: now note that there're 2 cases:
+
+     - when left word is <= half of the palindrome we are forming:
+       try writing left word backwards and see if anything in `words` matches that,
+       and then test rest part of it for palindrome-ness
+       example:
+       - left word: "abcd"
+       - use "dcba" to find one right word: "dcbauvu"
+       - see whether "uvu" is a palindrome
+
+     - when left word is > half of the palindrome we are forming:
+       now we have know the "core" of this palindrome, and we just want to see:
+
+       - if left word is itself a partial palindrome
+       - if so, is there an exact match that we can use from the set of words given
+
+   */
   // backward trie - words are index-ed by their reverses for searching palindrome
   const bwTrie = new TrieNode(null)
   // word: word used to go to the path, could be reversed.
@@ -107,7 +137,6 @@ console.log(
     "abcd", "dcba", "lls", "s", "sssll",
     "acdef", "edca", "acdee", "dca", "atuvu", "ta",
     "ccc", "cccc",
-    // to problem setter: FUCK YOU.
     ""
   ]))
 
