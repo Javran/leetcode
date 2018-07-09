@@ -50,4 +50,6 @@ const minArea = (img, xInp, yInp) => {
   return (xMax - xMin + 1) * (yMax - yMin + 1)
 }
 
-console.assert(minArea(["0010", "0110", "0100"].map(x => x.split('')), 0, 2) === 6)
+console.assert(
+  minArea(["0010", "0110", "0100"].map(x => x.split('')), 0, 2) === 6
+)
