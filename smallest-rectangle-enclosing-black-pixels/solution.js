@@ -1,8 +1,3 @@
-function QNode(coords) {
-  this.coords = coords
-  this.next = null
-}
-
 /**
  * @param {character[][]} image
  * @param {number} x
@@ -12,44 +7,73 @@ function QNode(coords) {
 const minArea = (img, xInp, yInp) => {
   // as we are guaranteed to get one black region,
   // there is no need of checking (=== 0)s
-
-  // idea: not the fastest approach, but BFS seesm good enough
   const rows = img.length
   const cols = img[0].length
-  const visited = new Array(rows)
-  for (let i = 0; i < rows; ++i)
-    visited[i] = new Int8Array(cols)
-  let qHead = new QNode([xInp, yInp])
-  visited[xInp][yInp] = 1
-  let qTail = qHead
-  let xMin = xInp, xMax = xInp
-  let yMin = yInp, yMax = yInp
-  while (qHead !== null) {
-    const {coords: [x,y]} = qHead
-    if (x < xMin) xMin = x
-    if (x > xMax) xMax = x
-    if (y < yMin) yMin = y
-    if (y > yMax) yMax = y
-    const enqueue = (x,y) => {
-      if (
-        x >= 0 && x < rows && y >= 0 && y < cols &&
-        img[x][y] === '1' &&
-        visited[x][y] === 0
-      ) {
-        visited[x][y] = 1
-        qTail.next = new QNode([x,y])
-        qTail = qTail.next
+
+  const binarySearch = (l, r, condL, condR) => {
+    while (l <= r) {
+      const mid = (l + r) >> 1
+      const resultL = condL(mid)
+      const resultR = condR(mid)
+      if (resultL && resultR) {
+        return mid
+      } else if (resultL) {
+        l = mid + 1
+      } else {
+        r = mid - 1
       }
     }
-    enqueue(x-1,y)
-    enqueue(x+1,y)
-    enqueue(x,y-1)
-    enqueue(x,y+1)
-    qHead = qHead.next
   }
-  return (xMax - xMin + 1) * (yMax - yMin + 1)
+  const rowOccupied = row => {
+    for (let c = 0; c < cols; ++c)
+      if (img[row][c] === '1')
+        return true
+    return false
+  }
+  const colOccupied = col => {
+    for (let r = 0; r < rows; ++r)
+      if (img[r][col] === '1')
+        return true
+    return false
+  }
+
+  const xMin = binarySearch(
+    0, xInp,
+    i => i - 1 < 0 || !rowOccupied(i-1),
+    i => i < rows && rowOccupied(i)
+  )
+
+  const xMax = binarySearch(
+    xInp+1, rows,
+    i => i - 1 >= 0 && rowOccupied(i-1),
+    i => i >= rows || !rowOccupied(i)
+  )
+
+  const yMin = binarySearch(
+    0, yInp,
+    i => i - 1 < 0 || !colOccupied(i-1),
+    i => i < cols && colOccupied(i)
+  )
+
+  const yMax = binarySearch(
+    yInp+1, cols,
+    i => i - 1 >= 0 && colOccupied(i-1),
+    i => i >= cols || !colOccupied(i)
+  )
+
+  return (xMax - xMin) * (yMax - yMin)
 }
 
+const tr = s => s.map(x => x.split(''))
+
+console.assert(minArea(tr(["0", "1", "1", "1", "1"]), 2, 0) === 4)
+console.assert(minArea(tr(["0", "1", "1", "1", "0"]), 2, 0) === 3)
+console.assert(minArea(tr(["1", "1", "1", "1", "0"]), 2, 0) === 4)
+
 console.assert(
-  minArea(["0010", "0110", "0100"].map(x => x.split('')), 0, 2) === 6
+  minArea(tr(["0010", "0110", "0100"]), 0, 2) === 6
+)
+
+console.assert(
+  minArea(tr(["0000","1111"]), 1, 0) === 4
 )
