@@ -72,6 +72,14 @@ BinHeap.prototype.extractMin = function() {
  * @return {Interval[]}
  */
 const employeeFreeTime = schedule => {
+  /*
+     using the "anchor" approach as described in the solution.
+
+     this solution looks complicated but most of it is just dealing
+     with binary heap - as in JS we don't have a out-of-box choice
+     for priority queue impl.
+
+   */
   // progress[i] is the index of the first pending task for person i
   const progress = new Uint8Array(schedule.length)
   const pQueue = new BinHeap(pInd => schedule[pInd][progress[pInd]].start)
@@ -84,6 +92,10 @@ const employeeFreeTime = schedule => {
     const curTask = schedule[pInd][progress[pInd]]
     if (anchor < curTask.start) {
       if (anchor > -Infinity)
+        // when there is a gap between known latest time (anchor)
+        // and current task's start time, we know [anchor, curTask.start]
+        // is one part of the solution since we are monitoring over all persons
+        // with this priority queue.
         ans.push(new Interval(anchor, curTask.start))
     }
     if (anchor < curTask.end)
