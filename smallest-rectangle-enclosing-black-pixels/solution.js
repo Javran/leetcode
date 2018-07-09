@@ -10,6 +10,20 @@ const minArea = (img, xInp, yInp) => {
   const rows = img.length
   const cols = img[0].length
 
+  /*
+     idea: project to x-axis and y-axis, solve the 1d problem
+     using binary search (as we've known one point as starting point)
+     and put results together
+   */
+
+  /*
+     binary search a cutting position i, in which condL(i) && condR(i)
+     is satisfied.
+     we need result from condL and condR separately to allow us
+     to guide to the correct half of our search space.
+     note that since we are talking about a cutting position,
+     l and r can range from [0..N] inclusive where N is either rows or cols
+   */
   const binarySearch = (l, r, condL, condR) => {
     while (l <= r) {
       const mid = (l + r) >> 1
@@ -24,6 +38,13 @@ const minArea = (img, xInp, yInp) => {
       }
     }
   }
+  /*
+     rowOccupied & colOccupied are used to tell whether
+     certain row or col has black pixels somewhere.
+     could do memoize, but since in binarySearch
+     we call with each distinct input only once, there
+     is no need over-optimizing these 2 functions.
+   */
   const rowOccupied = row => {
     for (let c = 0; c < cols; ++c)
       if (img[row][c] === '1')
