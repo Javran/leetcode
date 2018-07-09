@@ -30,7 +30,6 @@ const siftDown = pq => ind => {
       break
     let preferInd = ind
     if (
-      lcInd < size &&
       elemToKey(container[lcInd]) <= elemToKey(container[preferInd])
     )
       preferInd = lcInd
