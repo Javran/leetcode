@@ -1,3 +1,5 @@
+// standard segment tree, node approach.
+
 function SegNode(l,r) {
   this.bound = [l,r]
   this.left = this.right = null
