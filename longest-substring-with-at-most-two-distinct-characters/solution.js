@@ -3,6 +3,23 @@
  * @return {number}
  */
 const lengthOfLongestSubstringTwoDistinct = s => {
+  /*
+     this problem could generalize to more than two distinct chars,
+     but for our purpose, I think simply maintaining chInfo1 and chInfo2
+     is good enough.
+
+     idea: sliding window, always keep two distinct chars in the window
+     and expand as much as we can.
+
+     - note that if we manage to expand the window to the whole input string,
+       that means the whole string is the optimal solution by itself.
+     - we want a fast way to drop part of the window to make room
+       for next incoming char, which is solved by keeping "lastInd"
+       for each distinct char in the window
+     - time complexity: O(s.length), the observation is that only startInd and endInd
+       moves, and both of them passes the input string at most once.
+
+   */
   if (s.length === 0)
     return 0
   let startInd = 0
