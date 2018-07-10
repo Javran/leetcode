@@ -4,6 +4,12 @@
  * @return {string}
  */
 const removeKdigits = (numsRaw, k) => {
+  /*
+     idea: instead of thinking about removing digits, we pick N - k digits
+     from the string preserving ordering.
+     we can make decisions from most significant digit to least one,
+     which allows us to give optimal solution.
+   */
   const N = numsRaw.length
   const nums = new Int8Array(N)
   for (let i = 0; i < N; ++i)
