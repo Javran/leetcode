@@ -47,3 +47,4 @@ const removeKdigits = (numsRaw, k) => {
 console.assert(removeKdigits("1432219",3) === "1219")
 console.assert(removeKdigits("10200", 1) === "200")
 console.assert(removeKdigits("10", 2) === "0")
+console.assert(removeKdigits("999998468579436432219",3) === "998468579436432219")
