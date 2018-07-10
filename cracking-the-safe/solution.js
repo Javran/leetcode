@@ -12,12 +12,11 @@ const crackSafe = (n, k) => {
    */
   const combCount = k ** n
   const prefixMod = combCount / k
-  // actually just store booleans.
+  // actually just storing booleans.
   const visited = new Int8Array(combCount)
   // expected length
   const totalLen = combCount - 1 + n
   const cur = []
-  let solved = false
   for (let i = 0; i < n; ++i)
     cur.push(0)
   visited[0] = 1
@@ -32,8 +31,7 @@ const crackSafe = (n, k) => {
      */
 
     if (dep === totalLen) {
-      solved = true
-      return
+      return cur.join('')
     }
     // equivalent to `*10` for decimal and `<<1` for binary
     const encodedPrefK = encodedPref*k
@@ -43,15 +41,16 @@ const crackSafe = (n, k) => {
         visited[encoded] = 1
         cur[dep] = i
         // `% prefixMod` removes the most significant digit
-        search(dep+1, encoded % prefixMod)
-        if (solved)
-          return
+        const ans = search(dep+1, encoded % prefixMod)
+        if (ans !== null)
+          return ans
         visited[encoded] = 0
       }
     }
+    return null
   }
-  search(n, 0)
-  return solved ? cur.join('') : "???"
+
+  return search(n, 0)
 }
 
 for (let n = 1; n <= 4; ++n) {
