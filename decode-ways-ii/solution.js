@@ -58,23 +58,23 @@ const M = 10**9+7
  * @return {number}
  */
 const numDecodings = s => {
+  /*
+     idea: dynamic programming ftw.
+
+     be careful about two things:
+
+     - '*' stands for '1' - '9' but not '0'
+     - make sure to `% M`, as the number blows up quickly
+
+   */
   // let f[i] be the way of decoding [0..i-1].
   const f = new Int32Array(s.length+1)
-  const mul = (small, large) => {
-    let sum = 0
-    for (let i = 0; i < small; ++i) {
-      sum = (sum + large) % M
-    }
-    return sum
-  }
   f[0] = 1
   f[1] = decodeWays(s[0])
   for (let i = 2; i <= s.length; ++i) {
-    const way1 = decodeWays(s.substr(i-1, 1))
-    const prod1 = mul(way1, f[i-1])
-    const way2 = decodeWays(s.substr(i-2, 2))
-    const prod2 = mul(way2, f[i-2])
-    f[i] = (prod1+prod2) % M
+    const way1 = (f[i-1] * decodeWays(s.substr(i-1, 1))) % M
+    const way2 = (f[i-2] * decodeWays(s.substr(i-2, 2))) % M
+    f[i] = (way1+way2) % M
   }
   return f[s.length]
 }
