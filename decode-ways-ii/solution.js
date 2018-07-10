@@ -1,6 +1,6 @@
 /*
-   possible ways to decode a string unit,
-   in other words, the string has to be considered as a whole.
+   possible ways to decode a string unit.
+   by "unit" I mean the string has to be considered as a whole.
 
    assume that 1 <= st.length <= 2 and st[?] = '0'-'9' or '*'
  */
@@ -72,8 +72,8 @@ const numDecodings = s => {
   f[0] = 1
   f[1] = decodeWays(s[0])
   for (let i = 2; i <= s.length; ++i) {
-    const way1 = (f[i-1] * decodeWays(s.substr(i-1, 1))) % M
-    const way2 = (f[i-2] * decodeWays(s.substr(i-2, 2))) % M
+    const way1 = f[i-1] * decodeWays(s.substr(i-1, 1))
+    const way2 = f[i-2] * decodeWays(s.substr(i-2, 2))
     f[i] = (way1+way2) % M
   }
   return f[s.length]
