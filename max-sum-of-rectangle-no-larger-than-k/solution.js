@@ -54,16 +54,33 @@ const solveMaxSum1D = (xs, k) => {
  */
 const maxSumSubmatrix = (mat, k) => {
   /*
-     the matrix is at least of size 1x1 otherwise
-     there is no solution.
+     the matrix is at least of size 1x1
+     otherwise there is no solution.
    */
   const rows = mat.length
   const cols = mat[0].length
   let max = -Infinity
+  /*
+
+     credits to java-chao
+
+     first up, know how to deal with it in 1D array:
+     ref: https://www.quora.com/Given-an-array-of-integers-A-and-an-integer-k-find-a-subarray-that-contains-the-largest-sum-subject-to-a-constraint-that-the-sum-is-less-than-k
+
+     the idea is to build accumulative sums and find solution for every index j from 0 to some N-1.
+     which can be solved in O(N*lg N)
+
+     then time to see how to solve this in 2D: we basically
+     project consecutive column regions into 1D array (using summation of course)
+     and solve the problem over there.
+     which results in overall time complexity of O(col*col*row*lg row).
+     this works the best when row is longer than col.
+     but if it is not the case, we still know how to do.
+   */
 
   // now let's assume that the # of rows is larger than the # of cols,
   // so we want to enumerate col ranges and work on them as 1D array.
-  const xs = new Array(rows).fill(0)
+  const xs = new Int32Array(rows)
   for (let cL = 0; cL < cols; ++cL, xs.fill(0)) {
     for (let cR = cL; cR < cols; ++cR) {
       // accumulate new col
