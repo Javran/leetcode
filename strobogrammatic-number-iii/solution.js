@@ -8,6 +8,7 @@ digits[9] = 6
 const pDigits = [0,1,6,8,9]
 const centerDigits = [0,1,8]
 
+// plus one to a string representation of number
 const plus1 = nStr => {
   const xs = new Int8Array(nStr.length+1)
   for (let i = 0; i < nStr.length; ++i)
@@ -91,13 +92,15 @@ const countUp = numStr => {
     // first digit is fine
     if (digits[dFst] >= (numStr.codePointAt(dLen-1) & 15)) {
       ans += countUp(numStr.substr(1, dLen-2))
-    } else if (!(/^9+$/.exec(numStr.substr(1, dLen-2)))) {
-      /*
-         e.g. 123456 ~ 999999
-           as 123451 < 123456, we need to try 123461 >= 123456 instead
-       */
-      const next = plus1(numStr.substr(1,dLen-2))
-      ans += countUp(next)
+    } else {
+      const sub = numStr.substr(1, dLen-2)
+      if (!(/^9+$/.exec(sub))) {
+        /*
+           e.g. 123456 ~ 999999
+             as 123451 < 123456, we need to try 123461 >= 123456 instead
+         */
+        ans += countUp(plus1(sub))
+      }
     }
   }
   return ans
@@ -125,6 +128,20 @@ const strobogrammaticInRange = (low, high) => {
   )
     // in case that low > high
     return 0
+  /*
+     idea: the whole program is built up on top of "countUp" and "countUp1":
+
+     - when "countUp" is given a number say "123456", returns strobogrammatic nums
+       between 123456 ~ 999999 (i.e. max number that has matching # of digits)
+
+     - "countUp1" is for tasks like count in range X0000 ~ 99999, which
+       is a subset of input for "countUp", which is helpful
+       in case we wish to count regions like 10~99, 100~999
+       (i.e. counting strobogrammatic nums for numbers that have a fixed length)
+
+     after this two steps are done,
+     remaining problems are just to reduce ranges using these two functions.
+   */
   // now that low <= high (numerically)
   if (low.length === high.length) {
     if (/^9+$/.exec(high)) {
