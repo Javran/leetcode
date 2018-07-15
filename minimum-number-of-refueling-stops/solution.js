@@ -65,6 +65,28 @@ BinHeap.prototype.extractMin = function() {
   return ret
 }
 
+/*
+   original idea (TLE):
+
+   pretend that [startFuel, 0] is in front of stations[0]
+   and [target, 0] is after stations[N-1] (of the input)
+
+   let f[i] = <Map from <step, remaining fuel when arriving at station i>>
+
+   pick minimum step from f[last] as s, and the answer is s-1
+   (as the last station is a virtual one)
+
+   for i = 0..n-1          ...(1)
+     initialize f[i]
+     for j = 0..i          ...(2)
+       try from f[j] to f[i], with all map pairs in f[j]  ...(3)
+
+   this doesn't work well as the time complexity is as high as O(n^3)
+   especially with (2) and (3) ... this strategy covers all possible situations,
+   but I don't feel right having to explore all possible cases.
+
+ */
+
 /**
  * @param {number} target
  * @param {number} startFuel
