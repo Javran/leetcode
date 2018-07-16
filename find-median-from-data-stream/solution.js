@@ -75,7 +75,24 @@ BinHeap.prototype.getMin = function() {
  * initialize your data structure here.
  */
 const MedianFinder = function() {
-  // max heap on left, min heap on right
+  /*
+     max heap on left, min heap on right.
+
+     so:
+     - this.leftPart.getMin() is actually the max val
+     - this.rightPart.getMin() is the min val
+
+     INVARIANT:
+
+     - 0 <= this.leftPart.size - this.rightPart.size <= 1
+       (in other words, leftPart and rightPart is kept balanced
+       most of the time with bias to leftPart)
+     - this.leftPart.getMin() <= this.rightPart.getMin()
+
+     these invariant helps us to always keep track of
+     the middle two elements of the list.
+
+   */
   this.leftPart = new BinHeap(x => -x)
   this.rightPart = new BinHeap(x => x)
 }
@@ -89,6 +106,13 @@ MedianFinder.prototype.addNum = function(num) {
     // insert to leftPart
     this.leftPart.insert(num)
     if (this.rightPart.size > 0 && this.leftPart.getMin() > this.rightPart.getMin()) {
+      /*
+         when invariant is violated, we can fix it simply by swaping top elements
+         of both heaps.
+         the observation is that the only value causing the invariant violation must
+         be the newly inserted one on top of either heap, if we move it
+         to the other heap, the invariant will be restored.
+       */
       const a = this.leftPart.extractMin()
       const b = this.rightPart.extractMin()
       this.leftPart.insert(b)
@@ -96,6 +120,7 @@ MedianFinder.prototype.addNum = function(num) {
     }
   } else {
     // insert to rightPart
+    // symmetric case
     this.rightPart.insert(num)
     if (this.leftPart.size > 0 && this.leftPart.getMin() > this.rightPart.getMin()) {
       const a = this.leftPart.extractMin()
@@ -116,10 +141,3 @@ MedianFinder.prototype.findMedian = function() {
     return (this.leftPart.getMin() + this.rightPart.getMin()) / 2
   }
 }
-
-/**
- * Your MedianFinder object will be instantiated and called as such:
- * var obj = Object.create(MedianFinder).createNew()
- * obj.addNum(num)
- * var param_2 = obj.findMedian()
- */
