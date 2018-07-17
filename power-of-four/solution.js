@@ -11,6 +11,6 @@ const isPowerOfFour = num => {
      => ? = log2(num) / 2
 
    */
-  const v = Math.floor(Math.floor(Math.log2(num)) / 2)
-  return 4 ** v === num
+  const v = Math.log2(num) / 2
+  return Number.isInteger(v)
 }
