@@ -3,6 +3,11 @@
  * @return {boolean}
  */
 const containsDuplicate = nums => {
+  /*
+     as there isn't any useful constraint on input,
+     we cannot do any better than O(n lg n) in which
+     lg n is the time of accessing our set.
+   */
   if (nums.length <= 1)
     return false
   const s = new Set()
