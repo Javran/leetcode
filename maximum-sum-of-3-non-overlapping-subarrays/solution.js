@@ -4,6 +4,15 @@
  * @return {number[]}
  */
 const maxSumOfThreeSubarrays = (nums, k) => {
+  /*
+     idea: dynamic programming.
+
+     - current version is slow due to not taking into account
+       that we are picking only 3 elements and there's a way to optimize based on this.
+
+     - TODO: optimize
+
+   */
   const N = nums.length
   // kSums[i] = sum from nums[i] to nums[i+k-1]
   let kSums = new Uint32Array(N-k+1)
