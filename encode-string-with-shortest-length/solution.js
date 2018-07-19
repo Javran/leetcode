@@ -21,18 +21,19 @@ const encode = s => {
   const enc = new Array(N)
   for (let i = 0; i < N; ++i)
     enc[i] = new Array(N)
+
   for (let l = 1; l <= 4; ++l) {
     for (let i = 0, j = i+l-1; j < N; ++i, ++j) {
       enc[i][j] = s.substring(i,j+1)
     }
   }
+
   for (let l = 5; l <= N; ++l) {
     for (let i = 0, j = i+l-1; j < N; ++i, ++j) {
-      let minEnc = s.substring(i,j+1)
-      let nowEnc = encodeRep(minEnc)
-      if (nowEnc.length < minEnc.length)
-        minEnc = nowEnc
+      // either encode current partial string
+      let minEnc = encodeRep(s.substring(i,j+1))
       for (let k = i; k < j; ++k) {
+        // or break it into two parts and combine
         const l = enc[i][k]
         const r = enc[k+1][j]
         const lrEnc = encodeRep(l+r)
@@ -42,6 +43,7 @@ const encode = s => {
       enc[i][j] = minEnc
     }
   }
+  console.log(enc)
   return enc[0][N-1]
 }
 
