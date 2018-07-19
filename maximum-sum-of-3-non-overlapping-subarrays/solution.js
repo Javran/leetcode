@@ -15,16 +15,18 @@ const maxSumOfThreeSubarrays = (nums, k) => {
   }
   // now problem becomes taking 3 values from kSums, but with some constraints
   // that all taken value should keep a distance from each other (index diff >= k)
-  const f = new Array(3)
-  const frm = new Array(3)
-  f[1] = Array.from(kSums)
-  frm[1] = new Array(kSums.length).fill(-1)
-  // f[0] = new Int8Array(kSums.length)
-  for (let i = 2; i <= 3; ++i) {
-    f[i] = new Array(kSums.length).fill(-Infinity)
+  const f = new Array(2)
+  const frm = new Array(2)
+  /*
+     f[t][i]: while taking the (t+1)-th element at i (or nums[i ... i-k+1])
+   */
+  f[0] = Array.from(kSums)
+  frm[0] = []
+  for (let i = 1; i < 3; ++i) {
+    f[i] = new Array(kSums.length)
     frm[i] = new Array(kSums.length)
   }
-  for (let t = 2; t <= 3; ++t) {
+  for (let t = 1; t < 3; ++t) {
     for (let i = 0; i < kSums.length; ++i) {
       let max = -Infinity
       let frmInd = null
@@ -40,14 +42,14 @@ const maxSumOfThreeSubarrays = (nums, k) => {
   }
   let max = -Infinity, maxInd = null
   for (let i = 0; i < kSums.length; ++i) {
-    if (f[3][i] > max) {
-      max = f[3][i]
+    if (f[2][i] > max) {
+      max = f[2][i]
       maxInd = i
     }
   }
-  let t = 3
+  let t = 2
   const ans = []
-  while (maxInd !== -1) {
+  while (t >= 0) {
     ans.push(maxInd)
     maxInd = frm[t][maxInd]
     --t
@@ -66,4 +68,4 @@ const genTest = (N = 20000) => {
   console.log(JSON.stringify(xs))
 }
 
-genTest()
+// genTest()
