@@ -50,5 +50,5 @@ const encode = s => {
 console.assert(encodeRep("abababab") === "4[ab]")
 console.assert(encodeRep("aaaaa") === "5[a]")
 
-console.log(encode("aabcaabcd"))
-console.log(encode("abbbabbbcabbbabbbc"))
+console.assert(encode("aabcaabcd") === "2[aabc]d")
+console.assert(encode("abbbabbbcabbbabbbc") === "2[2[abbb]c]")
