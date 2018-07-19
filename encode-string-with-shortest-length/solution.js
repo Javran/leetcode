@@ -1,4 +1,5 @@
 const encodeRep = s => {
+  // see: https://leetcode.com/problems/repeated-substring-pattern/description/
   const ind = (s + s).substr(1, s.length*2-2).indexOf(s)
   if (ind === -1)
     return s
@@ -43,7 +44,6 @@ const encode = s => {
       enc[i][j] = minEnc
     }
   }
-  console.log(enc)
   return enc[0][N-1]
 }
 
