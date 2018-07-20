@@ -26,6 +26,7 @@ struct TreeNode {
 // https://en.wikipedia.org/wiki/Left-child_right-sibling_binary_tree
 
 class Codec {
+    static const std::vector<Node*> z;
 public:
     // Encodes an n-ary tree to a binary tree.
     TreeNode* encode(Node* root) {
@@ -47,10 +48,12 @@ public:
     Node* decode(TreeNode* root) {
         if (root == nullptr)
             return nullptr;
-        auto ret = new Node(root->val, std::vector<Node*>(0));
+        auto ret = new Node(root->val, z);
         for (auto cur = root->left; cur; cur = cur->right) {
             ret->children.emplace_back(decode(cur));
         }
         return ret;
     }
 };
+
+const std::vector<Node*> Codec::z = {};
