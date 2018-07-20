@@ -3,6 +3,15 @@
  * @return {number}
  */
 const minPathSum = grid => {
+  /*
+     idea: basic DP stuff:
+
+     let f[i][j] be the answer to (i,j),
+     then it can be derived from f[i][j-1] and f[i-1][j].
+
+     of course we can optimize the space to O(n), which is quite standard
+     so probably I won't bother.
+   */
   const M = grid.length
   if (M === 0)
     return 0
