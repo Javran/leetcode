@@ -22,56 +22,35 @@ struct TreeNode {
 };
 
 #include <vector>
-#include <algorithm>
 
 // https://en.wikipedia.org/wiki/Left-child_right-sibling_binary_tree
 
 class Codec {
-    TreeNode* encAux(
-        Node* root,
-        decltype(Node::children.begin()) sBegin,
-        decltype(sBegin) sEnd
-    ) {
-        if (root == nullptr)
-            return nullptr;
-        TreeNode * newNode = new TreeNode(root->val);
-        newNode->left = root->children.size() > 0 ?
-            encAux(
-                root->children.front(),
-                root->children.begin()+1,
-                root->children.end()
-            ) : nullptr;
-        newNode->right = sBegin < sEnd ?
-            encAux(*sBegin, sBegin+1, sEnd) : nullptr;
-        return newNode;
-    }
-
-    decltype(Node::children) decodeAux(TreeNode* root) {
-        decltype(Node::children) sibs;
-        if (root == nullptr)
-            return sibs;
-        decltype(Node::children) cs = decodeAux(root->left);
-        std::reverse(cs.begin(), cs.end());
-        Node *newNode = new Node(root->val, cs);
-        sibs = decodeAux(root->right);
-        sibs.push_back(newNode);
-        return sibs;
-    }
-
 public:
     // Encodes an n-ary tree to a binary tree.
     TreeNode* encode(Node* root) {
-        decltype(root->children) dummy;
-        return encAux(root, dummy.begin(), dummy.end());
+        if (root == nullptr)
+            return nullptr;
+        auto ret = new TreeNode(root->val);
+        if (root->children.size() == 0)
+            return ret;
+        auto it = root->children.begin();
+        ret->left = encode(*it);
+        ++it;
+        for (auto cur = ret->left; it < root->children.end(); ++it, cur = cur->right) {
+            cur->right = encode(*it);
+        }
+        return ret;
     }
 
     // Decodes your binary tree to an n-ary tree.
     Node* decode(TreeNode* root) {
-        auto ret = decodeAux(root);
-        if (ret.size() > 0) {
-            return ret.front();
-        } else {
+        if (root == nullptr)
             return nullptr;
+        auto ret = new Node(root->val, std::vector<Node*>(0));
+        for (auto cur = root->left; cur; cur = cur->right) {
+            ret->children.emplace_back(decode(cur));
         }
+        return ret;
     }
 };
