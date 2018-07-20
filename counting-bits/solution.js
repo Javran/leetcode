@@ -16,5 +16,7 @@ const countBits = num => {
   for (let i = 1; i <= num; ++i) {
     xs[i] = xs[i >>> 1] + (i & 1)
   }
+  
+
   return xs
 }
