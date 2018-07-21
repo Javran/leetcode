@@ -19,20 +19,31 @@ const hIndex = cs => {
      since we've sorted cs, this can be simplified to:
 
      - h < 1 || cs[h-1] >= h ===> h === 0 || cs[h-1] >= h
-     - cs[h] <= h
+     - h >= N || cs[h] <= h  ===> h === N || cs[h] <= h
    */
   cs.sort((x,y) => y-x)
   // eliminate cases where h === 0
   if (cs.length === 0 || cs[0] === 0)
     return 0
+  if (cs[cs.length-1] >= cs.length)
+    return cs.length
   // now we just need to find cs[h-1] >= h >= cs[h]
-  for (let h = 1; h < cs.length; ++h)
-    if (cs[h-1] >= h && h >= cs[h])
-      return h
-  return cs.length
+  let l = 1, r = cs.length-1
+  while (l < r) {
+    const mid = (l+r+1) >>> 1
+    if (cs[mid-1] >= mid) {
+      if (mid >= cs[mid])
+        return mid
+      l = mid
+    } else {
+      r = mid - 1
+    }
+  }
+  return l
 }
 
-console.assert(hIndex([11, 15]) === 2)
+console.assert(hIndex([11,15]) === 2)
 console.assert(hIndex([1]) === 1)
 console.assert(hIndex([3,0,6,1,5]) === 3)
 console.assert(hIndex([1,2,3,4,5,5,6,6,6,7]) === 5)
+console.assert(hIndex([1,2,2]) === 2)
