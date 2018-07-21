@@ -34,6 +34,9 @@ const hIndex = cs => {
     // will make this stuck in an infinite loop
     const mid = (l+r+1) >>> 1
     if (cs[mid-1] >= mid) {
+      // this test is not necessary but could make it return a bit faster.
+      if (mid >= cs[mid])
+        return mid
       l = mid
     } else {
       r = mid - 1
