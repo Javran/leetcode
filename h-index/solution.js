@@ -30,6 +30,8 @@ const hIndex = cs => {
   // now we just need to find cs[h-1] >= h >= cs[h]
   let l = 1, r = cs.length-1
   while (l < r) {
+    // need to make mid right-biased, otherwise "l = mid"
+    // will make this stuck in an infinite loop
     const mid = (l+r+1) >>> 1
     if (cs[mid-1] >= mid) {
       if (mid >= cs[mid])
