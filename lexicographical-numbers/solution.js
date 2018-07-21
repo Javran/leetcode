@@ -7,15 +7,18 @@ const lexicalOrder = n => {
      idea: notice that DFS generates the correct order
      so we may just as well use it.
    */
-  const ans = []
+  const ans = new Array(n)
+  let sz = 0
   const gen = cur => {
     // note that cur is never expected to be 0,
     // as we don't want numbers with leading 0s
     if (cur > n)
       return
-    ans.push(cur)
+    ans[sz] = cur
+    ++sz
     const s = cur*10
-    for (let i = 0; i <= 9 && s + i <= n; ++i) {
+    const upBound = Math.min(9, n - s)
+    for (let i = 0; i <= upBound; ++i) {
       gen(s+i)
     }
   }
