@@ -16,23 +16,25 @@ const solution = read4 => {
    * @return {number} The number of characters read
    */
   return (buf, n) => {
-    let xs = []
+    let ret = 0
     if (cache.length > 0) {
       // consume whatever in the cache first.
       const cacheConsumed = cache.slice(0, n)
       const cacheRemained = cache.slice(n)
-      xs = xs.concat(cacheConsumed)
+      buf.push(...cacheConsumed)
+      ret += cacheConsumed.length
       n -= cacheConsumed.length
       cache = cacheRemained
     }
     if (n > 0) {
       // INVARIANT: cache.length === 0
       while (n >= 4 && !endFlag) {
-        const buf = []
-        const loaded = read4(buf)
+        const buf1 = []
+        const loaded = read4(buf1)
         if (loaded < 4)
           endFlag = true
-        xs = xs.concat(buf)
+        buf.push(...buf1)
+        ret += buf1.length
         n -= loaded
       }
       if (n > 0 && !endFlag) {
@@ -42,14 +44,13 @@ const solution = read4 => {
           endFlag = true
         const cacheConsumed = cache.slice(0, n)
         const cacheRemained = cache.slice(n)
-        xs = xs.concat(cacheConsumed)
-        n -= cacheConsumed
+        buf.push(...cacheConsumed)
+        ret += cacheConsumed.length
+        n -= cacheConsumed.length
         cache = cacheRemained
       }
     }
-    for (let i = 0; i < xs.length; ++i)
-      buf[i] = xs[i]
-    return xs.length
+    return ret
   }
 }
 
