@@ -20,6 +20,7 @@ const minEatingSpeed = (piles, H) => {
   let l = 1, r = maxPile
   const testK = K => {
     let hours = 0
+    // we can stop as soon as we find out that we don't have enough time
     for (let i = 0; i < N && hours <= H; ++i) {
       hours += Math.ceil(piles[i] / K)
     }
