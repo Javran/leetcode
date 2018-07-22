@@ -6,6 +6,9 @@ const MAX = (2 ** 31) - 1
  * @return {number}
  */
 const reverse = x => {
+  /*
+     idea: reverse and check bound
+   */
   if (x === 0)
     return 0
   const sign = Math.sign(x)
