@@ -4,7 +4,6 @@ function QNode(front, vState, depth) {
   // current node
   this.front = front
   this.depth = depth
-  this.fromNode = null
   this.next = null
 }
 
@@ -17,7 +16,7 @@ const shortestPathLength = graph => {
   const vStateSet = (which, vState) => (vState | (1 << which))
   const vStateTest = (which, vState) => Boolean(vState & (1 << which))
 
-  // memo[vState][front] = {depth, fromNode} records the best path of <vState> and <front>
+  // memo[vState][front] = depth records the best path of <vState> and <front>
   const memo = new Array(1 << N)
 
   // dummy node for now
@@ -31,7 +30,7 @@ const shortestPathLength = graph => {
     qTail = qTail.next
 
     memo[vState] = new Array(N)
-    memo[vState][i] = {depth: node.depth, fromNode: node.fromNode}
+    memo[vState][i] = node.depth
 
     // reusing this loop to set target v-state, which is 1 for all nodes
     targetVState = vStateSet(i, targetVState)
@@ -39,41 +38,36 @@ const shortestPathLength = graph => {
   // get rid of dummy head
   qHead = qHead.next
   while (qHead) {
-    const {vState, front, fromNode, depth} = qHead
+    const {vState, front, depth} = qHead
     if (vState === targetVState) {
       // current one is already a solution, no need of looking further.
       qHead = qHead.next
       continue
     }
+    const newDep = depth+1
     // try to extend the front
     graph[front].forEach(nextNode => {
       const newVState = vStateSet(nextNode, vState)
-      const nextQNode = new QNode(nextNode, newVState, depth+1)
-      nextQNode.fromNode = qHead
       if (!(newVState in memo)) {
         memo[newVState] = new Array(N)
       }
-      if (!(nextNode in memo[newVState])) {
-        memo[newVState][nextNode] = nextQNode
+      if (
+        !(nextNode in memo[newVState]) ||
+        memo[newVState][nextNode] > newDep
+      ) {
+        memo[newVState][nextNode] = newDep
       } else {
-        const m = memo[newVState][nextNode]
-        if (m.depth > depth+1) {
-          memo[newVState][nextNode] = nextQNode
-        } else {
-          return
-        }
+        return
       }
-      qTail.next = nextQNode
+      qTail.next = new QNode(nextNode, newVState, newDep)
       qTail = qTail.next
     })
     qHead = qHead.next
   }
   let minDepth = +Infinity
-  let minFront = null
   memo[targetVState].forEach(x => {
-    if (minDepth > x.depth) {
-      minDepth = x.depth
-      minFront = x.front
+    if (minDepth > x) {
+      minDepth = x
     }
   })
   return minDepth
@@ -106,8 +100,6 @@ const inp2 = [
   [5]
 ]
 
-// console.log(JSON.stringify(inp2))
-// console.log(shortestPathLength([[1,2,3],[0],[0],[0]]))
 console.assert(shortestPathLength(inp2) === 15)
 console.assert(shortestPathLength([[1,2,3],[0],[0],[0]]) === 4)
 console.assert(shortestPathLength([[1],[0,2,4],[1,3,4],[2],[1,2]]) === 4)
