@@ -13,19 +13,19 @@ const inorderTraversal = root => {
        and meanwhile push previous focus onto the stack
        and pretend it doesn't have a left subtree.
 
+     - if we have lost our focus (=== null),
+       the current "go deep" part is done
+       so we go back and revisit things on stack
+       as if we are doing the recursive version.
+
    */
   const ans = []
   const stack = []
   let focus = root
   while (focus || stack.length > 0) {
     if (focus) {
-      if (focus.left) {
-        stack.push(focus)
-        focus = focus.left
-      } else {
-        ans.push(focus.val)
-        focus = focus.right
-      }
+      stack.push(focus)
+      focus = focus.left
     } else {
       focus = stack.pop()
       ans.push(focus.val)
