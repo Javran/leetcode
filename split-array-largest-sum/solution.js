@@ -4,6 +4,12 @@
  * @return {number}
  */
 const splitArray = (nums, m) => {
+  /*
+     idea: dynamic programming.
+
+     assuming f[i][j] is min max-sum of splitting nums[0..i] into j parts.
+     then f[i][j] can be derive from f[k][j-1] in which k < i
+   */
   const N = nums.length
   const accSum = new Uint32Array(N+1)
   for (let i = 0; i < N; ++i) {
@@ -39,6 +45,3 @@ consoleTest(splitArray)([874,184,1221,255,1744,654,1797,1705,1052,833], 2)(5387)
 consoleTest(splitArray)([874,184,1221,255,1744,654,1797,1705,1052,833], 4)(3502)
 consoleTest(splitArray)([874,184,1221,255,1744,654,1797,1705,1052,833], 9)(1797)
 consoleTest(splitArray)([874,184,1221,255,1744,654,1797,1705,1052,833], 10)(1797)
-
-const xs = genList(10, {l: 0, r: 2000})
-console.log(JSON.stringify(xs))
