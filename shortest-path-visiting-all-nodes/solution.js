@@ -100,6 +100,8 @@ const inp2 = [
   [5]
 ]
 
-console.assert(shortestPathLength(inp2) === 15)
-console.assert(shortestPathLength([[1,2,3],[0],[0],[0]]) === 4)
-console.assert(shortestPathLength([[1],[0,2,4],[1,3,4],[2],[1,2]]) === 4)
+const {consoleTest} = require('leetcode-zwischenzug')
+
+consoleTest(shortestPathLength)(inp2)(15)
+consoleTest(shortestPathLength)([[1,2,3],[0],[0],[0]])(4)
+consoleTest(shortestPathLength)([[1],[0,2,4],[1,3,4],[2],[1,2]])(4)
