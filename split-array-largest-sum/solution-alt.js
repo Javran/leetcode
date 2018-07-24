@@ -18,6 +18,7 @@ const splitArray = (nums, m) => {
     if (l < nums[i])
      l = nums[i]
   }
+  // try to see if we can use <= m subarrays and maintain max sum <= sumBound
   const experiment = sumBound => {
     let sum = 0
     let cnt = 0
