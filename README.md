@@ -11,9 +11,9 @@ Nowadays most source codes are available in JavaScript as I feel that's the lang
 Occasionally I'll use Scala to get some functional programming going
 or simply for HashMap and stuff not easily available for LeetCode's JavaScript environment.
 
-(still WIP) check out [leetcode-zwischenzug](https://www.npmjs.com/package/leetcode-zwischenzug),
-which is a library I'm working on to improve testing & debugging LeetCode problems
-locally.
+[leetcode-zwischenzug](https://www.npmjs.com/package/leetcode-zwischenzug),
+which is a package I'm working on to improve testing & debugging LeetCode problems
+locally. Please install this package if you want to run the code locally.
 
 # Regarding CSharp Programs (mono)
 
