@@ -4,15 +4,20 @@
  * @return {number}
  */
 const splitArray = (nums, m) => {
+  /*
+     a faster approach than solution.js:
+     we can use binary search to find the answer:
+     instead of dynamic programming, we'll just guess the
+     max sum and try to split array so that we have limited # of subarrays
+     and still have sum under control.
+   */
   const N = nums.length
-  const accSum = new Uint32Array(N+1)
-  let l = -Infinity
+  let l = -Infinity, r = 0
   for (let i = 0; i < N; ++i) {
-    accSum[i+1] = accSum[i] + nums[i]
+    r += nums[i]
     if (l < nums[i])
      l = nums[i]
   }
-  let r = accSum[N]
   const experiment = sumBound => {
     let sum = 0
     let cnt = 0
