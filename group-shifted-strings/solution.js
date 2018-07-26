@@ -8,6 +8,16 @@ const groupStrings = xs => {
   /*
      idea: normalize the string by forcing first char to be 'a',
      then we can group them by using the result of normalization as key.
+
+     note: for not well explained reason, it's assumed that we are cycling through alphabet,
+     which needs a different strategy than when successor of 'z' doesn't exist:
+
+     - if we cycle through the alphabet (which is what we are doing),
+       fixing first char to "a" is good enough
+     - if not, then we have to stop at "z", in this case, we need to determine
+       the closest character to "z" and use that as difference to guide normalization.
+       in this case the normalization just try to make sure that the normalized string contains at least one "z"
+
    */
   const norm = s => {
     if (s.length === 0)
