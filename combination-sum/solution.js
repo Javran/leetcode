@@ -4,6 +4,12 @@
  * @return {number[][]}
  */
 const combinationSum = (cs, target) => {
+  /*
+     idea: just DFS. typical knapsack problem with replacement.
+     DP could work but since we are supposed to output all possible results,
+     DP would just result in more waste of space which doesn't worth it.
+   */
+
   // order doesn't matter, and we want to reduce search space
   // and eliminate duplicate answers, we may just as well sort it and remove dups first
   cs.sort((x,y) => x - y)
