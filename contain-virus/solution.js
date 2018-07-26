@@ -34,6 +34,7 @@ const containVirus = grid => {
    */
   const rows = grid.length
   const cols = grid[0].length
+  // could use generators, but it seems to be faster using arrays
   const validMoves = (x,y) => {
     const ret = []
     if (x > 0)
