@@ -14,50 +14,49 @@ const exist = (board, word) => {
      to rule out duplicated states (for a particular path,
      all of its visited cells matters when determining where to go next)
 
+     optimize: since we only need to find one solution
+     and it seems that destructively modifying input is okay,
+     we can let function return at the first available moment.
+
    */
   if (word === '')
     // vacuously true
     return true
   const rows = board.length
-  if (rows === 0)
-    return false
   const cols = board[0].length
-  if (cols === 0)
-    return false
-  let found = false
-  const visited = new Set()
   const search = (r,c,dep) => {
     if (dep === word.length) {
-      found = true
-      return
+      return true
     }
-    for (let i = 0; i < 4 && !found; ++i) {
+    const wCode = word.codePointAt(dep)
+    for (let i = 0; i < 4; ++i) {
       const [dr,dc] = dirs[i]
       const r1 = r + dr, c1 = c + dc
       if (
         r1 >= 0 && r1 < rows && c1 >= 0 && c1 < cols &&
-	    board[r1][c1] === word[dep]
+	    board[r1][c1].codePointAt(0) === wCode
       ) {
-        const key = `${r1},${c1}`
-        if (!(visited.has(key))) {
-          visited.add(key)
-          search(r1,c1,dep+1)
-          visited.delete(key)
-        }
+        const tmp = board[r1][c1]
+        board[r1][c1] = ''
+        if (search(r1,c1,dep+1))
+          return true
+        board[r1][c1] = tmp
       }
     }
+    return false
   }
-  for (let r = 0; r < rows && !found; ++r) {
-    for (let c = 0; c < cols && !found; ++c) {
+  for (let r = 0; r < rows; ++r) {
+    for (let c = 0; c < cols; ++c) {
       if (board[r][c] === word[0]) {
-        const key = `${r},${c}`
-        visited.add(key)
-        search(r,c,1)
-        visited.delete(key)
+        const tmp = board[r][c]
+        board[r][c] = ''
+        if (search(r,c,1))
+          return true
+        board[r][c] = tmp
       }
     }
   }
-  return found
+  return false
 }
 
 const {consoleTest} = require('leetcode-zwischenzug')
