@@ -5,7 +5,7 @@ const dsFind = x => {
 }
 
 // unionHook(u,v) to notify that u now becomes parent of v
-const dsUnion = (x,y,unionHook) => {
+const mkDsUnion = unionHook => (x,y) => {
   let xRoot = dsFind(x), yRoot = dsFind(y)
   if (xRoot === yRoot)
     return xRoot
@@ -22,8 +22,6 @@ const dsUnion = (x,y,unionHook) => {
   return xRoot
 }
 
-const dirs = [[-1,0],[1,0],[0,-1],[0,1]]
-
 /**
  * @param {number[][]} grid
  * @return {number}
@@ -36,6 +34,18 @@ const containVirus = grid => {
    */
   const rows = grid.length
   const cols = grid[0].length
+  const validMoves = (x,y) => {
+    const ret = []
+    if (x > 0)
+      ret.push([x-1,y])
+    if (x + 1 < rows)
+      ret.push([x+1,y])
+    if (y > 0)
+      ret.push([x,y-1])
+    if (y + 1 < cols)
+      ret.push([x,y+1])
+    return ret
+  }
   const emptyCells = new Set()
   const activeChunks = new Set()
   const dSets = new Array(rows)
@@ -45,6 +55,10 @@ const containVirus = grid => {
      coords encode: code = (i <<< 6) + j
      decode: i = code >>> 6, j = code & 0x3f
    */
+  const hook = (_u,v) => {
+    activeChunks.delete(v)
+  }
+  const dsUnion = mkDsUnion(hook)
   for (let i = 0; i < rows; ++i)
     for (let j = 0; j < cols; ++j) {
       if (grid[i][j] === 1) {
@@ -52,14 +66,11 @@ const containVirus = grid => {
         node.parent = node
         dSets[i][j] = node
         activeChunks.add(node)
-        const hook = (_u,v) => {
-          activeChunks.delete(v)
-        }
         if (i > 0 && grid[i-1][j] === 1) {
-          dsUnion(dSets[i-1][j], node, hook)
+          dsUnion(dSets[i-1][j], node)
         }
         if (j > 0 && grid[i][j-1] === 1) {
-          dsUnion(dSets[i][j-1], node, hook)
+          dsUnion(dSets[i][j-1], node)
         }
       } else {
         // g[i][j] === 0
@@ -79,10 +90,8 @@ const containVirus = grid => {
     emptyCells.forEach(code => {
       const x = code >>> 6
       const y = code & 0x3f
-      dirs.forEach(([dx,dy]) => {
-        const x1 = x + dx
-        const y1 = y + dy
-        if (x1 >= 0 && x1 < rows && y1 >= 0 && y1 < cols && grid[x1][y1] === 1) {
+      validMoves(x,y).forEach(([x1, y1]) => {
+        if (grid[x1][y1] === 1) {
           const chunkRoot = dsFind(dSets[x1][y1])
           if (
             grid[x1][y1] === 1 &&
@@ -113,10 +122,8 @@ const containVirus = grid => {
     maxThreatCells.forEach(code => {
       const x = code >>> 6
       const y = code & 0x3f
-      dirs.forEach(([dx,dy]) => {
-        const x1 = x + dx
-        const y1 = y + dy
-         if (x1 >= 0 && x1 < rows && y1 >= 0 && y1 < cols && grid[x1][y1] === 1) {
+      validMoves(x,y).forEach(([x1,y1]) => {
+         if (grid[x1][y1] === 1) {
            const chunkRoot = dsFind(dSets[x1][y1])
            if (
              chunkRoot === maxThreatChunk
@@ -135,10 +142,8 @@ const containVirus = grid => {
     emptyCells.forEach(code => {
       const x = code >>> 6
       const y = code & 0x3f
-      dirs.forEach(([dx,dy]) => {
-        const x1 = x + dx
-        const y1 = y + dy
-        if (x1 >= 0 && x1 < rows && y1 >= 0 && y1 < cols && grid[x1][y1] === 1) {
+      validMoves(x,y).forEach(([x1,y1]) => {
+        if (grid[x1][y1] === 1) {
           const chunkRoot = dsFind(dSets[x1][y1])
           if (
             activeChunks.has(chunkRoot)
@@ -157,18 +162,12 @@ const containVirus = grid => {
       node.parent = node
       dSets[x][y] = node
       activeChunks.add(node)
-      const hook = (_u,v) => {
-        activeChunks.delete(v)
-      }
-
-      dirs.forEach(([dx,dy]) => {
-        const x1 = x + dx
-        const y1 = y + dy
-        if (x1 >= 0 && x1 < rows && y1 >= 0 && y1 < cols && grid[x1][y1] === 1) {
+      validMoves(x,y).forEach(([x1,y1]) => {
+        if (grid[x1][y1] === 1) {
           // a bit twist here: inactive chunks cannot threat empty cells,
           // we only try to union with active chunks
           if (activeChunks.has(dsFind(dSets[x1][y1]))) {
-            dsUnion(dSets[x1][y1], node, hook)
+            dsUnion(dSets[x1][y1], node)
           }
         }
       })
