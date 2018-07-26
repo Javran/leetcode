@@ -29,6 +29,11 @@ const dirs = [[-1,0],[1,0],[0,-1],[0,1]]
  * @return {number}
  */
 const containVirus = grid => {
+  /*
+     idea: just do what's asked.
+     here I decide to use disjoint-set
+     for easy chunk detection
+   */
   const rows = grid.length
   const cols = grid[0].length
   const emptyCells = new Set()
@@ -68,6 +73,9 @@ const containVirus = grid => {
     for (let ac of activeChunks) {
       threatenCells.set(ac, new Set())
     }
+    // the trick is to look for empty cells and see if they are
+    // threaten by any active chunks,
+    // if so, we record current cell to threatenCells of the active chunks.
     emptyCells.forEach(code => {
       const x = code >>> 6
       const y = code & 0x3f
@@ -80,6 +88,11 @@ const containVirus = grid => {
             grid[x1][y1] === 1 &&
             threatenCells.has(chunkRoot)
           ) {
+            /*
+               we are using Set because the list is not guaranteed to be unique:
+               if multiple cells of the same chunk threatens the same cell, (x,y) in this case,
+               it can count towards the chunk multiple times.
+             */
             threatenCells.get(chunkRoot).add(code)
           }
         }
@@ -108,13 +121,16 @@ const containVirus = grid => {
            if (
              chunkRoot === maxThreatChunk
            ) {
-             // console.log([x,y],[x1,y1])
+             // driving by empty cells allows us to count walls
+             // without worrying about dups
              ++ans
            }
         }
       })
     })
     // step 4: spread
+    // keeping a list because we don't want the update to happen immediately,
+    // which could pre-maturely merge blocks and end up infecting more cells than actually needed.
     const todo = []
     emptyCells.forEach(code => {
       const x = code >>> 6
@@ -149,6 +165,8 @@ const containVirus = grid => {
         const x1 = x + dx
         const y1 = y + dy
         if (x1 >= 0 && x1 < rows && y1 >= 0 && y1 < cols && grid[x1][y1] === 1) {
+          // a bit twist here: inactive chunks cannot threat empty cells,
+          // we only try to union with active chunks
           if (activeChunks.has(dsFind(dSets[x1][y1]))) {
             dsUnion(dSets[x1][y1], node, hook)
           }
