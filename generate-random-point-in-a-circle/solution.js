@@ -1,3 +1,55 @@
+/*
+   idea: break the circle into N small isosceles,
+   when N is big enough, we can just worry about
+   creating a uniform distribution on these isosceles.
+
+   let theta = 2*pi / N, we have an isoscele whose
+   3 sides are radius, radius, 2*pi*radius / N,
+   and we can break it into two right triangles:
+
+       /|\
+      / | \
+     /  |  \
+    /   H   \
+   __W__|__W__
+
+   now the problem becomes create a uniform distribution of this
+   and rotate n*theta where `n : int ~ U[0, N-1]`
+
+   this can be done by picking inside a rectangle:
+
+   i.e. (x0, y0) in Solution.prototype.randPoint
+
+   y
+   ^
+   +-----+
+   |    /|
+   | A / |
+   |  /  |
+   | / B H
+   |__W__|___>x
+
+   and translate A and B so we end up with something like this:
+
+        y
+        ^
+        |
+        |
+   -----O--------> x
+       /|\
+      / | \
+     /  |  \
+    / B H A \
+   __W__|__W__
+        |
+
+   i.e. (x1, y1) in Solution.prototype.randPoint
+
+   now the rest of it is just applying rotation matrix on coordiates and translating
+   it with x_center and y_center
+
+ */
+
 const N = 10 ** 8
 
 /**
@@ -22,7 +74,8 @@ Solution.prototype.randPoint = function() {
   const x0 = Math.random() * W
   const y0 = Math.random() * H
   let x1, y1
-  if (y0 <= H * x0 / W) {
+  // to avoid division
+  if (W * y0 <= H * x0) {
     x1 = -(W-x0)
     y1 = -(H-y0)
   } else {
@@ -37,6 +90,7 @@ Solution.prototype.randPoint = function() {
 }
 
 const s = new Solution(10,20,90)
+// redirect it somewhere as .csv and plot it to see the result
 for (let i = 0; i < 5000; ++i) {
   const t = s.randPoint()
   console.log(`${t[0]},${t[1]}`)
