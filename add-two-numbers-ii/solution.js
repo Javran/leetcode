@@ -69,3 +69,7 @@ const addTwoNumbers = (l1, l2) => {
   }
   return ans
 }
+
+const {consoleTest, mkListNode, listNodeToArray} = require('leetcode-zwischenzug')
+const f = consoleTest((xs, ys) => listNodeToArray(addTwoNumbers(mkListNode(xs), mkListNode(ys))))
+f([9,9,9,9], [1])([1,0,0,0,0])
