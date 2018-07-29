@@ -12,11 +12,15 @@ const profitableSchemes = (G, P, group, profit) => {
    */
   const N = group.length
   /*
-     let f[p][g] be # of schemes with p profit and g members where
-     we have taken into account schemes 0..i-1 and is considering
-     scheme i with grp = group[i] and prof = profit[i]:
+     let f[p][g][i] be # of schemes with p profit and g members where
+     we have taken into account crimes 0..i-1 and is considering
+     crime i with grp = group[i] and prof = profit[i]:
 
-     f[p+prof][g+grp] += f[p][g]
+     f[p+prof][g+grp][i] += f[p][g][i-1]
+
+     note that we can choose to not consider crime i at all then f[p+0][g+0][i] === f[p][g][i-1].
+     this suggest that we can get rid of the last dimension (i.e. [i] here)
+     and just use f[p][g][i-1] as if we have considered the case that crime i is not committed.
 
    */
   const f = new Array(P+1)
