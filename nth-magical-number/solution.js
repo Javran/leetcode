@@ -6,7 +6,6 @@ const gcd = (a,b) => {
 
 const M = 10 ** 9 + 7
 
-// console.log(gcd(1234,16))
 /**
  * @param {number} N
  * @param {number} A
@@ -14,6 +13,18 @@ const M = 10 ** 9 + 7
  * @return {number}
  */
 const nthMagicalNumber = (N, A, B) => {
+  /*
+     idea: we can find first X solutions <= LCM(A,B):
+
+     > merge([A,2A,3A,...], [B,2B,3B,...]) (all elements are < LCM(A,B), followed by LCM(A,B)
+
+     where merge is the function we usually use in a merge sort.
+
+     after this we'll begin with min(A,B)+LCM(A,B) and start this cycle again
+     but with LCM(A,B) as base instead of N.
+
+     so after we figure out how long this cycle would be, the rest of it is standard
+   */
   // gcd and lcm
   const g = gcd(A,B)
   const l = A / g * B
