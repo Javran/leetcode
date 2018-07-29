@@ -3,49 +3,35 @@
  * @return {number}
  */
 const findLonelyPixel = img => {
+  /*
+     idea: solve 1d problem for rows and cols,
+     once this is done, 2d lonely pixels
+     are those that occupied an otherwise empty row and col,
+     which is the intersection of both 1d solution.
+     so we just take min of them
+   */
   const rows = img.length
   if (rows === 0)
     return 0
   const cols = img[0].length
   if (cols === 0)
     return 0
-  const colSets = new Array(cols)
-  // scan every row looking for lonely black pixels
+  const rowCounts = new Uint16Array(rows)
+  const colCounts = new Uint16Array(cols)
   for (let i = 0; i < rows; ++i) {
-    let j = 0
-    while (j < cols && img[i][j] === 'W')
-      ++j
-    if (j < cols) {
-      let good = true
-      // img[i][j] === 'B'
-      for (let k = j+1; good && k < cols; ++k) {
-        if (img[i][k] === 'B')
-          good = false
-      }
-      if (good) {
-        // try recording i,j
-        if (!(j in colSets)) {
-          colSets[j] = j
-        } else {
-          // wipe old result as if it's removed
-          // but setting it to false still keep the index occupied
-          colSets[j] = false
-        }
+    for (let j = 0; j < cols; ++j) {
+      if (img[i][j] === 'B') {
+        ++rowCounts[i]
+        ++colCounts[j]
       }
     }
   }
-  return colSets.reduce((acc, colIndOrFalse) => {
-    if (colIndOrFalse !== false) {
-      let count = 0
-      for (let i = 0; count <= 1 && i < rows; ++i) {
-        if (img[i][colIndOrFalse] === 'B')
-          ++count
-      }
-      if (count === 1)
-        ++acc
-    }
-    return acc
-  }, 0)
+  const g = (acc, cnt) =>
+    cnt === 1 ? acc + 1 : acc
+  return Math.min(
+    rowCounts.reduce(g, 0),
+    colCounts.reduce(g, 0)
+  )
 }
 
 const {consoleTest} = require('leetcode-zwischenzug')
