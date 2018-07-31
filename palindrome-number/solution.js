@@ -8,27 +8,30 @@ const isPalindrome = x => {
      this is EXACTLY why you should never try to test a string property
      without using string unless performance is critical
      this is just more complicated for nothing.
+
+     optimize: looks like (_ >>> 0) is a more efficient way to
+     take floor than Math.floor. noted.
    */
   if (x < 0)
     return false
   if (x < 10)
     return true
   let num = x
-  let base = 10 ** Math.floor(Math.log10(x))
+  let base = 10 ** (Math.log10(x) >>> 0)
   for (
     /* NOOP */;
     base >= 100;
     /* NOOP */
   ) {
-    const head = Math.floor(num / base)
+    const head = (num / base) >>> 0
     const last = num % 10
     if (head !== last)
       return false
-    num = Math.floor((num - head * base) / 10)
+    num = ((num - head * base) / 10) >>> 0
     base /= 100
   }
   if (base === 10) {
-    return Math.floor(num / 10) === num % 10
+    return ((num / 10) >>> 0) === num % 10
   } else {
     return true
   }
