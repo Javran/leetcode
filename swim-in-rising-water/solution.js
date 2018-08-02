@@ -24,6 +24,11 @@ const dsUnion = (x,y) => {
  * @return {number}
  */
 const swimInWater = grid => {
+  /*
+     idea: the problem can be simplified to be just asking
+     for the first time that (0,0) and (N-1,N-1) are connected
+     with each other, and disjoint set could do a good job of this.
+   */
   const N = grid.length
   const T = N * N
   const rs = new Uint16Array(T)
