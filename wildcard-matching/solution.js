@@ -26,7 +26,13 @@ const isMatch = (str, patRaw) => {
   for (let i = 0; i <= str.length; ++i)
     f[i] = new Uint8Array(pat.length+1)
   /*
-     f[i][j]: bool tells if str[0..i-1] and pat[0..j-1] matches.
+     idea: dynamic programming.
+
+     - f[i][j]: bool tells if str[0..i-1] and pat[0..j-1] matches.
+     - straightforward recurrence relation for literal pattern or pattern '?' from f[i-1][j-1]
+     - if pattern is '*', we'll need to check if any of f[k][j-1] matches,
+       fortunately we can store this info (by `tmp` above) so we don't end up trying all previously
+       encountered `i`s.
    */
   f[0][0] = 1
   if (pat[0] === '*') {
