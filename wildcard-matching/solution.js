@@ -21,6 +21,8 @@ const isMatch = (str, patRaw) => {
     }
   }
   const f = new Array(str.length+1)
+  // tmp[i] records if pat[0..i] has been matched.
+  const tmp = new Uint8Array(pat.length)
   for (let i = 0; i <= str.length; ++i)
     f[i] = new Uint8Array(pat.length+1)
   /*
@@ -28,6 +30,9 @@ const isMatch = (str, patRaw) => {
    */
   f[0][0] = 1
   if (pat[0] === '*') {
+    /*
+       well, we have to handle this specially because '*' can match any string.
+     */
     for (let i = 0; i <= str.length; ++i)
       f[i][1] = 1
   }
@@ -35,18 +40,23 @@ const isMatch = (str, patRaw) => {
     const s = str[i-1]
     for (let j = 1; j <= pat.length; ++j) {
       const p = pat[j-1]
-      if (f[i][j])
-        continue
       if (p === '?' || p === s) {
         if (f[i-1][j-1])
           f[i][j] = 1
       }
       if (p === '*') {
-        for (let k = i; k >= 0; --k)
-          if (f[k][j-1]) {
-            f[i][j] = 1
-            break
-          }
+        /*
+           current pattern char is pat[j-1],
+           and we want to know if pat[0..j-2] are matched
+           with some str[0..?] where ? is any index of str we have encountered so far.
+           this means that we can let '*' consume str[?+1 .. i-1] so that
+           str[0..i-1] can match with pat[0..j-1]
+        */
+        if (tmp[j-2])
+          f[i][j] = 1
+      }
+      if (f[i][j]) {
+        tmp[j-1] = 1
       }
     }
   }
