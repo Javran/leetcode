@@ -15,7 +15,7 @@
  * @param {number[]} prices
  * @return {number}
  */
-const maxProfit = ps => {
+const maxProfit_v1 = ps => {
   const N = ps.length
   if (N === 0)
     return 0
@@ -48,14 +48,56 @@ const maxProfit = ps => {
    */
   for (let k = 1; k <= 2; ++k) {
     for (let i = 1; i < N; ++i) {
-      let max = f[i-1][k]
-      for (let j = 0; j < i ; ++j) {
+      let max = -Infinity
+      for (let j = 0; j < i; ++j) {
         let cur = f[j][k-1] + ps[i] - ps[j]
         if (cur > max) {
           max = cur
         }
       }
-      f[i][k] = max
+      f[i][k] = Math.max(f[i-1][k], max)
+    }
+  }
+  return f[N-1][2]
+}
+
+// credits to peterleetcode
+// ref: https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii/discuss/39608/A-clean-DP-solution-which-generalizes-to-k-transactions
+const maxProfit = ps => {
+  const N = ps.length
+  if (N === 0)
+    return 0
+  const f = new Array(N)
+  for (let i = 0; i < N; ++i)
+    f[i] = new Array(3).fill(0)
+  for (let k = 1; k <= 2; ++k) {
+    // also see graham2181's explanation below in that page for why this "max" business works.
+    /*
+       f[1][k] = max of
+       - f[0][k]
+       - f[0][k-1] + ps[1] - ps[0] => (f[0][k-1] - ps[0]) + ps[1]
+
+       f[2][k] = max of
+       - f[1][k]
+       - f[1][k-1] + ps[2] - ps[1] => (f[1][k-1] - ps[1]) + ps[2]
+       - f[0][k-1] + ps[2] - ps[0] => (f[0][k-1] - ps[0]) + ps[1]
+
+       f[3][k] = max of
+       - f[2][k]
+       - f[2][k-1] + ps[3] - ps[2] => (f[2][k-1] - ps[2]) + ps[3]
+       - f[1][k-1] + ps[3] - ps[1] => (f[1][k-1] - ps[1]) + ps[2]
+       - f[0][k-1] + ps[3] - ps[0] => (f[0][k-1] - ps[0]) + ps[1]
+
+       ...
+
+       note that how things are repeated
+       so we can keep track of max = f[j][k-1] - ps[j] to
+       reduce the amount of unnecessary computations
+     */
+    let max = f[0][k-1] - ps[0]
+    for (let i = 1; i < N; ++i) {
+      f[i][k] = Math.max(f[i-1][k], ps[i] + max)
+      max = Math.max(max, f[i][k-1] - ps[i])
     }
   }
   return f[N-1][2]
