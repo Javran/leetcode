@@ -1,7 +1,7 @@
 // details in my best-time-to-buy-and-sell-stock-iii solution.
 const maxProfit = (K, ps) => {
   const N = ps.length
-  if (N === 0)
+  if (N <= 1)
     return 0
   if (K >= (N >>> 1)) {
     // when we have more than enough limit on transactions,
@@ -13,17 +13,25 @@ const maxProfit = (K, ps) => {
     }
     return ans
   }
-  const f = new Array(N)
-  for (let i = 0; i < N; ++i)
-    f[i] = new Uint32Array(K+1)
+  /*
+     optimize 1: we swap two dimensions here so that
+     we have less amount of Arrays to initialize and handle.
+     (at this point we know K < N/2)
+
+     optimize 2: note that f[k][x] depends only on f[k-1][y]
+     for some x,y. this suggests that we only need 2 arrays
+     to carry out the computation.
+   */
+  const f = [new Uint32Array(N), new Uint32Array(N)]
   for (let k = 1; k <= K; ++k) {
-    let max = f[0][k-1] - ps[0]
+    let kCur = k & 1, kPrev = 1 - kCur
+    let max = f[kPrev][0] - ps[0]
     for (let i = 1; i < N; ++i) {
-      f[i][k] = Math.max(f[i-1][k], ps[i] + max)
-      max = Math.max(max, f[i][k-1] - ps[i])
+      f[kCur][i] = Math.max(f[kCur][i-1], ps[i] + max)
+      max = Math.max(max, f[kPrev][i] - ps[i])
     }
   }
-  return f[N-1][K]
+  return f[K & 1][N-1]
 }
 
 const {consoleTest, genList} = require('leetcode-zwischenzug')
