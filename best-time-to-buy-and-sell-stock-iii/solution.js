@@ -33,21 +33,27 @@ const maxProfit = ps => {
 
        NOTHING IS OBVIOUS ABOUT THIS CASE. so we'll have to explain this properly:
        this case is about if we sell stock at i-th day.
-       but note that we intentionally allow i === j to indicate
-       the fact that we can buy and sell stock at the same day once or twice.
+       note that nothing prevents us from buying and selling at the same day,
+       this ends up producing 0 profit, but doing so allows us to
+       worry about performing exactly k transactions instead of at most k transactions
        (as long as N >= 1 to allow this operation to happen)
-       we want to do this so we don't force ourselves into doing negative profits
-       (e.g. ps = [4,3,2,1])
-
+       so we begin with allowing i === j to indicate that this operation is allowed,
+       but actually we can have slightly better constrains:
+       0 <= j < i with same recurrence relation also works.
+       this is because f[i-1][k] is involved,
+       which is at least 0 (as we have initialized it this way)
+       we can interpret f[0][k] === 0 as performing this "buy and sell at the same day" business
+       on first day, and we actually don't care that when this "empty operation" would happen.
 
    */
   for (let k = 1; k <= 2; ++k) {
     for (let i = 1; i < N; ++i) {
       let max = f[i-1][k]
-      for (let j = 0; j <= i ; ++j) {
+      for (let j = 0; j < i ; ++j) {
         let cur = f[j][k-1] + ps[i] - ps[j]
-        if (cur > max)
+        if (cur > max) {
           max = cur
+        }
       }
       f[i][k] = max
     }
