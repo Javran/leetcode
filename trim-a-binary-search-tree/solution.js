@@ -7,6 +7,10 @@ const {TreeNode, consoleTest, mkTree} = require('leetcode-zwischenzug')
  * @return {TreeNode}
  */
 const trimBST = (root, L, R) => {
+  /*
+     idea: should be straightforward, just slight discussion regarding
+     the relationship between L,R and root.val
+   */
   const go = root => {
     if (root === null)
       return null
