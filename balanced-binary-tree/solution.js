@@ -7,12 +7,14 @@ const isBalanced = root => {
   const go = root => {
     if (root) {
       const lResult = go(root.left)
+      if (lResult === false)
+        return false
       const rResult = go(root.right)
-      if (lResult === false || rResult === false)
+      if (rResult === false)
         return false
       if (Math.abs(lResult - rResult) > 1)
         return false
-      return 1 + Math.max(lResult, rResult)
+      return 1 + (lResult >= rResult ? lResult : rResult)
     } else {
       // empty tree
       return 0
