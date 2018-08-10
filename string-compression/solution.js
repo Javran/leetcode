@@ -25,6 +25,8 @@ const compress = chars => {
       if (ch !== null) {
         if (count > 1) {
           record(ch)
+          // note that this is safe to do as long as count > 1
+          // so that compressed string is never longer
           String(count).split('').map(record)
         } else {
           record(ch)
