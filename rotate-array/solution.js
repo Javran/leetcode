@@ -14,8 +14,19 @@ const rotate = (nums, k) => {
   if (N <= 1)
     return
   k = k % N
-  // our approach results in rotating to left, so we have to fix this
-  // by turning k around.
+  /*
+     our approach results in rotating to left, so we have to fix this
+     by turning k around.
+
+     note:
+
+     - left-rotation is implemented by keeping index j (below) move forward as j = (j+k) % N
+     - right-rotation can be implemented by keeping index j move "backwards" as j = (j+(N-k)) % N.
+       (note that we are not doing j = (j-k) % N as this would make j negative at some point,
+       which is not what we want.)
+       but doing so is the same as changing k to N-k as if we are doing a left-rotation.
+       we might as well do this so we don't re-compute N-k over and over again.
+   */
   k = N - k
   if (k === 0)
     return
