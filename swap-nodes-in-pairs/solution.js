@@ -5,6 +5,23 @@ const {consoleTest, ListNode, mkListNode, listNodeToArray} = require('leetcode-z
  * @return {ListNode}
  */
 const swapPairs = head => {
+  /*
+     idea: nothing difficult, but we can't be too careful
+     when it comes to manipulating pointers.
+
+     we'll use 3 pointers in the following relative position:
+
+     ... -> prev -> fst -> snd -> ...
+
+     where fst = prev.next, snd = fst.next.
+     (of course if either of `fst` or `snd` becomes null
+     we can stop the swapping process immediately)
+
+     now that we can swap `fst` and `snd` and proceed by setting `prev` to new `snd`:
+
+     ... -> prev -> snd -> fst (next prev position) -> ...
+
+   */
   const dummy = {next: head}
   for (let prev = dummy; prev !== null; /* NOOP */) {
     const fst = prev.next
