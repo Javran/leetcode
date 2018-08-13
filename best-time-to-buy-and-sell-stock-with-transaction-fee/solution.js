@@ -33,15 +33,20 @@ const maxProfit = (prices, fee) => {
      of the action of buying, holding for potentially few days and then selling.
 
    */
-  const buy = new Array(N)
-  const sell = new Array(N)
-  buy[0] = -prices[0]
-  sell[0] = 0
+  /*
+     note that buy[i] and sell[i] depends only on buy[i-1] and sell[i-1],
+     this allows us to save some space.
+   */
+  let buy = -prices[0]
+  let sell = 0
   for (let i = 1; i < N; ++i) {
-    buy[i] = Math.max(buy[i-1], sell[i-1]-prices[i])
-    sell[i] = Math.max(sell[i-1], buy[i-1]+prices[i]-fee)
+    const p = prices[i]
+    const newBuy = Math.max(buy, sell-p)
+    const newSell = Math.max(sell, buy+p-fee)
+    buy = newBuy
+    sell = newSell
   }
-  return sell[N-1]
+  return sell
 }
 
 const {consoleTest} = require('leetcode-zwischenzug')
