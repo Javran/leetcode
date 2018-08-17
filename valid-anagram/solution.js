@@ -13,6 +13,9 @@ const freqCount = s => {
  * @return {boolean}
  */
 const isAnagram = (s, t) => {
+  /*
+     idea: to be anagram is to be equivalent under freq count.
+   */
   if (s.length !== t.length)
     return false
   const xs = freqCount(s)
