@@ -10,6 +10,12 @@ const getFactors = n => {
   const ans = []
   const search = (x, min, dep) => {
     if (x === 1) {
+      /*
+         for the constraint "<= n",
+         we just need to make sure that the length is at least 2
+         since we know 1 cannot be included in cur (as we begin with 2),
+         as long as dep > 1, we cannot reach n.
+       */
       if (dep > 1)
         ans.push(cur.slice(0, dep))
       return
