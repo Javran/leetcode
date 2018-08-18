@@ -6,6 +6,9 @@ const codeA = 'a'.codePointAt(0)
  * @return {boolean}
  */
 const wordPattern = (pattern, str) => {
+  /*
+     idea: straightforward, but be careful about bijection checking.
+   */
   const words = str.split(' ')
   if (pattern.length !== words.length)
     return false
@@ -16,14 +19,24 @@ const wordPattern = (pattern, str) => {
     return false
   const patMap = new Array(26).fill(null)
   for (let i = 0; i < N; ++i) {
+    /*
+       this loop serves the purpose of both constructing the binding
+       and checking the consisency of the binding
+     */
     const pat = pattern.codePointAt(i) - codeA
     if (patMap[pat] === null) {
+      // binding an unbound pat
       patMap[pat] = words[i]
     } else {
+      // checking whether the pat binding is consistent
       if (patMap[pat] !== words[i])
         return false
     }
   }
+  /*
+     finally we need to make sure that same word does not map
+     back to different pats
+   */
   const xs = patMap.filter(x => x !== null)
   const xsSet = new Set(xs)
   return xs.length === xsSet.size
