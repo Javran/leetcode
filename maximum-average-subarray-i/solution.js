@@ -4,6 +4,9 @@
  * @return {number}
  */
 const findMaxAverage = (xs, k) => {
+  /*
+     idea: a sliding window of sum
+   */
   let curSum = 0
   for (let i = 0; i < k; ++i)
     curSum += xs[i]
