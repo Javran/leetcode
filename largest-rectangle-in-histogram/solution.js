@@ -3,7 +3,16 @@
  * @return {number}
  */
 const largestRectangleArea = hs => {
-  // credit to anton4, the idea looks nice and sound to me.
+  /*
+     credit to anton4, the idea looks nice and sound to me.
+     ref: https://leetcode.com/problems/largest-rectangle-in-histogram/discuss/28902/5ms-O(n)-Java-solution-explained-(beats-96)
+     idea:
+     - for each index i of the histogram h[i],
+       determine the leftmost- and rightmost- position such that
+       no value is less than h[i] along the way.
+     - after which is done, we know the maximal rectangle for each i,
+       pick the max of them
+   */
   if (hs.length === 0)
     return 0
   if (hs.length === 1)
