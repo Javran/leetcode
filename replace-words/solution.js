@@ -11,7 +11,12 @@ function TrieNode() {
  * @return {string}
  */
 const replaceWords = (dict, sentence) => {
+  /*
+     idea: maintain a trie for dictionary lookup
+   */
   const root = new TrieNode()
+  // trieInsert(<word>)(<root>, <index into word>)
+  // we assume that w.length > 0, root is not null and index is always valid.
   const trieInsert = w => {
     const lMax = w.length-1
     const f = (tNode, i) => {
@@ -27,11 +32,9 @@ const replaceWords = (dict, sentence) => {
     }
     return f
   }
+  // assuming dict does not contain any word of zero length.
   for (let i = 0; i < dict.length; ++i) {
-    const w = dict[i]
-    if (w.length > 0) {
-      trieInsert(w)(root, 0)
-    }
+    trieInsert(dict[i])(root, 0)
   }
   const tr = word => {
     let cur = root, i = 0
