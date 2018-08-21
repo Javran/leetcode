@@ -26,7 +26,7 @@ const largestRectangleArea = hs => {
     if (hs[i] > hs[i-1]) {
       leftmost[i] = i
     } else {
-      let j = leftmost[i-1]
+      let j = i-1
       while (j > 0 && hs[j-1] >= hs[i])
         j = leftmost[j-1]
       leftmost[i] = j
