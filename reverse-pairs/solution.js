@@ -13,9 +13,11 @@ const reversePairs = nums => {
      [-3,-2,-1], there is an important pair (-3,-2). so the standard way of using merge sort to
      count reverse pair will not work.
 
-     back to the topic though. given sorted array xs[l .. mid] and xs[mid+1 .. r],
-     it will also do if we can count how many important reverse pairs are there.
+     back to the topic though. given sorted array L = xs[l .. mid] and R= xs[mid+1 .. r],
+     it will also do if we can count how many important reverse pairs
+     we can form using one element from L and another from R.
 
+     TODO: need revisiting later.
    */
   if (nums.length < 2) {
     return 0
@@ -33,6 +35,9 @@ const reversePairs = nums => {
     mergeSort(mid+1,r)
     // note that we separate merging and counting
     // because a sorted array could contain important reverse pairs
+
+    // counting will take some extra steps in O(n), so the overall time complexity for this algorithm
+    // is still O(n*log(n))
 
     // counting
     {
