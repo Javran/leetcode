@@ -150,7 +150,7 @@ const improveBoard = inpBoard => {
   }
   return {
     board,
-    solved: board.every(r => !r.some(v => isSet(v))),
+    solved: !board.some(r => r.some(v => isSet(v))),
   }
 }
 
