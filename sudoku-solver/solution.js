@@ -1,4 +1,22 @@
-const allCandidates = new Set([1,2,3,4,5,6,7,8,9])
+const setBound = 0b1000000000
+const isSet = x => x >= setBound
+const allCandidates = setBound | 0b111111111
+const mkSingleton = num => setBound | (1 << (num-1))
+const getSingleton = setRep => {
+  for (let num = 1; num <= 9; ++num) {
+    if (mkSingleton(num) === setRep)
+      return num
+  }
+  return null
+}
+const toNums = setRep => {
+  let ret = []
+  for (let num = 1; num <= 9; ++num) {
+    if (setRep & (1 << (num-1)))
+      ret.push(num)
+  }
+  return ret
+}
 
 /*
    groups of cells that has to contain mutually exclusive nums
@@ -7,20 +25,52 @@ const allCandidates = new Set([1,2,3,4,5,6,7,8,9])
    - 18~26: all boxes
    - all groups will contain exactly 9 elements
  */
-const meGroups = [[{r:0,c:0},{r:0,c:1},{r:0,c:2},{r:0,c:3},{r:0,c:4},{r:0,c:5},{r:0,c:6},{r:0,c:7},{r:0,c:8}],[{r:1,c:0},{r:1,c:1},{r:1,c:2},{r:1,c:3},{r:1,c:4},{r:1,c:5},{r:1,c:6},{r:1,c:7},{r:1,c:8}],[{r:2,c:0},{r:2,c:1},{r:2,c:2},{r:2,c:3},{r:2,c:4},{r:2,c:5},{r:2,c:6},{r:2,c:7},{r:2,c:8}],[{r:3,c:0},{r:3,c:1},{r:3,c:2},{r:3,c:3},{r:3,c:4},{r:3,c:5},{r:3,c:6},{r:3,c:7},{r:3,c:8}],[{r:4,c:0},{r:4,c:1},{r:4,c:2},{r:4,c:3},{r:4,c:4},{r:4,c:5},{r:4,c:6},{r:4,c:7},{r:4,c:8}],[{r:5,c:0},{r:5,c:1},{r:5,c:2},{r:5,c:3},{r:5,c:4},{r:5,c:5},{r:5,c:6},{r:5,c:7},{r:5,c:8}],[{r:6,c:0},{r:6,c:1},{r:6,c:2},{r:6,c:3},{r:6,c:4},{r:6,c:5},{r:6,c:6},{r:6,c:7},{r:6,c:8}],[{r:7,c:0},{r:7,c:1},{r:7,c:2},{r:7,c:3},{r:7,c:4},{r:7,c:5},{r:7,c:6},{r:7,c:7},{r:7,c:8}],[{r:8,c:0},{r:8,c:1},{r:8,c:2},{r:8,c:3},{r:8,c:4},{r:8,c:5},{r:8,c:6},{r:8,c:7},{r:8,c:8}],[{r:0,c:0},{r:1,c:0},{r:2,c:0},{r:3,c:0},{r:4,c:0},{r:5,c:0},{r:6,c:0},{r:7,c:0},{r:8,c:0}],[{r:0,c:1},{r:1,c:1},{r:2,c:1},{r:3,c:1},{r:4,c:1},{r:5,c:1},{r:6,c:1},{r:7,c:1},{r:8,c:1}],[{r:0,c:2},{r:1,c:2},{r:2,c:2},{r:3,c:2},{r:4,c:2},{r:5,c:2},{r:6,c:2},{r:7,c:2},{r:8,c:2}],[{r:0,c:3},{r:1,c:3},{r:2,c:3},{r:3,c:3},{r:4,c:3},{r:5,c:3},{r:6,c:3},{r:7,c:3},{r:8,c:3}],[{r:0,c:4},{r:1,c:4},{r:2,c:4},{r:3,c:4},{r:4,c:4},{r:5,c:4},{r:6,c:4},{r:7,c:4},{r:8,c:4}],[{r:0,c:5},{r:1,c:5},{r:2,c:5},{r:3,c:5},{r:4,c:5},{r:5,c:5},{r:6,c:5},{r:7,c:5},{r:8,c:5}],[{r:0,c:6},{r:1,c:6},{r:2,c:6},{r:3,c:6},{r:4,c:6},{r:5,c:6},{r:6,c:6},{r:7,c:6},{r:8,c:6}],[{r:0,c:7},{r:1,c:7},{r:2,c:7},{r:3,c:7},{r:4,c:7},{r:5,c:7},{r:6,c:7},{r:7,c:7},{r:8,c:7}],[{r:0,c:8},{r:1,c:8},{r:2,c:8},{r:3,c:8},{r:4,c:8},{r:5,c:8},{r:6,c:8},{r:7,c:8},{r:8,c:8}],[{r:0,c:0},{r:0,c:1},{r:0,c:2},{r:1,c:0},{r:1,c:1},{r:1,c:2},{r:2,c:0},{r:2,c:1},{r:2,c:2}],[{r:0,c:3},{r:0,c:4},{r:0,c:5},{r:1,c:3},{r:1,c:4},{r:1,c:5},{r:2,c:3},{r:2,c:4},{r:2,c:5}],[{r:0,c:6},{r:0,c:7},{r:0,c:8},{r:1,c:6},{r:1,c:7},{r:1,c:8},{r:2,c:6},{r:2,c:7},{r:2,c:8}],[{r:3,c:0},{r:3,c:1},{r:3,c:2},{r:4,c:0},{r:4,c:1},{r:4,c:2},{r:5,c:0},{r:5,c:1},{r:5,c:2}],[{r:3,c:3},{r:3,c:4},{r:3,c:5},{r:4,c:3},{r:4,c:4},{r:4,c:5},{r:5,c:3},{r:5,c:4},{r:5,c:5}],[{r:3,c:6},{r:3,c:7},{r:3,c:8},{r:4,c:6},{r:4,c:7},{r:4,c:8},{r:5,c:6},{r:5,c:7},{r:5,c:8}],[{r:6,c:0},{r:6,c:1},{r:6,c:2},{r:7,c:0},{r:7,c:1},{r:7,c:2},{r:8,c:0},{r:8,c:1},{r:8,c:2}],[{r:6,c:3},{r:6,c:4},{r:6,c:5},{r:7,c:3},{r:7,c:4},{r:7,c:5},{r:8,c:3},{r:8,c:4},{r:8,c:5}],[{r:6,c:6},{r:6,c:7},{r:6,c:8},{r:7,c:6},{r:7,c:7},{r:7,c:8},{r:8,c:6},{r:8,c:7},{r:8,c:8}]]
-const coordToGroupInds = [[[0,9,18],[0,10,18],[0,11,18],[0,12,19],[0,13,19],[0,14,19],[0,15,20],[0,16,20],[0,17,20]],[[9,1,18],[1,10,18],[1,11,18],[1,12,19],[1,13,19],[1,14,19],[1,15,20],[1,16,20],[1,17,20]],[[9,2,18],[10,2,18],[2,11,18],[2,12,19],[2,13,19],[2,14,19],[2,15,20],[2,16,20],[2,17,20]],[[9,3,21],[10,3,21],[11,3,21],[3,12,22],[3,13,22],[3,14,22],[3,15,23],[3,16,23],[3,17,23]],[[9,4,21],[10,4,21],[11,4,21],[12,4,22],[4,13,22],[4,14,22],[4,15,23],[4,16,23],[4,17,23]],[[9,5,21],[10,5,21],[11,5,21],[12,5,22],[13,5,22],[5,14,22],[5,15,23],[5,16,23],[5,17,23]],[[9,6,24],[10,6,24],[11,6,24],[12,6,25],[13,6,25],[14,6,25],[6,15,26],[6,16,26],[6,17,26]],[[9,7,24],[10,7,24],[11,7,24],[12,7,25],[13,7,25],[14,7,25],[15,7,26],[7,16,26],[7,17,26]],[[9,8,24],[10,8,24],[11,8,24],[12,8,25],[13,8,25],[14,8,25],[15,8,26],[16,8,26],[8,17,26]]]
+const meGroups = [
+  [{r:0,c:0},{r:0,c:1},{r:0,c:2},{r:0,c:3},{r:0,c:4},{r:0,c:5},{r:0,c:6},{r:0,c:7},{r:0,c:8}],
+  [{r:1,c:0},{r:1,c:1},{r:1,c:2},{r:1,c:3},{r:1,c:4},{r:1,c:5},{r:1,c:6},{r:1,c:7},{r:1,c:8}],
+  [{r:2,c:0},{r:2,c:1},{r:2,c:2},{r:2,c:3},{r:2,c:4},{r:2,c:5},{r:2,c:6},{r:2,c:7},{r:2,c:8}],
+  [{r:3,c:0},{r:3,c:1},{r:3,c:2},{r:3,c:3},{r:3,c:4},{r:3,c:5},{r:3,c:6},{r:3,c:7},{r:3,c:8}],
+  [{r:4,c:0},{r:4,c:1},{r:4,c:2},{r:4,c:3},{r:4,c:4},{r:4,c:5},{r:4,c:6},{r:4,c:7},{r:4,c:8}],
+  [{r:5,c:0},{r:5,c:1},{r:5,c:2},{r:5,c:3},{r:5,c:4},{r:5,c:5},{r:5,c:6},{r:5,c:7},{r:5,c:8}],
+  [{r:6,c:0},{r:6,c:1},{r:6,c:2},{r:6,c:3},{r:6,c:4},{r:6,c:5},{r:6,c:6},{r:6,c:7},{r:6,c:8}],
+  [{r:7,c:0},{r:7,c:1},{r:7,c:2},{r:7,c:3},{r:7,c:4},{r:7,c:5},{r:7,c:6},{r:7,c:7},{r:7,c:8}],
+  [{r:8,c:0},{r:8,c:1},{r:8,c:2},{r:8,c:3},{r:8,c:4},{r:8,c:5},{r:8,c:6},{r:8,c:7},{r:8,c:8}],
+  [{r:0,c:0},{r:1,c:0},{r:2,c:0},{r:3,c:0},{r:4,c:0},{r:5,c:0},{r:6,c:0},{r:7,c:0},{r:8,c:0}],
+  [{r:0,c:1},{r:1,c:1},{r:2,c:1},{r:3,c:1},{r:4,c:1},{r:5,c:1},{r:6,c:1},{r:7,c:1},{r:8,c:1}],
+  [{r:0,c:2},{r:1,c:2},{r:2,c:2},{r:3,c:2},{r:4,c:2},{r:5,c:2},{r:6,c:2},{r:7,c:2},{r:8,c:2}],
+  [{r:0,c:3},{r:1,c:3},{r:2,c:3},{r:3,c:3},{r:4,c:3},{r:5,c:3},{r:6,c:3},{r:7,c:3},{r:8,c:3}],
+  [{r:0,c:4},{r:1,c:4},{r:2,c:4},{r:3,c:4},{r:4,c:4},{r:5,c:4},{r:6,c:4},{r:7,c:4},{r:8,c:4}],
+  [{r:0,c:5},{r:1,c:5},{r:2,c:5},{r:3,c:5},{r:4,c:5},{r:5,c:5},{r:6,c:5},{r:7,c:5},{r:8,c:5}],
+  [{r:0,c:6},{r:1,c:6},{r:2,c:6},{r:3,c:6},{r:4,c:6},{r:5,c:6},{r:6,c:6},{r:7,c:6},{r:8,c:6}],
+  [{r:0,c:7},{r:1,c:7},{r:2,c:7},{r:3,c:7},{r:4,c:7},{r:5,c:7},{r:6,c:7},{r:7,c:7},{r:8,c:7}],
+  [{r:0,c:8},{r:1,c:8},{r:2,c:8},{r:3,c:8},{r:4,c:8},{r:5,c:8},{r:6,c:8},{r:7,c:8},{r:8,c:8}],
+  [{r:0,c:0},{r:0,c:1},{r:0,c:2},{r:1,c:0},{r:1,c:1},{r:1,c:2},{r:2,c:0},{r:2,c:1},{r:2,c:2}],
+  [{r:0,c:3},{r:0,c:4},{r:0,c:5},{r:1,c:3},{r:1,c:4},{r:1,c:5},{r:2,c:3},{r:2,c:4},{r:2,c:5}],
+  [{r:0,c:6},{r:0,c:7},{r:0,c:8},{r:1,c:6},{r:1,c:7},{r:1,c:8},{r:2,c:6},{r:2,c:7},{r:2,c:8}],
+  [{r:3,c:0},{r:3,c:1},{r:3,c:2},{r:4,c:0},{r:4,c:1},{r:4,c:2},{r:5,c:0},{r:5,c:1},{r:5,c:2}],
+  [{r:3,c:3},{r:3,c:4},{r:3,c:5},{r:4,c:3},{r:4,c:4},{r:4,c:5},{r:5,c:3},{r:5,c:4},{r:5,c:5}],
+  [{r:3,c:6},{r:3,c:7},{r:3,c:8},{r:4,c:6},{r:4,c:7},{r:4,c:8},{r:5,c:6},{r:5,c:7},{r:5,c:8}],
+  [{r:6,c:0},{r:6,c:1},{r:6,c:2},{r:7,c:0},{r:7,c:1},{r:7,c:2},{r:8,c:0},{r:8,c:1},{r:8,c:2}],
+  [{r:6,c:3},{r:6,c:4},{r:6,c:5},{r:7,c:3},{r:7,c:4},{r:7,c:5},{r:8,c:3},{r:8,c:4},{r:8,c:5}],
+  [{r:6,c:6},{r:6,c:7},{r:6,c:8},{r:7,c:6},{r:7,c:7},{r:7,c:8},{r:8,c:6},{r:8,c:7},{r:8,c:8}],
+]
+
+const coordToGroupInds = [
+  [[0,9,18],[0,10,18],[0,11,18],[0,12,19],[0,13,19],[0,14,19],[0,15,20],[0,16,20],[0,17,20]],
+  [[9,1,18],[1,10,18],[1,11,18],[1,12,19],[1,13,19],[1,14,19],[1,15,20],[1,16,20],[1,17,20]],
+  [[9,2,18],[10,2,18],[2,11,18],[2,12,19],[2,13,19],[2,14,19],[2,15,20],[2,16,20],[2,17,20]],
+  [[9,3,21],[10,3,21],[11,3,21],[3,12,22],[3,13,22],[3,14,22],[3,15,23],[3,16,23],[3,17,23]],
+  [[9,4,21],[10,4,21],[11,4,21],[12,4,22],[4,13,22],[4,14,22],[4,15,23],[4,16,23],[4,17,23]],
+  [[9,5,21],[10,5,21],[11,5,21],[12,5,22],[13,5,22],[5,14,22],[5,15,23],[5,16,23],[5,17,23]],
+  [[9,6,24],[10,6,24],[11,6,24],[12,6,25],[13,6,25],[14,6,25],[6,15,26],[6,16,26],[6,17,26]],
+  [[9,7,24],[10,7,24],[11,7,24],[12,7,25],[13,7,25],[14,7,25],[15,7,26],[7,16,26],[7,17,26]],
+  [[9,8,24],[10,8,24],[11,8,24],[12,8,25],[13,8,25],[14,8,25],[15,8,26],[16,8,26],[8,17,26]],
+]
 
 const copyBoard = board => {
   const ret = new Array(9)
   for (let i = 0; i < 9; ++i) {
-    ret[i] = new Array(9)
-    for (let j = 0; j < 9; ++j) {
-      if (typeof board[i][j] === 'number') {
-        ret[i][j] = board[i][j]
-      } else {
-        ret[i][j] = new Set(board[i][j])
-      }
-    }
+    ret[i] = board[i].slice()
   }
   return ret
 }
@@ -51,34 +101,37 @@ const improveBoard = inpBoard => {
      should any deletion happens to other cells,
      those cells will be enqueued for further "attacking".
 
+     this function returns false if and only if current cell has no candidate,
+     in which case this cannot be a solution so we can abort any further search along this branch
+
      p.s. I call it "attack" simply because it looks like a queen
      attacking her row, col and surrounding cells
      (box rather than diagonal in this case).
    */
   const attack = (r,c) => {
-    if (typeof board[r][c] === 'number') {
+    if (isSet(board[r][c])) {
+      // board[r][c] is a Set
+      const s = board[r][c]
+      if (/* s.size === 0 */ s === setBound)
+        return false
+      const maybeNum = getSingleton(s)
+      if (/* s.size === 1 */ maybeNum !== null) {
+        board[r][c] = maybeNum
+        return attack(r,c)
+      }
+      return true
+    } else {
       const num = board[r][c]
+      const sg = mkSingleton(num)
       coordToGroupInds[r][c].forEach(eGrpInd =>
         meGroups[eGrpInd].forEach(coord => {
           const {r:r1, c:c1} = coord
-          if (board[r1][c1] instanceof Set) {
-            if (board[r1][c1].has(num)) {
-              board[r1][c1].delete(num)
-              enqueue(coord)
-            }
+          if (sg === (sg & board[r1][c1])) {
+            board[r1][c1] ^= 1 << (num - 1)
+            enqueue(coord)
           }
         })
       )
-      return true
-    } else {
-      // board[r][c] is a Set
-      const s = board[r][c]
-      if (s.size === 0)
-        return false
-      if (s.size === 1) {
-        board[r][c] = [...s][0]
-        return attack(r,c)
-      }
       return true
     }
   }
@@ -97,7 +150,7 @@ const improveBoard = inpBoard => {
   }
   return {
     board,
-    solved: board.every(r => r.every(v => typeof v === 'number')),
+    solved: board.every(r => !r.some(v => isSet(v))),
   }
 }
 
@@ -112,10 +165,10 @@ const solveSudoku = rawBoard => {
   // board[i][j] = 1~9 or a set of candidates
   let initBoard = new Array(9)
   for (let i = 0; i < 9; ++i) {
-    initBoard[i] = new Array(9)
+    initBoard[i] = new Uint16Array(9)
     for (let j = 0; j < 9; ++j) {
       if (rawBoard[i][j] === '.') {
-        initBoard[i][j] = new Set(allCandidates)
+        initBoard[i][j] = allCandidates
       } else {
         initBoard[i][j] = Number(rawBoard[i][j])
       }
@@ -130,16 +183,17 @@ const solveSudoku = rawBoard => {
     // (an improved board won't have cells whose size of candidate list are less than 2)
     const search = board => {
       let bestCell = null
-      let candidateCount = +Infinity
+      let candidates = null
       /*
          to reduce branching factor, at each layer of the search,
          we only try the cell with least amount of candidates.
        */
       for (let i = 0; i < 9; ++i) {
         for (let j = 0; j < 9; ++j) {
-          if (typeof board[i][j] !== 'number') {
-            if (board[i][j].size < candidateCount) {
-              candidateCount = board[i][j].size
+          if (isSet(board[i][j])) {
+            const cs = toNums(board[i][j])
+            if (candidates === null || cs.length < candidates.length) {
+              candidates = cs
               bestCell = {r:i, c:j}
             }
           }
@@ -147,7 +201,6 @@ const solveSudoku = rawBoard => {
       }
       if (bestCell !== null) {
         const {r,c} = bestCell
-        const candidates = [...board[r][c]]
         for (let k = 0; k < candidates.length; ++k) {
           const newBoard = copyBoard(board)
           newBoard[r][c] = candidates[k]
