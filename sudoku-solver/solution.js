@@ -120,7 +120,10 @@ const improveBoard = inpBoard => {
     if (!attack(r,c))
       return null
   }
-  console.log(board)
+  return {
+    board,
+    solved: board.every(r => r.every(v => typeof v === 'number')),
+  }
 }
 
 /**
@@ -129,7 +132,7 @@ const improveBoard = inpBoard => {
  */
 const solveSudoku = rawBoard => {
   // board[i][j] = 1~9 or a set of candidates
-  const initBoard = new Array(9)
+  let initBoard = new Array(9)
   for (let i = 0; i < 9; ++i) {
     initBoard[i] = new Array(9)
     for (let j = 0; j < 9; ++j) {
@@ -140,7 +143,53 @@ const solveSudoku = rawBoard => {
       }
     }
   }
-  console.log(improveBoard(initBoard))
+  let ans = null
+  const ret = improveBoard(initBoard)
+  if (ret.solved) {
+    ans = ret.board
+  } else {
+    const search = board => {
+      let bestCell = null
+      let candidateCount = +Infinity
+      for (let i = 0; i < 9; ++i) {
+        for (let j = 0; j < 9; ++j) {
+          if (typeof board[i][j] !== 'number') {
+            if (board[i][j].size < candidateCount) {
+              candidateCount = board[i][j].size
+              bestCell = {r:i, c:j}
+            }
+          }
+        }
+      }
+      if (bestCell !== null) {
+        const {r,c} = bestCell
+        const candidates = [...board[r][c]]
+        for (let k = 0; k < candidates.length; ++k) {
+          const newBoard = copyBoard(board)
+          newBoard[r][c] = candidates[k]
+          const ret = improveBoard(newBoard)
+          if (ret !== null) {
+            if (ret.solved) {
+              ans = ret.board
+              return
+            }
+            search(ret.board)
+            if (ans !== null)
+              return
+          }
+        }
+      }
+    }
+    while (ans === null)
+      search(initBoard)
+  }
+  for (let i = 0; i < 9; ++i) {
+    for (let j = 0; j < 9; ++j) {
+      rawBoard[i][j] = String(ans[i][j])
+    }
+  }
+  console.log(ans)
+  return
 }
 
 const {consoleTest} = require('leetcode-zwischenzug')
@@ -155,4 +204,37 @@ f([
   [".","6",".",".",".",".","2","8","."],
   [".",".",".","4","1","9",".",".","5"],
   [".",".",".",".","8",".",".","7","9"],
+])()
+f([
+  "5.46.37..",
+  "1...745.3",
+  ".3785.2..",
+  ".4.36.97.",
+  "3..78....",
+  ".75.42.3.",
+  "..3.98.5.",
+  "4.653...9",
+  "..9..6..7",
+].map(x => x.split("")))()
+f([
+  [".",".","9","7","4","8",".",".","."],
+  ["7",".",".",".",".",".",".",".","."],
+  [".","2",".","1",".","9",".",".","."],
+  [".",".","7",".",".",".","2","4","."],
+  [".","6","4",".","1",".","5","9","."],
+  [".","9","8",".",".",".","3",".","."],
+  [".",".",".","8",".","3",".","2","."],
+  [".",".",".",".",".",".",".",".","6"],
+  [".",".",".","2","7","5","9",".","."]
+])()
+f([
+  [".",".",".","2",".",".",".","6","3"],
+  ["3",".",".",".",".","5","4",".","1"],
+  [".",".","1",".",".","3","9","8","."],
+  [".",".",".",".",".",".",".","9","."],
+  [".",".",".","5","3","8",".",".","."],
+  [".","3",".",".",".",".",".",".","."],
+  [".","2","6","3",".",".","5",".","."],
+  ["5",".","3","7",".",".",".",".","8"],
+  ["4","7",".",".",".","1",".",".","."],
 ])()
