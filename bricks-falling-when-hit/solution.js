@@ -89,7 +89,9 @@ const hitBricks = (grid, hits) => {
     if (c+1 < cols && dSets[r][c+1] !== null)
       dsUnion(node, dSets[r][c+1])
     const after = dsFind(topRowDS).size
-    ans[i] = after === before ? 0 : after - before - 1
+    ans[i] = after === before ?
+      0 /* if added brick does not change top row cluster */ :
+      after - before - 1 /* "-1" as the newly added brick does not count */
   }
   return ans
 }
