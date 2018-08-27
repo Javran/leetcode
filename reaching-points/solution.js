@@ -6,6 +6,10 @@
  * @return {boolean}
  */
 const reachingPoints = (sx, sy, tx, ty) => {
+  /*
+     idea: "you know when you know" situation,
+     in which every other method will lead to TLE, well I have nothing to say.
+   */
   while (tx >= sx && ty >= sy) {
     if (tx === ty) {
       // only possible when starting point happens to be target.
