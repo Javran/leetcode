@@ -57,8 +57,9 @@ const settle = debtState => {
   let best = +Infinity
   // peek one value from the set and try to settle that.
   const pd = debtState.pos.keys()[Symbol.iterator]().next().value;
-  // console.log('aaa', [...debtState.neg.keys()], typeof pd, pd);
   [...debtState.neg.keys()].forEach(nd => {
+    // here we are simply copying previous state
+    // a persistent data structure will work better but this seems to be good enough.
     const newDebtState = {
       pos: new Map(debtState.pos),
       neg: new Map(debtState.neg),
@@ -71,11 +72,11 @@ const settle = debtState => {
     } else {
       freqSetAlter(newDebtState.neg, newDebt, 1)
     }
-    const cur = 1 + settle(newDebtState)
+    const cur = settle(newDebtState)
     if (cur < best)
       best = cur
   })
-  return ans + best
+  return ans + 1 + best
 }
 
 /**
@@ -83,6 +84,17 @@ const settle = debtState => {
  * @return {number}
  */
 const minTransfers = transactions => {
+  /*
+     idea: compute net debt and then search.
+
+     - a positive debt must pair with a negative one to be able to settle,
+       so here we are using DebtState { pos: Map<Debt, Freq>, neg: Map<Debt, Freq> }
+     - there are obvious cases where one positive debt
+       can be settled by a negative debt of same amount,
+       these cases are handled by calling "improve" to reduce the search space.
+     - in all other cases, we pick a postivie value and settle it with a negative one,
+       DFS on which negative value to pick will allow us to take into account all possible ways.
+   */
   const debt = new Map()
   for (let i = 0; i < transactions.length; ++i) {
     const [p0, p1, v] = transactions[i]
@@ -103,6 +115,8 @@ const minTransfers = transactions => {
 
 const {consoleTest, genInt} = require('leetcode-zwischenzug')
 const f = consoleTest(minTransfers)
+
+f([[0,1,10],[2,0,5]])(2)
 f([[0,1,10], [1,0,1], [1,2,5], [2,0,5]])(1)
 f([[7,1,8],[4,9,2],[9,6,-6],[10,8,-9],[4,0,-9],[3,1,5],[3,4,8],[8,5,-6],[1,0,1],[10,0,-7],[0,1,5],[6,1,-2],[0,9,-10],[5,6,2],[1,0,-9],[7,1,-4],[9,0,-5],[0,8,3],[1,6,-10],[10,5,-1],[9,8,6],[2,0,-7],[9,0,1],[7,6,-10],[2,7,5],[1,8,-6],[10,1,-3],[1,3,-5],[9,8,6],[4,0,-4],[6,9,3],[10,6,-1],[2,4,-6],[9,7,8],[9,4,-10],[2,5,3],[0,7,8],[9,6,3],[4,1,-4],[8,6,2],[4,3,1],[9,2,-10],[3,6,5],[10,4,-8],[3,8,5],[2,3,5],[7,6,-4],[4,1,10],[8,1,-8],[6,1,1]])(9)
 
