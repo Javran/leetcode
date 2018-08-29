@@ -4,26 +4,26 @@
  */
 const rotate = mat => {
   /*
-     idea: transpose then reverse row by row
+     idea:
+     the following two should both work:
+
+     - transpose then reverse row by row
+
+     or
+
+     - reverse then transpose (our algorithm)
    */
   const n = mat.length
   if (n <= 1)
     return
 
+  mat.reverse()
   // in-place transpose
   for (let i = 0; i < n; ++i) {
     for (let j = i+1; j < n; ++j) {
       const tmp = mat[i][j]
       mat[i][j] = mat[j][i]
       mat[j][i] = tmp
-    }
-  }
-  for (let i = 0; i < n; ++i) {
-    const xs = mat[i]
-    for (let l = 0, r = n-1; l < r; ++l, --r) {
-      const tmp = xs[l]
-      xs[l] = xs[r]
-      xs[r] = tmp
     }
   }
 }
