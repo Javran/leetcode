@@ -4,29 +4,35 @@
  */
 const sortColors = nums => {
   let j = nums.length, u = 0
-  const swap = (i,j) => {
-    const tmp = nums[i]
-    nums[i] = nums[j]
-    nums[j] = tmp
-  }
   /*
-     all of below are range indices, whichs means they are pointing at element gaps rather than elements
+     idea: maintain 3 sorted groups while we scan through the Array.
+
+     unless explicitly stated, all of below are range indices, whichs means
+     they are pointing at element gaps rather than elements
      (e.g. range index 0 is to the left of first element, and range index 1 is to the right)
+
      - 0..u are all color 0s (element index from 0 to u-1)
      - u..i are all color 1s (element index from u to i-1)
      - j..N are all color 2s (element index from j to N-1)
+
    */
-  for (let i = 0; i < j; ++i) {
+  for (let i = 0; i < j; /* NOOP */) {
     const num = nums[i]
     if (num === 0) {
-      swap(u,i)
+      // could do: swap(u,i)
+      // but we know that nums[i] = 0
+      nums[i] = nums[u]
+      nums[u] = 0
       ++u
+      ++i
     } else if (num === 1) {
-      continue
+      ++i
     } else {
       --j
-      swap(j,i)
-      --i
+      // swap(j,i)
+      // knowing nums[i] === 2
+      nums[i] = nums[j]
+      nums[j] = 2
     }
   }
 }
