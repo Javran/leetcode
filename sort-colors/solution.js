@@ -15,6 +15,10 @@ const sortColors = nums => {
      - u..i are all color 1s (element index from u to i-1)
      - j..N are all color 2s (element index from j to N-1)
 
+     the algorithm runs in O(n). it's true that we don't always increase i,
+     but when we don't, j is decreased instead making the range of
+     unsorted part of the Array keeps shrinking.
+
    */
   for (let i = 0; i < j; /* NOOP */) {
     const num = nums[i]
