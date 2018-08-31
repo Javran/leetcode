@@ -1,3 +1,5 @@
+// idea: https://en.wikipedia.org/wiki/Fisher–Yates_shuffle
+
 const genRandomExcl = (l,r) => {
   return l + Math.floor(Math.random()*(r-l))
 }
@@ -14,6 +16,8 @@ const Solution = function(nums) {
  * @return {number[]}
  */
 Solution.prototype.reset = function() {
+  // there is no need operating on original input array at all,
+  // so we just keep it intact
   return this.nums
 }
 
@@ -38,7 +42,7 @@ Solution.prototype.shuffle = function() {
 
 const s = new Solution([1,2,3,4])
 const stat = new Map()
-for (let i = 0; i < 100000; ++i) {
+for (let i = 0; i < 240000; ++i) {
   const key = s.shuffle().join('')
   if (stat.has(key)) {
     stat.set(key, stat.get(key) + 1)
