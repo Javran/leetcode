@@ -4,6 +4,11 @@ function TNode() {
 }
 
 const codeA = 'a'.codePointAt(0)
+/*
+   normally we'll build a "visited" structure to tell that
+   some cells have been used so we shouldn't go to it,
+   but we can do the actual masking directly on board.
+ */
 const mask = 0x7f
 
 /**
@@ -18,6 +23,15 @@ const findWords = (rawBoard, words) => {
   const cols = rawBoard[0].length
   if (cols === 0)
     return []
+  /*
+     idea: use trie to represent the set of words,
+     therefore we can maximize the use of search context
+     to achieve better performance than perform searches individually.
+
+     e.g. words like "ab", "abc", "abcde", which share the same prefix,
+     can all reuse search results of "ab", etc.
+
+   */
   const ans = new Set()
   /*
      I have to make an assumption for now:
@@ -92,7 +106,6 @@ const findWords = (rawBoard, words) => {
         search(nextNode, i, j)
         board[i][j] = code
       }
-
     }
 
   return [...ans]
