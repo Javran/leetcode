@@ -32,7 +32,7 @@ const findWords = (rawBoard, words) => {
      can all reuse search results of "ab", etc.
 
    */
-  const ans = new Set()
+  const ans = []
   /*
      I have to make an assumption for now:
 
@@ -58,7 +58,7 @@ const findWords = (rawBoard, words) => {
     if (w.length !== 0) {
       trieInsert(trieRoot, w, 0)
     } else {
-      ans.add('')
+      ans.push('')
     }
   })
 
@@ -74,7 +74,10 @@ const findWords = (rawBoard, words) => {
 
   const search = (curRoot, r, c) => {
     if (curRoot.word !== null) {
-      ans.add(curRoot.word)
+      ans.push(curRoot.word)
+      // now that this word has been used, there's no reason
+      // keeping it around.
+      curRoot.word = null
     }
     const trySearch = (r1, c1) => {
       if (board[r1][c1] !== mask) {
