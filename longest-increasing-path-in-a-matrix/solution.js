@@ -36,10 +36,9 @@ const longestIncreasingPath = mat => {
   while (qHead !== null) {
     const {r,c} = qHead
     const curH = mat[r][c]
-    const curDist = dist[r][c]
+    const nextDist = dist[r][c] + 1
     const enqueue = (r1,c1) => {
       if (mat[r1][c1] > curH) {
-        const nextDist = curDist + 1
         if (nextDist > dist[r1][c1]) {
           dist[r1][c1] = nextDist
           if (nextDist > ans)
