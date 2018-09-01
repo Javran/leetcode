@@ -3,6 +3,14 @@
  * @return {string[]}
  */
 const findItinerary = tickets => {
+  /*
+     idea:
+
+     https://en.wikipedia.org/wiki/Eulerian_path
+
+     see Hierholzer's algorithm.
+
+   */
   // Map<Loc, {nexts: Array[Loc]>
   const graph = new Map()
   const getRecord = loc => {
@@ -19,6 +27,7 @@ const findItinerary = tickets => {
     getRecord(tFrom).push(tTo)
   })
   graph.forEach((record, k) => {
+    // sort it in reverse so we can use efficient .pop() rather than .shift()
     record.sort((a,b) => a === b ? 0 : a < b ? 1 : -1)
   })
   let ans = []
