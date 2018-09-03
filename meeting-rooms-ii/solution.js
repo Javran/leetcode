@@ -79,11 +79,19 @@ BinHeap.prototype.extractMin = function() {
  * @return {number}
  */
 const minMeetingRooms = itvs => {
+  /*
+     idea: the meetings are already line-up and there is no arrangement to be solved,
+     so we'll just simulate until done.
+   */
   // sort by start time, don't worry about end time though,
   // they don't matter.
   itvs.sort((x,y) => x.start - y.start)
   let ans = 0
-  // lazy container of all meetings we are holding.
+  /*
+     lazy container of all meetings we are holding.
+     when we want to arrange a new meeting, we remove all expired meetings
+     from `rooms` and update `ans` accordingly.
+   */
   const rooms = new BinHeap(x => x.end)
   itvs.forEach(itv => {
     while (rooms.size > 0 && rooms.container[0].end <= itv.start) {
@@ -100,5 +108,5 @@ const f = consoleTest(minMeetingRooms)
 const mkItvs = xs => xs.map(([x,y]) => new Interval(x,y))
 
 f(mkItvs([[1,2],[2,3]]))(1)
-f(mkItvs([[0, 30],[5, 10],[15, 20]]))(2)
+f(mkItvs([[0,30],[5,10],[15,20]]))(2)
 f(mkItvs([[7,10],[2,4]]))(1)
