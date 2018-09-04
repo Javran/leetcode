@@ -1,3 +1,23 @@
+/*
+   idea:
+
+   - freq increases by 1 each time, which suggests that
+     if we put key into buckets by freq, then we can use a doubly linked
+     list to efficiently
+     - access least used item
+     - do freq + 1 to any key and maintain the structure
+
+   - ideally we would like all buckets to be non-empty,
+     but we can also do lasy-deletion: we remove values only when
+     we are required to evict a value, this simplifies the impl and give us
+     amortized time complexity of O(1) - all we do is simply delaying the deletion until needed.
+
+  - also since for every bucket we need to remove least recently used one,
+     this justifies a FIFO structure that also requires removing arbitrary element in the middle of it,
+     and another doubly linked list for our bucket representation is sufficient to solve the problem
+
+ */
+
 const mkGuard = () => {
   const node = {}
   node.prev = node
@@ -172,6 +192,8 @@ const genTest = () => {
 }
 
 // genTest()
+
+// TODO: zwischenzug
 
 const assert = require('assert')
 
