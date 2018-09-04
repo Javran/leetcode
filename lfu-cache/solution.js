@@ -78,12 +78,9 @@ LFUCache.prototype.put = function(key, value) {
     return
   // delete old value (if any)
   if (this.store.has(key)) {
-    this.store.delete(key)
-    const node = this.keyToNode.get(key)
-    node.prev.next = node.next
-    node.next.prev = node.prev
-    this.keyToNode.delete(key)
-    --this.size
+    this.store.set(key,value)
+    this.get(key)
+    return
   }
 
   if (this.size === this.capacity) {
@@ -148,20 +145,58 @@ LFUCache.prototype.debug = function() {
 
 }
 
-/**
- * Your LFUCache object will be instantiated and called as such:
- * var obj = Object.create(LFUCache).createNew(capacity)
- * var param_1 = obj.get(key)
- * obj.put(key,value)
- */
-const s = new LFUCache(2)
-console.log(s.put(1,1))
-console.log(s.put(2,2))
-console.log(s.get(1))
-console.log(s.put(3,3))
-console.log(s.get(2))
-console.log(s.get(3))
-console.log(s.put(4,4))
-console.log(s.get(1))
-console.log(s.get(3))
-console.log(s.get(4))
+const {genInt} = require('leetcode-zwischenzug')
+
+const genTest = () => {
+  const cmds = ["LFUCache"]
+  const args = [[3]]
+  const genKey = () => genInt(0,5)
+  const genVal = () => genInt(0,65535)
+  for (let i = 0; i < 10; ++i) {
+    const which = genInt(0,9)
+    if (which <= 4) {
+      cmds.push("get")
+      args.push([genKey()])
+    } else {
+      cmds.push("put")
+      args.push([genKey(), genVal()])
+    }
+  }
+  console.log(JSON.stringify(cmds))
+  console.log(JSON.stringify(args))
+}
+
+// genTest()
+
+if (true)
+  return true
+
+const testImpl = (mkFunc, cmds, args) => {
+  const fName = mkFunc.name
+  let obj = null
+  const ans = []
+  for (let i = 0; i < cmds.length; ++i) {
+    const cmd = cmds[i]
+    if (cmd === fName) {
+      obj = new mkFunc(...args[i])
+      ans.push(null)
+    } else {
+      const ret = obj[cmd].apply(obj, [...args[i]])
+      ans.push(ret || null)
+    }
+  }
+  console.log(ans)
+}
+
+testImpl(
+  LFUCache,
+  ["LFUCache","put","put","get","get","get","put","get","get","put","get","put","get","get","put","get","get"],
+  [[3],[5,23],[4,54],[4],[4],[5],[5,60],[3],[4],[3,12],[2],[2,22],[3],[4],[3,37],[2],[3]]
+)
+
+/*
+["LFUCache","get","get","get","get","get","put","get","get","get","get","put","put","get","get","get","get","get","get","get","get","get","get","get","put","get","get","get","get","get","put","get","get","get","get","put","get","get","get","put","put","put","get","get","put","get","get","get","get","get","get","put","get","put","get","put","get","get","put","get","get","get","get","put","get","put","get","get","get","put","get","get","put","put","get","get","put","get","put","get","get","get","get","get","get","put","get","get","get","get","get","get","get","get","get","get","put","get","put","get","get"]
+[[3],[1],[7],[2],[1],[3],[0,56481],[3],[10],[10],[6],[8,60824],[1,62140],[10],[1],[5],[3],[2],[1],[8],[8],[10],[0],[2],[7,34034],[1],[5],[9],[0],[7],[4,24837],[1],[8],[8],[1],[3,25179],[2],[9],[1],[7,1581],[6,15872],[1,22631],[1],[1],[10,31762],[0],[1],[5],[1],[9],[8],[1,3948],[8],[1,52691],[5],[6,33822],[10],[7],[1,41819],[6],[3],[2],[1],[5,64540],[10],[2,62287],[1],[0],[10],[5,62881],[0],[9],[10,52551],[10,60057],[9],[3],[5,41100],[4],[10,58506],[10],[9],[6],[3],[6],[6],[1,28879],[10],[5],[9],[8],[2],[7],[4],[7],[6],[3],[8,58986],[10],[4,11287],[2],[1]]
+
+[null,-1,-1,-1,-1,-1,null,-1,-1,-1,-1,null,null,-1,62140,-1,-1,-1,62140,60824,60824,-1,56481,-1,null,62140,-1,-1,-1,34034,null,62140,60824,60824,62140,null,-1,-1,62140,null,null,null,22631,22631,null,-1,22631,-1,22631,-1,60824,null,60824,null,-1,null,-1,-1,null,33822,-1,-1,41819,null,-1,null,41819,-1,-1,null,-1,-1,null,null,-1,-1,null,-1,null,58506,-1,-1,-1,-1,-1,null,58506,-1,-1,60824,-1,-1,-1,-1,-1,-1,null,58506,null,-1,28879]
+*/
