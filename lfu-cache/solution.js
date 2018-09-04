@@ -78,6 +78,13 @@ LFUCache.prototype.put = function(key, value) {
     return
   // delete old value (if any)
   if (this.store.has(key)) {
+    /*
+       note: it makes no sense to me why
+       setting another value to an existing key
+       preserves the previous frequency,
+       but since the expected answer can only be explained by taking
+       this weird behavior into account.
+     */
     this.store.set(key,value)
     this.get(key)
     return
