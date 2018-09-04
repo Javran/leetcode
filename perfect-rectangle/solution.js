@@ -96,7 +96,7 @@ const isRectangleCover = rects => {
     ))
       return false
   }
-  // checking shapes
+  // checking points
   const pairs = [...points.entries()]
   let cornerCount = 0
   for (let i = 0; i < pairs.length; ++i) {
