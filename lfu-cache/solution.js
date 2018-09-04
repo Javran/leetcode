@@ -111,7 +111,9 @@ LFUCache.prototype.put = function(key, value) {
   }
 
   if (this.size === this.capacity) {
-    // evict
+    // evict must go before insertion, otherwise we might end up evicting
+    // the value we just inserted.
+
     // remove list nodes of empty container
     while (
       this.freqList.next !== this.freqList &&
@@ -170,7 +172,7 @@ LFUCache.prototype.debug = function() {
   }
 }
 
-const {genInt} = require('leetcode-zwischenzug')
+const {genInt, cTestImpl} = require('leetcode-zwischenzug')
 
 const genTest = () => {
   const cmds = ["LFUCache"]
@@ -193,49 +195,7 @@ const genTest = () => {
 
 // genTest()
 
-// TODO: zwischenzug
-
-const assert = require('assert')
-
-const testImpl =
-  (mkFunc, assertEqual = assert.deepStrictEqual) => (cmds, argLists) => expected => {
-  const fName = mkFunc.name
-  let obj = null
-  const ans = []
-
-  console.time(fName)
-  for (let i = 0; i < cmds.length; ++i) {
-    const cmd = cmds[i]
-    if (cmd === fName) {
-      obj = new mkFunc(...argLists[i])
-      ans.push(null)
-    } else {
-      const ret = obj[cmd].apply(obj, [...argLists[i]])
-      ans.push(ret || null)
-    }
-  }
-  console.timeEnd(fName)
-  if (typeof expected !== 'undefined') {
-    try {
-      assertEqual(ans, expected)
-    } catch (e) {
-      console.error(`[FAILED]`)
-      console.error('expected:')
-      console.error(JSON.stringify(expected))
-      console.error('actual:')
-      console.error(JSON.stringify(ans))
-      if (assertEqual !== assert.deepStrictEqual) {
-        console.error(`error:`)
-        console.error(e)
-      }
-    }
-  } else {
-    console.log(`Result:`)
-    console.log(JSON.stringify(ans))
-  }
-}
-
-const f = testImpl(LFUCache)
+const f = cTestImpl(LFUCache)
 
 f(
   ["LFUCache","put","put","get","get","get","put","get","get","put","get","put","get","get","put","get","get"],
