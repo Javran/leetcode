@@ -6,6 +6,51 @@ const eps = 1e-5
  * @return {number}
  */
 const findMaxAverage = (nums, k) => {
+  /*
+
+     idea:
+
+     refer to:
+
+     - https://leetcode.com/problems/maximum-average-subarray-ii/solution/
+
+     if we can verify whether a guessed average lower bound g is possible efficiently,
+     we can utilize binary search to find the answer -
+     if g is possible, that means we can find an average value >= g in nums,
+     we'll then search in range (g,r) or otherwise (l,g),
+     in which l and r are initialized to the min and max value of the original array,
+     until we narrow `r-l` to allowed error.
+
+     now to see whether an average >= g can be achieved:
+
+     first, to get sums of any subarray, we can do the standard preprocessing
+     of cumulative sum:
+
+     - accSum[0] = 0
+     - accSum[i+1] = accSum[i] + nums[i]
+
+     then for any range (i,j), the sum is accSum[j+1] - accSum[i].
+     now to see whether an average of at least g can be achieved,
+     we need max value of accSum[j+1] - accSum[i] in which j+i-1 >= k,
+     which means for each j, we have accSum[j+1] and want to find k+1-j <= i <= j
+     so that accSum[i] is minimum.
+
+     now we can check sums efficiently, let's worry about g:
+
+     sum(nums[i..j]) / (j-i+1) >= g
+     ==> (nums[i] - g) + (nums[i-1] - g) + ... + (nums[j] - g) >= 0
+
+     this formulate allows us to do things element-wise:
+
+     we first check the initial k elements nums[0..k-1] and see if average >= g
+     if so, this g value can be confirmed to be valid.
+
+     now for index i from k to N-1, we not only want to check sum[i-k+1..i], but also
+     want to check expanded window to its left until sum[0..i] is covered.
+     and the analysis above tell us that we just need to keep the min of accSum[0..i+k-1],
+     which can be updated during the process
+
+   */
   const N = nums.length
   const accSum = new Int32Array(N+1)
   let lVal = nums[0], rVal = nums[0]
@@ -18,16 +63,20 @@ const findMaxAverage = (nums, k) => {
   }
   // now that accSum[j+1] - accSum[i] gives nums[i] + nums[i+1] + ... + nums[j]
   const check = guess => {
-    // sum from 0 to k-1
+    // (all sums described below means sum with corresponding # of guessed values removed)
+    // `sum` from 0 to k-1
     let sum = accSum[k] - accSum[0] - guess*k
     if (sum >= 0)
       return true
+    // `prev` is sum from 0 to i-k
+    // `sum` is sum from 0 to i
     let prev = 0, minSum = 0
     for (let i = k; i < N; ++i) {
       sum += nums[i] - guess
       prev += nums[i-k] - guess
       if (minSum > prev)
         minSum = prev
+      // sum - minSum >= 0 optimized
       if (sum >= minSum)
         return true
     }
