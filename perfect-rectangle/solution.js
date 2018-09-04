@@ -101,11 +101,17 @@ const isRectangleCover = rects => {
   let cornerCount = 0
   for (let i = 0; i < pairs.length; ++i) {
     const [rawKey, val] = pairs[i]
+    /*
     const popCount =
       Number(Boolean(val & TR)) +
       Number(Boolean(val & TL)) +
       Number(Boolean(val & BL)) +
       Number(Boolean(val & BR))
+     */
+    // https://stackoverflow.com/a/3815253/315302
+    let popCount = (val & 0b0101) + ((val >> 1) & 0b0101)
+    popCount = (popCount & 0b0011) + ((popCount >> 2) & 0b0011)
+
     // INVARIANT: 1 <= popCount <= 4
     /*
        - popCount = 1: only 4 corners
@@ -175,3 +181,24 @@ f([
   [1,3,2,4],
   [2,2,4,4],
 ])(false)
+
+const popCountTest = () => {
+  const popCountSlow = v => {
+    let r = 0
+    while (v > 0) {
+      if (v & 1)
+      ++r
+      v >>= 1
+    }
+    return r
+  }
+
+  const popCountBitwise = v => {
+    let r = (v & 0b0101) + ((v >> 1) & 0b0101)
+    return (r & 0b0011) + ((r >> 2) & 0b0011)
+  }
+
+  for (let i = 0; i <= 0b1111; ++i) {
+    console.log(i, popCountSlow(i), popCountBitwise(i))
+  }
+}
