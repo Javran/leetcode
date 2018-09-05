@@ -20,6 +20,8 @@
 const NumMatrix = function(matrix) {
   const rows = matrix.length
   if (rows === 0) {
+    // instead of checking an empty flag, we'll just overwrite the method
+    // so no actual runtime dispatch is needed for this.
     this.update = () => {}
     this.sumRegion = () => 0
     return
