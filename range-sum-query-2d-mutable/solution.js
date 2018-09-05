@@ -20,17 +20,19 @@
 const NumMatrix = function(matrix) {
   const rows = matrix.length
   if (rows === 0) {
-    this.empty = true
+    this.update = () => {}
+    this.sumRegion = () => 0
     return
   }
   const cols = matrix[0].length
   if (cols === 0) {
-    this.empty = true
+    this.update = () => {}
+    this.sumRegion = () => 0
     return
   }
+
   this.rows = rows
   this.cols = cols
-  this.empty = false
   this.tree = new Array(rows+1)
   for (let i = 0; i < this.tree.length; ++i) {
     this.tree[i] = new Array(cols+1).fill(0)
@@ -53,8 +55,6 @@ const NumMatrix = function(matrix) {
  * @return {void}
  */
 NumMatrix.prototype.update = function(row, col, val) {
-  if (this.empty)
-    return
   const {rows, cols, tree, nums} = this
   const diff = val - nums[row][col]
   nums[row][col] = val
@@ -66,8 +66,6 @@ NumMatrix.prototype.update = function(row, col, val) {
 }
 
 NumMatrix.prototype.sum = function(row, col) {
-  if (this.empty)
-    return 0
   const {tree} = this
   let ret = 0
   for (let i = row; i > 0; i -= i & (-i)) {
@@ -86,9 +84,6 @@ NumMatrix.prototype.sum = function(row, col) {
  * @return {number}
  */
 NumMatrix.prototype.sumRegion = function(row1, col1, row2, col2) {
-  if (this.empty)
-    return 0
-
   return this.sum(row2+1, col2+1) +
     this.sum(row1,col1) -
     this.sum(row1,col2+1) -
