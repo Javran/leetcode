@@ -30,7 +30,7 @@ const lengthOfLongestSubstringKDistinct = (sRaw, k) => {
   }
 
   // rlCode.length > 0 since sRaw.length > 0
-  let startInd = 0, endInd = 0, win = new Map()
+  let startInd = 0, endInd = 0, win = new Map(), curLen = rlCount[0]
   win.set(rlCode[0], rlCount[0])
   while (startInd < rlCode.length) {
     // expand endInd
@@ -43,12 +43,12 @@ const lengthOfLongestSubstringKDistinct = (sRaw, k) => {
         } else {
           win.set(nextCode, nextCount)
         }
+        curLen += nextCount
         ++endInd
       } else {
         break
       }
     }
-    const curLen = [...win.values()].reduce((x,y) => x+y, 0)
     if (curLen > ans)
       ans = curLen
     // move startInd forward
@@ -60,6 +60,7 @@ const lengthOfLongestSubstringKDistinct = (sRaw, k) => {
     } else {
       win.set(sCode, oldCount-sCount)
     }
+    curLen -= sCount
     ++startInd
   }
   return ans
