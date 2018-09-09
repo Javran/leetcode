@@ -7,6 +7,10 @@ const RLEIterator = function(A) {
   this.invariant()
 }
 
+/*
+   idea: the tricky part is how to skip values with 0 count,
+   we make sure this by calling invariant() below.
+ */
 RLEIterator.prototype.invariant = function() {
   if (this.ind >= this.xs.length)
     return
@@ -26,6 +30,8 @@ RLEIterator.prototype.invariant = function() {
  */
 RLEIterator.prototype.next = function(n) {
   let last = -1
+  // as calling "invariant()" will maintain the invariant that
+  // first count is always positive, we can safely extract the value.
   while (n > 0) {
     if (this.ind >= this.xs.length)
       return -1
