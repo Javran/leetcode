@@ -6,6 +6,9 @@
 const lengthOfLongestSubstringKDistinct = (sRaw, k) => {
   if (k <= 0 || sRaw.length === 0)
     return 0
+  /*
+     idea: compute run length, then do a sliding window on it.
+   */
   let ans = 1
   // first scan to convert this into run length
   const rlCode = []
@@ -30,19 +33,21 @@ const lengthOfLongestSubstringKDistinct = (sRaw, k) => {
   }
 
   // rlCode.length > 0 since sRaw.length > 0
-  let startInd = 0, endInd = 0, win = new Map(), curLen = rlCount[0]
-  win.set(rlCode[0], rlCount[0])
+  // note that win & keyCount & curLen can be implemented using just a Map
+  // but here we are separating them for performance
+  const win = new Uint16Array(256)
+  let startInd = 0, endInd = 0, curLen = rlCount[0], keyCount = 1
+  win[rlCode[0]] = rlCount[0]
   while (startInd < rlCode.length) {
     // expand endInd
     while (endInd+1 < rlCode.length) {
       const nextCode = rlCode[endInd+1]
-      if (win.has(nextCode) || win.size < k) {
+      if (win[nextCode] > 0 || keyCount < k) {
         const nextCount = rlCount[endInd+1]
-        if (win.has(nextCode)) {
-          win.set(nextCode, win.get(nextCode) + nextCount)
-        } else {
-          win.set(nextCode, nextCount)
+        if (win[nextCode] === 0) {
+          ++keyCount
         }
+        win[nextCode] += nextCount
         curLen += nextCount
         ++endInd
       } else {
@@ -54,12 +59,11 @@ const lengthOfLongestSubstringKDistinct = (sRaw, k) => {
     // move startInd forward
     const sCode = rlCode[startInd]
     const sCount = rlCount[startInd]
-    const oldCount = win.get(sCode)
+    const oldCount = win[sCode]
     if (oldCount === sCount) {
-      win.delete(sCode)
-    } else {
-      win.set(sCode, oldCount-sCount)
+      --keyCount
     }
+    win[sCode] -= sCount
     curLen -= sCount
     ++startInd
   }
