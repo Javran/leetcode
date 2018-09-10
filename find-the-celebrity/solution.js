@@ -32,14 +32,24 @@ const solution = knows => {
       }
 
       for (let i = 0; i < n; ++i) {
+        /*
+        // this is more straightforward
         if (candidate !== i) {
           if (knows(i, candidate) && !knows(candidate, i)) {
           } else {
             return -1
           }
         }
+        */
+        if (
+          candidate !== i &&
+          (
+            knows(candidate, i) || !knows(i, candidate)
+          )
+        ) {
+          return -1
+        }
       }
-
       return candidate
     }
 }
