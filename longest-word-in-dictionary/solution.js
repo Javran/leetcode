@@ -10,6 +10,11 @@ const codeA = 'a'.codePointAt(0)
  * @return {string}
  */
 const longestWord = words => {
+  /*
+     idea: trie for storing the set of words,
+     and DFS on it - but we only check those words
+     reachable by going through nodes that are not null in `word`
+   */
   const root = new TrieNode()
   const trieInsert = word => {
     let cur = root
@@ -34,6 +39,12 @@ const longestWord = words => {
   const search = cur => {
     if (cur.word === null)
       return
+    /*
+       the spec dictates that both .every and .forEach
+       will only visit elements in ascending order of the index
+       and skip indices that are unassigned.
+       and that justifies our uses of .every and .forEach below
+     */
     if (cur.children.every(node => node.word === null)) {
       if (ans === null || ans.length < cur.word.length)
         ans = cur.word
@@ -41,6 +52,7 @@ const longestWord = words => {
       cur.children.forEach(node => search(node))
     }
   }
+  // root is a dummy node, we need to search every child of it.
   root.children.forEach(search)
   return ans
 }
