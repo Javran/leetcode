@@ -27,7 +27,9 @@ const findLadders = (beginWord, endWord, wordList) => {
      and the paths can be recovered with a recursive approach.
 
      for nextWords, we can build up a trie and search the word
-     as if we allow one place to be wildcard.
+     as if we allow one place to be wildcard - this approach
+     is faster than trying 'a' ~ 'z' for every position in a Set,
+     as we never try a word that is not in the wordList by using Trie.
    */
   const tRoot = new TNode(null)
   const trieInsert = word => {
