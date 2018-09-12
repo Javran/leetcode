@@ -25,6 +25,9 @@ const findLadders = (beginWord, endWord, wordList) => {
      we don't enqueue any more words past endWord) and this
      gives us the traces from endWord all the way back to beginWord.
      and the paths can be recovered with a recursive approach.
+
+     for nextWords, we can build up a trie and search the word
+     as if we allow one place to be wildcard.
    */
   const tRoot = new TNode(null)
   const trieInsert = word => {
@@ -42,49 +45,35 @@ const findLadders = (beginWord, endWord, wordList) => {
     cur.word = word
   }
   wordList.forEach(trieInsert)
-  const searchWithWildcard = (cur, word, i, maskInd, out) => {
-    if (i === word.length) {
-      if (cur.word !== null)
+  // maskInd for the one ind which no comparison happens
+  const searchWithWildcard = (word, maskInd, out) => {
+    const search = (cur, i) => {
+      if (i === word.length) {
         out.push(cur.word)
-      return
-    }
-    if (i === maskInd) {
-      cur.children.forEach(node => searchWithWildcard(node, word, i+1, maskInd, out))
-    } else {
-      const ch = word.codePointAt(i) - codeA
-      if (ch in cur.children)
-        searchWithWildcard(cur.children[ch], word, i+1, maskInd, out)
-    }
-  }
-  const nextWords = word => {
-    const ret = []
-    for (let i = 0; i < word.length; ++i) {
-      searchWithWildcard(tRoot, word, 0, i, ret)
-    }
-    return ret
-  }
-
-  /*
-  const words = new Set(wordList)
-  const nextWords = word => {
-    const ret = []
-    for (let i = 0; i < word.length; ++i) {
-      for (let j = 0; j < codeAtoZ.length; ++j) {
-        const ch = codeAtoZ[j]
-        if (ch === word[i])
-          continue
-        const nextWord = [
-          word.substring(0,i),
-          ch,
-          word.substring(i+1),
-        ].join('')
-        if (words.has(nextWord)) {
-          ret.push(nextWord)
-        }
+        return
+      }
+      if (i === maskInd) {
+        cur.children.forEach(node => search(node, i+1))
+      } else {
+        const ch = word.codePointAt(i) - codeA
+        if (ch in cur.children)
+          search(cur.children[ch], i+1)
       }
     }
+    return search
+  }
+
+  // note that the resulting list will contain "word"
+  // itself, but as we are doing BFS, `track[w]` has the property
+  // that if `w` is present, it has to be the best solution,
+  // so we are fine because current word can never be enqueued again.
+  const nextWords = word => {
+    const ret = []
+    for (let i = 0; i < word.length; ++i) {
+      searchWithWildcard(word, i, ret)(tRoot, 0)
+    }
     return ret
-  }*/
+  }
 
   // track[word] = {dist: int, prevs: Array<string>}
   const track = new Map()
