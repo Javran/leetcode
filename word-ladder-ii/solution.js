@@ -12,13 +12,28 @@ const codeAtoZ = 'abcdefghijklmnopqrstuvwxyz'
  * @return {string[][]}
  */
 const findLadders = (beginWord, endWord, wordList) => {
+  /*
+     idea: use BFS to build up the graph from beginWord to endWord,
+     we don't return immediately after a path is found,
+     instead, allow queue to exhaust (for this we need to make sure that
+     we don't enqueue any more words past endWord) and this
+     gives us the traces from endWord all the way back to beginWord.
+     and the paths can be recovered with a recursive approach.
+   */
   const words = new Set(wordList)
   const nextWords = word => {
     const ret = []
     for (let i = 0; i < word.length; ++i) {
       for (let j = 0; j < codeAtoZ.length; ++j) {
-        const nextWord = [word.substring(0,i), codeAtoZ[j], word.substring(i+1)].join('')
-        if (nextWord !== word && words.has(nextWord)) {
+        const ch = codeAtoZ[j]
+        if (ch === word[i])
+          continue
+        const nextWord = [
+          word.substring(0,i),
+          ch,
+          word.substring(i+1),
+        ].join('')
+        if (words.has(nextWord)) {
           ret.push(nextWord)
         }
       }
