@@ -1,5 +1,3 @@
-const codeA = 'A'.codePointAt(0)
-
 /**
  * @param {string} s
  * @return {number}
@@ -10,7 +8,7 @@ const titleToNumber = s => {
    */
   let ans = 0
   for (let base = 1, i = s.length-1; i >= 0; --i, base *= 26) {
-    const code = s.codePointAt(i) - codeA + 1
+    const code = s.codePointAt(i) & 31
     ans += code * base
   }
   return ans
