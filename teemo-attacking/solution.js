@@ -4,25 +4,25 @@
  * @return {number}
  */
 const findPoisonedDuration = (timeSeries, duration) => {
-  // not necessary
-  if (duration === 0)
+  if (duration === 0 || timeSeries.length === 0)
     return 0
-  let lastAtk = null
+  /*
+     idea: accumulate by gaps
+   */
   let ans = 0
-  for (let i = 0; i < timeSeries.length; ++i) {
+  for (let i = 1; i < timeSeries.length; ++i) {
     const t = timeSeries[i]
-    if (i > 0) {
-      if (lastAtk + duration <= t) {
-        ans += duration
-      } else {
-        ans += t - lastAtk
-      }
+    // whenever there is a gap, we want to accumlate answer with shorter of
+    // - the time gap t - timeSeries[i-1]
+    // - the duration
+    if (timeSeries[i-1] + duration <= t) {
+      ans += duration
+    } else {
+      ans += t - timeSeries[i-1]
     }
-    lastAtk = t
   }
-  if (lastAtk !== null)
-    ans += duration
-  return ans
+  // + duration to account for last attack
+  return ans + duration
 }
 
 const {cTestFunc, genInt} = require('leetcode-zwischenzug')
