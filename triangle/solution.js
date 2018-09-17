@@ -7,6 +7,14 @@ const minimumTotal = ts => {
   if (N === 0)
     return 0
   /*
+     idea: DP line by line, and as the recurrence relation
+     only require the previous line to be present,
+     we can just keep two latest rows for that. (tmp in my solution below)
+
+     apparently you can mutate input Array to do the trick,
+     which in no way like a tasteful practice for me. so, forget about all that business.
+   */
+  /*
      valid indices:
      ts[0][0..0]
      ts[1][0..1]
