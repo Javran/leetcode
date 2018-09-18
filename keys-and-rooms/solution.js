@@ -3,7 +3,11 @@
  * @return {boolean}
  */
 const canVisitAllRooms = rooms => {
+  /*
+     idea: standard DFS should do, we at most have 3000 keys to worry about.
+   */
   const N = rooms.length
+  // not necessary to keep the count, but this will allow speed up
   let vCount = 0
   const visited = new Uint8Array(N)
   const go = room => {
