@@ -5,6 +5,14 @@ const memo = []
  * @return {number}
  */
 const numTrees = n => {
+  /*
+     idea: notice the recursive structure of this problem:
+     to construct a BST of size n, we need to pick one element
+     as node and construct its left and right side recursively:
+
+     numTrees(n) = sum of { numTrees(i-1)*numTrees(n-i)  } where 1 <= i <= n
+
+   */
   if (n <= 1)
     return 1
   if (n in memo)
