@@ -4,15 +4,20 @@
  */
 const minSwapsCouples = row => {
   let ans = 0
-  for (let i = 0, j = 1; j < row.length; i += 2, j += 2) {
-    if ((row[i] ^ row[j]) !== 1) {
+  for (let i = 0; i < row.length; i += 2) {
+    if ((row[i] ^ row[i+1]) !== 1) {
       ++ans
       // need to swap row[j]
       const target = row[i] ^ 1
-      for (let k = j + 1; k < row.length; ++k) {
+      for (let k = i+2; k < row.length; ++k) {
         if (row[k] === target) {
-          row[k] = row[j]
-          row[j] = target
+          row[k] = row[i+1]
+          /*
+             assigning to row[j] isn't necessary,
+             as we scan through `row` only once
+             without looking at all previous values
+           */
+          // row[i+1] = target
           break
         }
       }
