@@ -3,6 +3,51 @@
  * @return {number}
  */
 const maxEnvelopes = es => {
+  /*
+     idea:
+
+     the O(n^2) solution is easy to come up with:
+     we first do pairwise comparison to figure out
+     for any two envelopes i, j, whether i can be put into j,
+     then this info serves as an edge in a graph g,
+     once we figure out the whole graph g,
+     the longest path is the answer.
+
+     credit to TianhaoSong for the O(n * log n) idea:
+
+     the slowdown is actually in how we deal with this "fits into" relation:
+     in the general solution above, we treat it as partial order,
+
+     for example:
+     - [1,1] <= [3,2] <= [4,4]
+     - [1,1] <= [2,3] <= [4,4]
+
+     and there is no relation between [3,2] and [2,3], so we kinda want to
+     work with a graph.
+
+     but if we sort envelopes by one dimension, say width, in ascending order,
+     we can have some small groups of envelopes of same width to work with:
+
+     e.g. (still using the previous example):
+     - group w = 1: [1,1], ...
+     - group w = 2: [2,3], ...
+     - group w = 3: [3,2], ...
+     - group w = 4: [4,4], ...
+
+     then problem becomes: select at most one element from each group
+     and we want to know the maximum number of elements we can select.
+
+     so for each group we either don't pick any element at all or pick
+     exactly one element to allow heights of the selection to be an increasing sequence.
+
+     This is almost like a standard Longest Increasing Sequence(LIS) problem but
+     how do we say that we need to pick at most one element from each group?
+     Well, this turns out to be an easy way: for each group of elements, sort
+     height in descending order, and work out LIS base on height,
+     this way, we know 2 same height can never be included in one solution,
+     so we are good to go.
+
+   */
   // ascending by width then descending by height
   es.sort((u, v) => u[0] === v[0] ? v[1] - u[1] : u[0] - v[0])
   const f = new Uint32Array(es.length)
