@@ -3,11 +3,41 @@
  * @return {number}
  */
 const minSwapsCouples = row => {
+  /*
+     idea:
+
+     see https://leetcode.com/problems/couples-holding-hands/solution/ for a formal proof.
+
+     but let's just say that any move in an optimal solution need to resolve
+     at least one couple.
+
+     just play with some examples a bit, you'll notice that
+     for an optimal solution, the swap happens only in small cycles:
+     for an unresolved position <i, i+1>, figure out the position of the other one j
+     (here we pick i+1 for swaping out for simplicity, but i will do as well),
+     then swap people at i+1 and j, and repeat this process at <i', i'+1> where
+     j === i' or j === i'+1, this form small cycles.
+
+     If we can resolve each cycle individually, we'll solve the problem.
+     Now there are two different swaps:
+
+     (1) one that resolves only one couple
+     (2) the other that resolves two at a time
+
+     but a closer examination will reveal that the steps are already deterministic
+     and we have no decision to make: whenever we can do (2), we'll go for it,
+     but the only chance when (2) is available, is when this "swap cycle"
+     has reduced to size 2, so swaping makes both couple resolved.
+
+     this suggests we can simply simulate the process
+     and count number of swaps
+
+   */
   let ans = 0
   for (let i = 0; i < row.length; i += 2) {
     if ((row[i] ^ row[i+1]) !== 1) {
       ++ans
-      // need to swap row[j]
+      // need to swap row[i+1]
       const target = row[i] ^ 1
       for (let k = i+2; k < row.length; ++k) {
         if (row[k] === target) {
