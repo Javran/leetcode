@@ -5,6 +5,22 @@
  * @return {number[]}
  */
 const calcEquation = (equations, values, queries) => {
+  /*
+     idea:
+
+     notice that, when given a / b = u, b / c = v,
+     - we know b / a = 1 / u and c / b =  1 / v
+     - we also know a / c = (a / b) * (b / c) = u * v
+
+     this allows us to use transitivity to derive the "path" we want.
+
+     so the relation can be encoded into a graph in which nodes are variables,
+     and for an edge (A,B), we attach a value k on this edge to mean that A/B = k,
+     as the input is guaranteed to be consistent, given any two variable A and B,
+     we just need to find a path from A to B and multiple values along the path.
+
+   */
+
   // graph: Map<Var, Map<Var, K>>
   // e.g.: if A / B = K, graph[A][B] = K
   const graph = new Map()
