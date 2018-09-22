@@ -27,35 +27,31 @@ const findStrobogrammatic = n => {
   if (n === 0)
     return ['']
   if (n === 1)
-    return sMids.slice()
+    return sMids
 
-  // all possible "middle number" - could be an empty string
-  // when n is even.
-  const mids = (n & 1) ? sMids : ['']
   const half = n >>> 1
   const ans = []
-  const curL = new Int8Array(half)
-  const curR = new Int8Array(half)
+  const cur = new Int8Array(n)
 
   const build = dep => {
     if (dep === half) {
-      mids.forEach(mid => {
-        const result = [
-          ...curL.slice(0, half),
-          ...mid,
-          ...curR.slice(0, half).reverse(),
-        ].join('')
-        ans.push(result)
-      })
+      if (n & 1) {
+        [0,1,8].forEach(m => {
+          cur[half] = m
+          ans.push(cur.join(''))
+        })
+        // odd length needs middle value
+      } else {
+        ans.push(cur.join(''))
+      }
       return
     }
-
     for (let i = 0; i < sPairs.length; ++i) {
       const [a,b] = sPairs[i]
       if (a === 0 && dep === 0)
         continue
-      curL[dep] = a
-      curR[dep] = b
+      cur[dep] = a
+      cur[n-1-dep] = b
       build(dep+1)
     }
   }
@@ -70,3 +66,4 @@ const f = cTestFunc(findStrobogrammatic)
 f(1)()
 f(3)()
 f(4)()
+f(6)()
