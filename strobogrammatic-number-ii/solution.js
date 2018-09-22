@@ -7,17 +7,35 @@ const sPairs = [[0,0], [1,1], [6,9], [8,8], [9,6]]
  * @return {string[]}
  */
 const findStrobogrammatic = n => {
+  /*
+     idea:
+
+     - every digit of the number will have a fixed set of values to pick from,
+       namely 0,1,6,8,9
+
+     - we just need to generate half of the number and rest of it will be clear
+
+     - in the event that we are require to generate numbers of odd length,
+       we need to have some number in the middle, which can only be picked
+       from 0,1,8
+
+     - keep it in mind that first value cannot be 0.
+
+   */
+
+  // having special cases for 0 and 1 simplifies rest of the impl.
   if (n === 0)
     return ['']
   if (n === 1)
     return sMids.slice()
 
-  // all possible "middle number"
+  // all possible "middle number" - could be an empty string
+  // when n is even.
   const mids = (n & 1) ? sMids : ['']
   const half = n >>> 1
   const ans = []
-  const curL = new Array(half)
-  const curR = new Array(half)
+  const curL = new Int8Array(half)
+  const curR = new Int8Array(half)
 
   const build = dep => {
     if (dep === half) {
