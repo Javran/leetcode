@@ -3,7 +3,18 @@
  * @return {string}
  */
 const countOfAtoms = formula => {
+  /*
+     idea: we just need a parser,
+     all are just standard procedures here.
+
+     we don't need all utils though, a sequential parse (i.e. parseMany)
+     can be achieved by pretending that we are parsing a formula enclosed
+     in a pair of parentheses
+
+   */
   formula = `(${formula})`
+  // combine two parsers together, if first one has failed, we'll call second one
+  // as the backup plan
   const altParse = (p1, p2) => startInd => {
     const result1 = p1(startInd)
     if (result1 !== null)
