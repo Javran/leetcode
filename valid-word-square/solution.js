@@ -3,6 +3,12 @@
  * @return {boolean}
  */
 const validWordSquare = words => {
+  /*
+     idea: just need to test whether the matrix
+     is the transpose of itself.
+
+     note that elements in words might not be of the same length
+   */
   const rows = words.length
   if (rows === 0)
     return true
