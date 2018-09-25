@@ -4,6 +4,12 @@
  * @return {boolean}
  */
 const containsNearbyDuplicate = (nums, k) => {
+  /*
+     idea: do a sliding window:
+     - if we have duplicates before even forming this window of size k,
+       we definitely have nearby dups
+     - otherwise slide the window until hitting the end.
+   */
   if (k <= 0)
     return false
   const win = new Set()
