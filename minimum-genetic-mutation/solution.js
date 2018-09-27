@@ -1,12 +1,10 @@
-const codeConsts = 'ACGT'
-
 const getInd = (str, i) => {
   const code = str.codePointAt(i)
-  for (let i = 0; i < codeConsts.length; ++i) {
-    if (codeConsts.codePointAt(i) === code)
-      return i
-  }
-  throw `invalid char: ${str[i]}`
+  return code === 65 /* A */ ? 0 :
+    code === 67 /* C */ ? 1 :
+    code === 71 /* G */ ? 2 :
+    code === 84 /* T */? 3 :
+    (() => {throw `invalid char: ${str[i]}`})()
 }
 
 function TrieNode(word) {
@@ -27,10 +25,22 @@ function QNode(word, dep) {
  * @return {number}
  */
 const minMutation = (start, end, bank) => {
+  // eliminate obvious cases first
   if (start === end)
     return 0
   if (!bank.includes(end))
     return -1
+
+  /*
+     idea: we build a trie to contain all genes in the bank
+     (start gene could be included but it should not be necessary)
+     this allows us to obtain genes with exactly one "wildcard place".
+
+     then we use this in function `nexts` to figure out what is
+     the next possible gene available.
+
+     after all these are done, a BFS completes the algorithm
+   */
 
   const tRoot = new TrieNode(null)
   // assuming word.length > 0
@@ -46,13 +56,13 @@ const minMutation = (start, end, bank) => {
     tCur.word = word
   }
 
-  trieInsert(start)
   for (let i = 0; i < bank.length; ++i)
     trieInsert(bank[i])
 
   const nexts = word => {
     const retSet = new Set()
     const collect = wildInd => {
+      // wildInd is the wildcard index
       const collectAux = (tCur, ind) => {
         if (tCur === null)
           return
@@ -91,16 +101,16 @@ const minMutation = (start, end, bank) => {
     if (word === end)
       return dep
     const nextWords = nexts(word)
+    const nextDep = dep+1
 
     for (let i = 0; i < nextWords.length; ++i) {
       const nWord = nextWords[i]
       if (visited.has(nWord))
         continue
       visited.add(nWord)
-      qTail.next = new QNode(nWord, dep+1)
+      qTail.next = new QNode(nWord, nextDep)
       qTail = qTail.next
     }
-
     qHead = qHead.next
   }
 
@@ -109,6 +119,7 @@ const minMutation = (start, end, bank) => {
 
 const {cTestFunc} = require('leetcode-zwischenzug')
 const f = cTestFunc(minMutation)
+
 f("AACCGGTT", "AACCGGTA", ["AACCGGTA"])(1)
 f("AACCGGTT", "AAACGGTA", ["AACCGGTA", "AACCGCTA", "AAACGGTA"])(2)
 f("AAAAACCC", "AACCCCCC", ["AAAACCCC", "AAACCCCC", "AACCCCCC"])(3)
