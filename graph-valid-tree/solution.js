@@ -4,6 +4,15 @@
  * @return {boolean}
  */
 const validTree = (n, edges) => {
+  /*
+     idea: for an undirected graph to be a single tree,
+     it must be the case that:
+
+     - it has exactly N-1 edges
+     - all vertices are reachable from each other
+     - it must not contain any cycle. but two conditions above
+       along should give us this guarantee
+   */
   if (edges.length !== n-1) {
     return false
   }
