@@ -7,16 +7,13 @@ const validTree = (n, edges) => {
   if (edges.length !== n-1) {
     return false
   }
-  const graph = new Map()
+  const graph = new Array(n).fill(null)
   const insert = (a, b) => {
-    let sub
-    if (graph.has(a)) {
-      sub = graph.get(a)
+    if (graph[a] === null) {
+      graph[a] = [b]
     } else {
-      sub = new Set()
-      graph.set(a, sub)
+      graph[a].push(b)
     }
-    sub.add(b)
   }
 
   for (let i = 0; i < edges.length; ++i) {
@@ -30,8 +27,9 @@ const validTree = (n, edges) => {
   const search = u => {
     visited[u] = 1
     ++count
-    if (graph.has(u)) {
-      for (let v of graph.get(u)) {
+    if (graph[u] !== null) {
+      for (let i = 0; i < graph[u].length; ++i) {
+        const v = graph[u][i]
         if (!visited[v]) {
           search(v)
         }
