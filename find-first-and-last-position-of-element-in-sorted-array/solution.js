@@ -7,10 +7,15 @@ const searchRange = (nums, target) => {
   if (nums.length === 0)
     return [-1,-1]
 
+  /*
+     idea: two binary searches with different directions of bias
+   */
   const lMost = (() => {
     let l = 0, r = nums.length - 1
     while (l < r) {
+      // left-biased mid-selection
       const mid = (l+r) >>> 1
+      // right-biased pruning
       if (nums[mid] < target) {
         l = mid+1
       } else {
@@ -24,9 +29,16 @@ const searchRange = (nums, target) => {
     return [-1,-1]
 
   const rMost = (() => {
+    // note that knowing lMost bound first
+    // allows us to slightly improve our algorithm
+    // by reducing search space to [lMost .. length-1]
+    // no difference in terms of complexity class as it's still O(lg n)
+    // but this could save us some unnecessary iterations
     let l = lMost, r = nums.length - 1
     while (l < r) {
+      // right-biased mid-selection
       const mid = (l+r+1) >>> 1
+      // left-biased pruning
       if (nums[mid] <= target) {
         l = mid
       } else {
