@@ -4,6 +4,15 @@
  * @return {number}
  */
 const minDistance = (word1, word2) => {
+  /*
+
+     idea: note that the only allowed operation is deletion,
+     we just need to find the longest common sequence (LCS)
+     and remove all the rest.
+
+     standard LCS should work then.
+
+   */
   const M = word1.length
   const N = word2.length
   const f = new Array(M+1)
