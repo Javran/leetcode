@@ -19,12 +19,13 @@ const minDistance = (word1, word2) => {
   for (let i = 0; i <= M; ++i)
     f[i] = new Int16Array(N+1)
   for (let i = 1; i <= M; ++i) {
+    const c1 = word1.codePointAt(i-1)
     for (let j = 1; j <= N; ++j) {
-      let cur = Math.max(f[i][j-1], f[i-1][j])
-      if (word1.codePointAt(i-1) === word2.codePointAt(j-1)) {
-        cur = Math.max(cur, f[i-1][j-1]+1)
+      if (c1 === word2.codePointAt(j-1)) {
+        f[i][j] = f[i-1][j-1]+1
+      } else {
+        f[i][j] = Math.max(f[i][j-1], f[i-1][j])
       }
-      f[i][j] = cur
     }
   }
   return M+N - 2*f[M][N]
