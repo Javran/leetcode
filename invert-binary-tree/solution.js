@@ -3,6 +3,9 @@
  * @return {TreeNode}
  */
 const invertTree = root => {
+  /*
+     idea: just a typical example of recursive function
+   */
   if (root === null) {
     return null
   } else {
