@@ -3,6 +3,9 @@
  * @return {number}
  */
 const findLHS = nums => {
+  if (nums.length <= 1)
+    return 0
+
   const freqs = new Map()
   for (let i = 0; i < nums.length; ++i) {
     const num = nums[i]
@@ -12,11 +15,11 @@ const findLHS = nums => {
       freqs.set(num, 1)
     }
   }
-  const keys = [...nums.keys()].sort((a,b) => a-b)
+  const keys = [...freqs.keys()].sort((a,b) => a-b)
   let ans = 0
   for (let i = 1; i < keys.length; ++i) {
     if (keys[i-1] + 1 === keys[i]) {
-      const cur = freqs.get(i-1) + freqs.get(i)
+      const cur = freqs.get(keys[i-1]) + freqs.get(keys[i])
       if (cur > ans)
         ans = cur
     }
@@ -27,3 +30,6 @@ const findLHS = nums => {
 
 const {cTestFunc} = require('leetcode-zwischenzug')
 const f = cTestFunc(findLHS)
+
+f([1,3,2,2,5,2,3,7])(5)
+f([1,2])(2)
