@@ -3,6 +3,10 @@
  * @return {number}
  */
 const findLHS = nums => {
+  /*
+     idea: freq count and scan through keys in sorted order,
+     and be aware that there are people trying too hard to be smart
+   */
   if (nums.length <= 1)
     return 0
 
