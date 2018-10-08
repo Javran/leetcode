@@ -5,6 +5,9 @@ const re = /^(\d+) (.*)$/
  * @return {string[]}
  */
 const subdomainVisits = cpdomains => {
+  /*
+     idea: freq count but with one key being split into multiple of them.
+   */
   const counts = new Map()
   const reg = cpdRaw => {
     const matchResult = re.exec(cpdRaw)
@@ -13,6 +16,8 @@ const subdomainVisits = cpdomains => {
     }
     const [_ignored, freqRaw, domRaw] = matchResult
     const freq = Number(freqRaw)
+    // could do something smarter using Array.reduce, not going to though,
+    // as I like the simplicity below.
     const doms = domRaw.split('.')
     for (let i = 0; i < doms.length; ++i) {
       const curDom = doms.slice(i).join('.')
