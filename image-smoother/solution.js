@@ -32,6 +32,12 @@ const imageSmoother = M => {
     ret[x][y] = Math.floor(sum / count)
   }
 
+  /*
+     step 1: an O(rows + cols) step of smoothing "surrounding cells".
+     yes the `smooth` function works for smoothing any cell within
+     the bound, but it has bound checks which are not necessary for
+     all inner cells
+   */
   for (let i = 0; i < rows; ++i) {
     smooth(i,0)
   }
@@ -49,6 +55,10 @@ const imageSmoother = M => {
     }
   }
 
+  /*
+     step 2: smooth all inner cells - we know they won't
+     hit bounds so it's safe and faster if we don't do the bound check at all.
+   */
   for (let i = 1; i < rows-1; ++i) {
     for (let j = 1; j < cols-1; ++j) {
       let sum = 0
