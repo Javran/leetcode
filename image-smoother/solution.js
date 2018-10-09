@@ -51,7 +51,8 @@ const imageSmoother = M => {
 
   for (let i = 1; i < rows-1; ++i) {
     for (let j = 1; j < cols-1; ++j) {
-      const sum = dirs.reduce((acc,[dx,dy]) => acc + M[i+dx][j+dy], 0)
+      let sum = 0
+      dirs.forEach(([dx,dy]) => { sum += M[i+dx][j+dy] })
       ret[i][j] = Math.floor(sum / 9)
     }
   }
