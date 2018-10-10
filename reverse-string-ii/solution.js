@@ -4,6 +4,11 @@
  * @return {string}
  */
 const reverseStr = (s, k) => {
+  /*
+     idea: things become easier once we realize
+     we just need to split the input string into group of k,
+     and then reverse every other group.
+   */
   const ansArr = []
   for (let i = 0, rev = true; i < s.length; i += k, rev = !rev) {
     const cur = s.substring(i, i+k)
