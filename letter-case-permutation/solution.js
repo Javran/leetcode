@@ -23,14 +23,15 @@ const letterCasePermutation = S => {
       return
     }
 
-    const maySplit = splitCh(dep)
-    if (maySplit === null) {
+    const code = S.codePointAt(dep)
+    if (code >= code0 && code <= code9) {
       cur[dep] = S[dep]
       gen(dep+1)
-    } else {
-      cur[dep] = String.fromCodePoint(maySplit+32)
+    } else  {
+      const upCode = codeA + (code & 31) -1
+      cur[dep] = String.fromCodePoint(upCode+32)
       gen(dep+1)
-      cur[dep] = String.fromCodePoint(maySplit)
+      cur[dep] = String.fromCodePoint(upCode)
       gen(dep+1)
     }
   }
