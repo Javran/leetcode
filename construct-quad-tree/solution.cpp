@@ -36,7 +36,7 @@ public:
             size_t x0, size_t y0, size_t sz
         ) mutable -> Node* {
             // NOTE: apparently we can't use `new Node()` otherwise all pointers
-            // are left not initialized.
+            // are left uninitialized.
             auto ret = new Node(false, false, nullptr, nullptr, nullptr, nullptr);
             if (sz == 1) {
                 ret->isLeaf = true;
