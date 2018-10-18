@@ -29,9 +29,6 @@ class Solution {
 public:
     Node* construct(std::vector<std::vector<int>>& grid) {
         size_t N = grid.size();
-        if (N == 0) {
-            return nullptr;
-        }
         std::function<Node*(size_t, size_t, size_t)> construct_aux = [&](
             size_t x0, size_t y0, size_t sz
         ) mutable -> Node* {
