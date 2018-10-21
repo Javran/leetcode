@@ -17,15 +17,9 @@ const toKey = xs => {
  * @return {number}
  */
 const numSpecialEquivGroups = A => {
-  const groups = new Map()
+  const groups = new Set()
   for (let i = 0; i < A.length; ++i) {
-    const xs = A[i]
-    const key = toKey(xs)
-    if (groups.has(key)) {
-      groups.get(key).push(xs)
-    } else {
-      groups.set(key, [xs])
-    }
+    groups.add(toKey(A[i]))
   }
   return groups.size
 }
