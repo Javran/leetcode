@@ -17,6 +17,19 @@ const toKey = xs => {
  * @return {number}
  */
 const numSpecialEquivGroups = A => {
+  /*
+     idea: notice that we are just finding
+     equivalence classes, which means once
+     a proper "digest" of the original element is found
+     (i.e. two elements digest to the same value iff
+     they belong to the same class),
+     we can easily figure out how many groups are there.
+
+     here notice that odd and even positions never get switched,
+     every element will have a bag of even and a bag of odd
+     characters and we can just establish equivalence by
+     having these 2 bags sorted and compared.
+   */
   const groups = new Set()
   for (let i = 0; i < A.length; ++i) {
     groups.add(toKey(A[i]))
