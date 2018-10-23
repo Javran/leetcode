@@ -82,20 +82,19 @@ const networkDelayTime = (times, N, K) => {
     if (u in graph) {
       sub = graph[u]
     } else {
-      sub = new Map()
+      sub = new Array(N+1)
       graph[u] = sub
     }
-    if (sub.has(v)) {
+    if (v in sub) {
       // in case that we have more than one path between u and v
-      sub.set(v, Math.min(sub.get(v), w))
+      sub[v] = Math.min(sub[v], w)
     } else {
-      sub.set(v, w)
+      sub[v] = w
     }
   }
 
   const dists = new Array(N+1).fill(+Infinity)
   const visited = new Array(N+1)
-  let vCount = 0
   dists[K] = 0
   const pq = new BinHeap(x => x.dist)
   pq.insert({node: K, dist: 0})
@@ -105,22 +104,19 @@ const networkDelayTime = (times, N, K) => {
       continue
     }
     visited[node] = true
-    vCount += 1
-    if (vCount === N)
-      break
     if (node in graph) {
-      for (let [v, w] of graph[node].entries()) {
+      graph[node].forEach((w, v) => {
         if (dists[v] > dists[node] + w) {
           dists[v] = dists[node] + w
           pq.insert({node: v, dist: dists[v]})
         }
-      }
+      })
     }
   }
-  if (vCount !== N)
-    return -1
-  let max = dists[1]
-  for (let i = 2; i <= N; ++i) {
+  let max = -Infinity
+  for (let i = 1; i <= N; ++i) {
+    if (dists[i] === +Infinity)
+      return -1
     if (dists[i] > max)
       max = dists[i]
   }
