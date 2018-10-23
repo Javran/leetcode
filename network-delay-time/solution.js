@@ -72,6 +72,8 @@ BinHeap.prototype.extractMin = function() {
  * @return {number}
  */
 const networkDelayTime = (times, N, K) => {
+  /* idea: typical Dijkstra's algorithm */
+
   // build graph
   const graph = new Array(N+1)
   for (let i = 0; i < times.length; ++i) {
@@ -84,6 +86,7 @@ const networkDelayTime = (times, N, K) => {
       graph[u] = sub
     }
     if (sub.has(v)) {
+      // in case that we have more than one path between u and v
       sub.set(v, Math.min(sub.get(v), w))
     } else {
       sub.set(v, w)
@@ -92,6 +95,7 @@ const networkDelayTime = (times, N, K) => {
 
   const dists = new Array(N+1).fill(+Infinity)
   const visited = new Array(N+1)
+  let vCount = 0
   dists[K] = 0
   const pq = new BinHeap(x => x.dist)
   pq.insert({node: K, dist: 0})
@@ -100,6 +104,10 @@ const networkDelayTime = (times, N, K) => {
     if (visited[node]) {
       continue
     }
+    visited[node] = true
+    vCount += 1
+    if (vCount === N)
+      break
     if (node in graph) {
       for (let [v, w] of graph[node].entries()) {
         if (dists[v] > dists[node] + w) {
@@ -108,12 +116,11 @@ const networkDelayTime = (times, N, K) => {
         }
       }
     }
-    visited[node] = true
   }
-  let max = -Infinity
-  for (let i = 1; i <= N; ++i) {
-    if (dists[i] === +Infinity)
-      return -1
+  if (vCount !== N)
+    return -1
+  let max = dists[1]
+  for (let i = 2; i <= N; ++i) {
     if (dists[i] > max)
       max = dists[i]
   }
