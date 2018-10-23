@@ -4,6 +4,7 @@
  * @return {number[]}
  */
 const intersection = (nums1, nums2) => {
+  // idea: straightforward approach using Set
   const set1 = new Set(nums1)
   const outSet = new Set()
   for (let i = 0; i < nums2.length; ++i) {
